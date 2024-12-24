@@ -8,6 +8,7 @@
     body {
       background-color: white;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
@@ -16,14 +17,52 @@
     video {
       max-width: 90%;
       max-height: 90%;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <!-- Embed your video here -->
+  <!-- First video (Red One) -->
   <video controls>
     <source src="Red_One_2024[_75186].mkv" type="video/webm">
     Your browser does not support the video tag.
   </video>
+
+  <!-- Second video (Moana) -->
+  <video controls>
+    <source src="Moana.mp4" type="video/webm">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Third video (Theparisunder) -->
+  <video controls>
+    <source src="Theparisunder.mp4" type="video/webm">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Scroll behavior JS -->
+  <script>
+    const videos = document.querySelectorAll('video');
+    let currentVideoIndex = 0;
+
+    // Scroll event to change videos
+    window.addEventListener('scroll', () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+
+      for (let i = 0; i < videos.length; i++) {
+        const videoElement = videos[i];
+        const videoTop = videoElement.offsetTop;
+        const videoHeight = videoElement.offsetHeight;
+
+        if (scrollPosition >= videoTop - windowHeight / 2 && scrollPosition < videoTop + videoHeight) {
+          if (i !== currentVideoIndex) {
+            videoElement.play();
+            currentVideoIndex = i;
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
