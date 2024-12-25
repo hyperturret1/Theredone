@@ -42,7 +42,7 @@
       font-weight: bold;
       margin-bottom: 10px;
     }
-    .red-one-buttons-container {
+    .redone-buttons-container {
       width: 400px; /* Fixed width for 4 buttons per line */
     }
   </style>
@@ -52,14 +52,14 @@
   <!-- First video (The Red One) -->
   <div>
     <div class="video-title">The Red One</div>
-    <video id="redOneVideo" controls>
+    <video id="redoneVideo" controls>
       <source src="theredone(1).mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
   </div>
 
   <!-- Buttons for switching between The Red One video parts -->
-  <div class="buttons-container red-one-buttons-container" id="redOneButtons"></div>
+  <div class="buttons-container redone-buttons-container" id="redoneButtons"></div>
 
   <!-- Second video (Moana, split into parts) -->
   <div>
@@ -84,34 +84,34 @@
 
   <script>
     // For the first video (The Red One)
-    const redOneVideo = document.getElementById('redOneVideo');
-    const redOneSegments = [
+    const redoneVideo = document.getElementById('redoneVideo');
+    const redoneSegments = [
       'theredone(1).mp4', 'theredone(2).mp4', 'theredone(3).mp4', 'theredone(4).mp4',
       'theredone(5).mp4', 'theredone(6).mp4', 'theredone(7).mp4', 'theredone(8).mp4',
       'theredone(9).mp4', 'theredone(10).mp4', 'theredone(11).mp4', 'theredone(12).mp4',
       'theredone(13).mp4', 'theredone(14).mp4', 'theredone(15).mp4', 'theredone(16).mp4'
     ];
 
-    const redOneButtonsContainer = document.getElementById('redOneButtons');
+    const redoneButtonsContainer = document.getElementById('redoneButtons');
 
     // Create buttons dynamically for The Red One segments
-    redOneSegments.forEach((segment, index) => {
+    redoneSegments.forEach((segment, index) => {
       const button = document.createElement('button');
       button.textContent = `Part ${index + 1}`;
       button.addEventListener('click', () => {
-        redOneVideo.src = segment;
-        redOneVideo.play();
+        redoneVideo.src = segment;
+        redoneVideo.play();
       });
-      redOneButtonsContainer.appendChild(button);
+      redoneButtonsContainer.appendChild(button);
     });
 
-    let currentRedOneSegment = 0;
+    let currentRedoneSegment = 0;
 
-    redOneVideo.addEventListener('ended', () => {
-      currentRedOneSegment++;
-      if (currentRedOneSegment < redOneSegments.length) {
-        redOneVideo.src = redOneSegments[currentRedOneSegment];
-        redOneVideo.play();
+    redoneVideo.addEventListener('ended', () => {
+      currentRedoneSegment++;
+      if (currentRedoneSegment < redoneSegments.length) {
+        redoneVideo.src = redoneSegments[currentRedoneSegment];
+        redoneVideo.play();
       }
     });
 
