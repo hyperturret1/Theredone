@@ -17,63 +17,64 @@
       max-width: 90%;
       max-height: 90%;
       margin-bottom: 20px;
-      position: relative;
-    }
-    video::before {
-      content: attr(data-title); /* Display the video title */
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-      color: white;
-      padding: 5px;
-      border-radius: 5px;
-      font-size: 14px;
-      font-weight: bold;
-      z-index: 1; /* Ensure it's above the video */
     }
     .buttons-container {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
-      margin-bottom: 20px; /* Add margin to create space between buttons and the next video */
+      margin-bottom: 20px;
     }
     .buttons-container button {
-      padding: 8px 12px; /* Slightly smaller buttons for a compact layout */
+      padding: 8px 12px;
       border: none;
       border-radius: 5px;
       background-color: #007bff;
       color: white;
-      font-size: 12px; /* Reduced font size for compactness */
+      font-size: 12px;
       cursor: pointer;
     }
     .buttons-container button:hover {
       background-color: #0056b3;
     }
+    .video-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
+
   <!-- First video (Red One) -->
-  <video controls data-title="Red One">
-    <source src="Red_One_2024[_75186].mkv" type="video/webm">
-    Your browser does not support the video tag.
-  </video>
+  <div>
+    <div class="video-title">Red One 2024</div>
+    <video controls>
+      <source src="Red_One_2024[_75186].mkv" type="video/webm">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
   <!-- Second video (Moana, split into parts) -->
-  <video id="moanaVideo" controls data-title="Moana 2">
-    <source src="Moana(1).mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  <div>
+    <div class="video-title">Moana 2</div>
+    <video id="moanaVideo" controls>
+      <source src="Moana(1).mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
   <!-- Buttons for switching between Moana video parts -->
   <div class="buttons-container" id="moanaButtons"></div>
 
   <!-- Third video (The Paris Under) -->
-  <video controls data-title="The Paris Under">
-    <source src="Theparisunder.mp4" type="video/webm">
-    Your browser does not support the video tag.
-  </video>
+  <div>
+    <div class="video-title">The Paris Under</div>
+    <video controls>
+      <source src="Theparisunder.mp4" type="video/webm">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
   <script>
     const moanaVideo = document.getElementById('moanaVideo');
