@@ -46,14 +46,17 @@
 </head>
 <body>
 
-  <!-- First video (Red One) -->
+  <!-- First video (The Red One) -->
   <div>
-    <div class="video-title">Red One 2024</div>
-    <video controls>
-      <source src="Red_One_2024[_75186].mkv" type="video/webm">
+    <div class="video-title">The Red One</div>
+    <video id="redOneVideo" controls>
+      <source src="theredone(1).mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
   </div>
+
+  <!-- Buttons for switching between The Red One video parts -->
+  <div class="buttons-container" id="redOneButtons"></div>
 
   <!-- Second video (Moana, split into parts) -->
   <div>
@@ -77,6 +80,39 @@
   </div>
 
   <script>
+    // For the first video (The Red One)
+    const redOneVideo = document.getElementById('redOneVideo');
+    const redOneSegments = [
+      'theredone(1).mp4', 'theredone(2).mp4', 'theredone(3).mp4', 'theredone(4).mp4',
+      'theredone(5).mp4', 'theredone(6).mp4', 'theredone(7).mp4', 'theredone(8).mp4',
+      'theredone(9).mp4', 'theredone(10).mp4', 'theredone(11).mp4', 'theredone(12).mp4',
+      'theredone(13).mp4', 'theredone(14).mp4', 'theredone(15).mp4', 'theredone(16).mp4'
+    ];
+
+    const redOneButtonsContainer = document.getElementById('redOneButtons');
+
+    // Create buttons dynamically for The Red One segments
+    redOneSegments.forEach((segment, index) => {
+      const button = document.createElement('button');
+      button.textContent = `Part ${index + 1}`;
+      button.addEventListener('click', () => {
+        redOneVideo.src = segment;
+        redOneVideo.play();
+      });
+      redOneButtonsContainer.appendChild(button);
+    });
+
+    let currentRedOneSegment = 0;
+
+    redOneVideo.addEventListener('ended', () => {
+      currentRedOneSegment++;
+      if (currentRedOneSegment < redOneSegments.length) {
+        redOneVideo.src = redOneSegments[currentRedOneSegment];
+        redOneVideo.play();
+      }
+    });
+
+    // For the second video (Moana)
     const moanaVideo = document.getElementById('moanaVideo');
     const moanaSegments = [
       'Moana(1).mp4', 'Moana(2).mp4', 'Moana(3).mp4', 'Moana(4).mp4',
@@ -86,7 +122,7 @@
       'Moana(17).mp4'
     ];
 
-    const buttonsContainer = document.getElementById('moanaButtons');
+    const moanaButtonsContainer = document.getElementById('moanaButtons');
 
     // Create buttons dynamically for Moana segments
     moanaSegments.forEach((segment, index) => {
@@ -96,15 +132,15 @@
         moanaVideo.src = segment;
         moanaVideo.play();
       });
-      buttonsContainer.appendChild(button);
+      moanaButtonsContainer.appendChild(button);
     });
 
-    let currentSegment = 0;
+    let currentMoanaSegment = 0;
 
     moanaVideo.addEventListener('ended', () => {
-      currentSegment++;
-      if (currentSegment < moanaSegments.length) {
-        moanaVideo.src = moanaSegments[currentSegment];
+      currentMoanaSegment++;
+      if (currentMoanaSegment < moanaSegments.length) {
+        moanaVideo.src = moanaSegments[currentMoanaSegment];
         moanaVideo.play();
       }
     });
