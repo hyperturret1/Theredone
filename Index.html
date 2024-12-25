@@ -17,6 +17,19 @@
       max-width: 90%;
       max-height: 90%;
       margin-bottom: 20px;
+      position: relative;
+    }
+    video::before {
+      content: attr(data-title);
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: bold;
     }
     .buttons-container {
       display: flex;
@@ -41,13 +54,13 @@
 </head>
 <body>
   <!-- First video (Red One) -->
-  <video controls>
+  <video controls data-title="Red One (New)">
     <source src="Red_One_2024[_75186].mkv" type="video/webm">
     Your browser does not support the video tag.
   </video>
 
   <!-- Second video (Moana, split into parts) -->
-  <video id="moanaVideo" controls>
+  <video id="moanaVideo" controls data-title="Moana 2 (New)">
     <source src="Moana(1).mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -56,7 +69,7 @@
   <div class="buttons-container" id="moanaButtons"></div>
 
   <!-- Third video (The Paris Under) -->
-  <video controls>
+  <video controls data-title="The Paris Under (New)">
     <source src="Theparisunder.mp4" type="video/webm">
     Your browser does not support the video tag.
   </video>
