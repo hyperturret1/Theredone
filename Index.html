@@ -11,13 +11,30 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       margin: 0;
     }
     video {
       max-width: 90%;
       max-height: 90%;
       margin-bottom: 20px;
+    }
+    .buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .buttons-container button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .buttons-container button:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
@@ -34,6 +51,9 @@
     Your browser does not support the video tag.
   </video>
 
+  <!-- Buttons for switching between Moana video parts -->
+  <div class="buttons-container" id="moanaButtons"></div>
+
   <!-- Third video (The Paris Under) -->
   <video controls>
     <source src="Theparisunder.mp4" type="video/webm">
@@ -49,6 +69,20 @@
       'Moana(13).mp4', 'Moana(14).mp4', 'Moana(15).mp4', 'Moana(16).mp4',
       'Moana(17).mp4'
     ];
+
+    const buttonsContainer = document.getElementById('moanaButtons');
+
+    // Create buttons dynamically for Moana segments
+    moanaSegments.forEach((segment, index) => {
+      const button = document.createElement('button');
+      button.textContent = `Part ${index + 1}`;
+      button.addEventListener('click', () => {
+        moanaVideo.src = segment;
+        moanaVideo.play();
+      });
+      buttonsContainer.appendChild(button);
+    });
+
     let currentSegment = 0;
 
     moanaVideo.addEventListener('ended', () => {
