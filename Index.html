@@ -23,7 +23,11 @@
       width: 100%; /* Ensure videos take up full container width */
       height: auto; /* Maintain aspect ratio */
       margin-bottom: 30px; /* Added extra space */
-      transition: all 0.3s ease-in-out; /* Smooth transition to avoid abrupt changes */
+      transition: transform 0.3s ease-in-out; /* Smooth transition for size change */
+      transform: scale(1); /* Initial scale */
+    }
+    video.loaded {
+      transform: scale(0.8); /* Scale down by 20% after loading */
     }
     .buttons-container {
       display: flex;
