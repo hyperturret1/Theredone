@@ -6,12 +6,16 @@
   <title>Simple Video Page</title>
   <style>
     body {
-      background-color: white;
+      background-image: url('https://source.unsplash.com/1600x900/?nature,water'); /* Background image from Unsplash */
+      background-size: cover; /* Ensure the image covers the entire viewport */
+      background-position: center; /* Center the background image */
+      background-repeat: no-repeat; /* Prevent repeating the image */
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       margin: 0;
+      color: white; /* Make the text visible on top of the background */
     }
     video {
       max-width: 90%;
