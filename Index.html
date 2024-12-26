@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Video Page</title>
+  <title>Simple Video Page with Stickman</title>
   <style>
     body {
       background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water'); /* Background with gradient and image */
@@ -39,6 +39,7 @@
       color: white;
       font-size: 12px;
       cursor: pointer;
+      position: relative; /* For positioning the stickman */
     }
     .buttons-container button:hover {
       background-color: #0056b3;
@@ -54,6 +55,15 @@
     .hidden {
       display: none;
     }
+    .stickman {
+      position: absolute;
+      width: 40px; /* Adjust size as needed */
+      height: 50px; /* Adjust size as needed */
+      bottom: 10px;
+      left: 50%; /* Center horizontally */
+      transform: translateX(-50%);
+      display: none; /* Hide initially */
+    }
   </style>
 </head>
 <body>
@@ -65,10 +75,11 @@
       <source src="theredone (1).mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+    <div class="buttons-container redone-buttons-container hidden" id="redoneButtons">
+      <button class="start-button" data-video-id="redoneVideo">Start Video</button>
+    </div>
+    <div class="stickman" id="stickmanRedone">🎩👀</div>
   </div>
-
-  <!-- Buttons for switching between The Red One video parts -->
-  <div class="buttons-container redone-buttons-container hidden" id="redoneButtons"></div>
 
   <!-- Second video (Moana, split into parts) -->
   <div class="hidden">
@@ -77,10 +88,11 @@
       <source src="Moana(1).mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+    <div class="buttons-container hidden" id="moanaButtons">
+      <button class="start-button" data-video-id="moanaVideo">Start Video</button>
+    </div>
+    <div class="stickman" id="stickmanMoana">🎩👀</div>
   </div>
-
-  <!-- Buttons for switching between Moana video parts -->
-  <div class="buttons-container hidden" id="moanaButtons"></div>
 
   <!-- Third video (The Paris Under) -->
   <div class="hidden">
@@ -89,103 +101,49 @@
       <source src="Theparisunder.mp4" type="video/webm">
       Your browser does not support the video tag.
     </video>
-  </div>
-
-  <!-- Fourth video (The Red One - Full) -->
-  <div>
-    <div class="video-title">The Red One - Full</div>
-    <video controls>
-      <source src="https://www.dropbox.com/scl/fi/ygwlg742cw4lj15rzyrci/theredonemovie.mp4?rlkey=ftgy82av3zzf8mzeog5yyvzm2&dl=1" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
-
-  <!-- Fifth video (Moana 2 - Full) -->
-  <div>
-    <div class="video-title">Moana 2 - Full</div>
-    <video controls>
-      <source src="https://www.dropbox.com/scl/fi/0kw6n7jkfqicgm94hwkk9/Moana-2_1080P_480P.mp4?rlkey=87jrwv5fjf5l3dyu0uridgq9x&dl=1" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
-
-  <!-- Sixth video (The Paris Under - Full) -->
-  <div>
-    <div class="video-title">The Paris Under - Full</div>
-    <video controls>
-      <source src="https://www.dropbox.com/scl/fi/9ku33jabzb7tilyqn78th/Under.Paris.2024.540p.x265.AAC.-9jaRocks.Com.mp4?rlkey=1p7wuean5x9raqi4dvnlo7o7a&dl=1" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
+    <div class="buttons-container hidden" id="theparisButtons">
+      <button class="start-button" data-video-id="theparisunderVideo">Start Video</button>
+    </div>
+    <div class="stickman" id="stickmanParis">🎩👀</div>
   </div>
 
   <script>
-    // For the first video (The Red One)
-    const redoneVideo = document.getElementById('redoneVideo');
-    const redoneSegments = [
-      'theredone (1).mp4', 'theredone (2).mp4', 'theredone (3).mp4', 'theredone (4).mp4',
-      'theredone (5).mp4', 'theredone (6).mp4', 'theredone (7).mp4', 'theredone (8).mp4',
-      'theredone (9).mp4', 'theredone (10).mp4', 'theredone (11).mp4', 'theredone (12).mp4',
-      'theredone (13).mp4', 'theredone (14).mp4', 'theredone (15).mp4', 'theredone (16).mp4'
-    ];
+    // Function to show stickman animation
+    function showStickman(videoId, stickmanId, startButton) {
+      const stickman = document.getElementById(stickmanId);
+      stickman.style.display = 'block'; // Show stickman
+      stickman.classList.add('stickman-animation'); // Add animation class
 
-    const redoneButtonsContainer = document.getElementById('redoneButtons');
-
-    // Create buttons dynamically for The Red One segments
-    redoneSegments.forEach((segment, index) => {
-      const button = document.createElement('button');
-      button.textContent = `Part ${index + 1}`;
-      button.addEventListener('click', () => {
-        redoneVideo.src = segment;
-        redoneVideo.play();
+      stickman.addEventListener('animationend', () => {
+        stickman.style.display = 'none'; // Hide stickman after animation ends
       });
-      redoneButtonsContainer.appendChild(button);
-    });
 
-    let currentRedoneSegment = 0;
-
-    redoneVideo.addEventListener('ended', () => {
-      currentRedoneSegment++;
-      if (currentRedoneSegment < redoneSegments.length) {
-        redoneVideo.src = redoneSegments[currentRedoneSegment];
-        redoneVideo.play();
-      }
-    });
-
-    // For the second video (Moana)
-    const moanaVideo = document.getElementById('moanaVideo');
-    const moanaSegments = [
-      'Moana(1).mp4', 'Moana(2).mp4', 'Moana(3).mp4', 'Moana(4).mp4',
-      'Moana(5).mp4', 'Moana(6).mp4', 'Moana(7).mp4', 'Moana(8).mp4',
-      'Moana(9).mp4', 'Moana(10).mp4', 'Moana(11).mp4', 'Moana(12).mp4',
-      'Moana(13).mp4', 'Moana(14).mp4', 'Moana(15).mp4', 'Moana(16).mp4',
-      'Moana(17).mp4'
-    ];
-
-    const moanaButtonsContainer = document.getElementById('moanaButtons');
-
-    // Create buttons dynamically for Moana segments
-    moanaSegments.forEach((segment, index) => {
-      const button = document.createElement('button');
-      button.textContent = `Part ${index + 1}`;
-      button.addEventListener('click', () => {
-        moanaVideo.src = segment;
-        moanaVideo.play();
+      // Click start button to play video after stickman finishes interaction
+      startButton.addEventListener('click', () => {
+        document.getElementById(videoId).play();
       });
-      moanaButtonsContainer.appendChild(button);
+    }
+
+    // Apply stickman animation for The Red One video
+    document.querySelectorAll('.start-button[data-video-id="redoneVideo"]').forEach(button => {
+      button.addEventListener('click', function() {
+        showStickman('redoneVideo', 'stickmanRedone', button);
+      });
     });
 
-    let currentMoanaSegment = 0;
-
-    moanaVideo.addEventListener('ended', () => {
-      currentMoanaSegment++;
-      if (currentMoanaSegment < moanaSegments.length) {
-        moanaVideo.src = moanaSegments[currentMoanaSegment];
-        moanaVideo.play();
-      }
+    // Apply stickman animation for Moana video
+    document.querySelectorAll('.start-button[data-video-id="moanaVideo"]').forEach(button => {
+      button.addEventListener('click', function() {
+        showStickman('moanaVideo', 'stickmanMoana', button);
+      });
     });
 
-    // For The Paris Under video
-    const theparisunderVideo = document.getElementById('theparisunderVideo');
+    // Apply stickman animation for The Paris Under video
+    document.querySelectorAll('.start-button[data-video-id="theparisunderVideo"]').forEach(button => {
+      button.addEventListener('click', function() {
+        showStickman('theparisunderVideo', 'stickmanParis', button);
+      });
+    });
   </script>
 </body>
 </html>
