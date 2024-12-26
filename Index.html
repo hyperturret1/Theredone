@@ -45,12 +45,15 @@
     .redone-buttons-container {
       width: 400px; /* Fixed width for 4 buttons per line */
     }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
   <!-- First video (The Red One) -->
-  <div>
+  <div class="hidden">
     <div class="video-title">The Red One</div>
     <video id="redoneVideo" controls>
       <source src="theredone (1).mp4" type="video/mp4">
@@ -59,10 +62,10 @@
   </div>
 
   <!-- Buttons for switching between The Red One video parts -->
-  <div class="buttons-container redone-buttons-container" id="redoneButtons"></div>
+  <div class="buttons-container redone-buttons-container hidden" id="redoneButtons"></div>
 
   <!-- Second video (Moana, split into parts) -->
-  <div>
+  <div class="hidden">
     <div class="video-title">Moana 2</div>
     <video id="moanaVideo" controls>
       <source src="Moana(1).mp4" type="video/mp4">
@@ -71,10 +74,10 @@
   </div>
 
   <!-- Buttons for switching between Moana video parts -->
-  <div class="buttons-container" id="moanaButtons"></div>
+  <div class="buttons-container hidden" id="moanaButtons"></div>
 
   <!-- Third video (The Paris Under) -->
-  <div>
+  <div class="hidden">
     <div class="video-title">The Paris Under</div>
     <video controls>
       <source src="Theparisunder.mp4" type="video/webm">
