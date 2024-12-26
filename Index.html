@@ -54,6 +54,38 @@
     .hidden {
       display: none;
     }
+    .game-container {
+      margin-top: 30px;
+    }
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .card {
+      width: 100px;
+      height: 100px;
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .card.hidden {
+      background-color: #ddd;
+    }
+    .card.matched {
+      background-color: #28a745;
+      cursor: default;
+    }
+    .card.flipped {
+      background-color: #007bff;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -118,74 +150,80 @@
     </video>
   </div>
 
+  <!-- Game Section -->
+  <div class="game-container">
+    <h2>Memory Card Matching Game</h2>
+    <div class="card-container" id="cardContainer"></div>
+  </div>
+
   <script>
-    // For the first video (The Red One)
-    const redoneVideo = document.getElementById('redoneVideo');
-    const redoneSegments = [
-      'theredone (1).mp4', 'theredone (2).mp4', 'theredone (3).mp4', 'theredone (4).mp4',
-      'theredone (5).mp4', 'theredone (6).mp4', 'theredone (7).mp4', 'theredone (8).mp4',
-      'theredone (9).mp4', 'theredone (10).mp4', 'theredone (11).mp4', 'theredone (12).mp4',
-      'theredone (13).mp4', 'theredone (14).mp4', 'theredone (15).mp4', 'theredone (16).mp4'
-    ];
+    // Card Matching Game
+    const cardContainer = document.getElementById('cardContainer');
+    const cardValues = Array.from({ length: 8 }, (_, i) => i + 1).flatMap(n => [n, n]); // pairs of numbers
+    let flippedCards = [];
+    let matchedPairs = 0;
 
-    const redoneButtonsContainer = document.getElementById('redoneButtons');
-
-    // Create buttons dynamically for The Red One segments
-    redoneSegments.forEach((segment, index) => {
-      const button = document.createElement('button');
-      button.textContent = `Part ${index + 1}`;
-      button.addEventListener('click', () => {
-        redoneVideo.src = segment;
-        redoneVideo.play();
-      });
-      redoneButtonsContainer.appendChild(button);
-    });
-
-    let currentRedoneSegment = 0;
-
-    redoneVideo.addEventListener('ended', () => {
-      currentRedoneSegment++;
-      if (currentRedoneSegment < redoneSegments.length) {
-        redoneVideo.src = redoneSegments[currentRedoneSegment];
-        redoneVideo.play();
+    // Shuffle function for randomizing the card order
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
       }
-    });
+      return array;
+    }
 
-    // For the second video (Moana)
-    const moanaVideo = document.getElementById('moanaVideo');
-    const moanaSegments = [
-      'Moana(1).mp4', 'Moana(2).mp4', 'Moana(3).mp4', 'Moana(4).mp4',
-      'Moana(5).mp4', 'Moana(6).mp4', 'Moana(7).mp4', 'Moana(8).mp4',
-      'Moana(9).mp4', 'Moana(10).mp4', 'Moana(11).mp4', 'Moana(12).mp4',
-      'Moana(13).mp4', 'Moana(14).mp4', 'Moana(15).mp4', 'Moana(16).mp4',
-      'Moana(17).mp4'
-    ];
-
-    const moanaButtonsContainer = document.getElementById('moanaButtons');
-
-    // Create buttons dynamically for Moana segments
-    moanaSegments.forEach((segment, index) => {
-      const button = document.createElement('button');
-      button.textContent = `Part ${index + 1}`;
-      button.addEventListener('click', () => {
-        moanaVideo.src = segment;
-        moanaVideo.play();
+    // Generate and display cards
+    function generateCards() {
+      shuffle(cardValues).forEach(value => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.dataset.value = value;
+        card.innerText = '?';
+        card.addEventListener('click', handleCardClick);
+        cardContainer.appendChild(card);
       });
-      moanaButtonsContainer.appendChild(button);
-    });
+    }
 
-    let currentMoanaSegment = 0;
+    // Handle card click event
+    function handleCardClick(e) {
+      const clickedCard = e.target;
 
-    moanaVideo.addEventListener('ended', () => {
-      currentMoanaSegment++;
-      if (currentMoanaSegment < moanaSegments.length) {
-        moanaVideo.src = moanaSegments[currentMoanaSegment];
-        moanaVideo.play();
+      if (flippedCards.length < 2 && !clickedCard.classList.contains('flipped') && !clickedCard.classList.contains('matched')) {
+        clickedCard.classList.add('flipped');
+        clickedCard.innerText = clickedCard.dataset.value;
+        flippedCards.push(clickedCard);
+
+        if (flippedCards.length === 2) {
+          checkMatch();
+        }
       }
-    });
+    }
 
-    // For The Paris Under video
-    const theparisunderVideo = document.getElementById('theparisunderVideo');
+    // Check if flipped cards match
+    function checkMatch() {
+      const [firstCard, secondCard] = flippedCards;
+
+      if (firstCard.dataset.value === secondCard.dataset.value) {
+        firstCard.classList.add('matched');
+        secondCard.classList.add('matched');
+        matchedPairs++;
+
+        if (matchedPairs === cardValues.length / 2) {
+          alert('Congratulations! You found all pairs!');
+        }
+      } else {
+        setTimeout(() => {
+          firstCard.classList.remove('flipped');
+          secondCard.classList.remove('flipped');
+          firstCard.innerText = '?';
+          secondCard.innerText = '?';
+        }, 1000);
+      }
+      flippedCards = [];
+    }
+
+    // Generate the game cards
+    generateCards();
   </script>
 </body>
 </html>
