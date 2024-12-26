@@ -54,149 +54,138 @@
     .hidden {
       display: none;
     }
-    
-    .stickman {
-      position: absolute;
-      bottom: 20px; /* Adjust to place stickman above the video */
-      left: 50%; /* Center the stickman */
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .stickman-body {
-      width: 10px;
-      height: 20px;
-      background-color: black;
-      border-radius: 5px;
-    }
-    .stickman-legs {
-      width: 2px;
-      height: 10px;
-      background-color: black;
-      margin-top: 5px;
-    }
-    @keyframes jump {
-      0% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-      100% {
-        transform: translateY(0);
-      }
-    }
   </style>
 </head>
 <body>
 
   <!-- First video (The Red One) -->
-  <div>
+  <div class="hidden">
     <div class="video-title">The Red One</div>
     <video id="redoneVideo" controls>
       <source src="theredone (1).mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <button id="redoneStartButton">Start</button>
   </div>
 
   <!-- Buttons for switching between The Red One video parts -->
   <div class="buttons-container redone-buttons-container hidden" id="redoneButtons"></div>
 
   <!-- Second video (Moana, split into parts) -->
-  <div>
+  <div class="hidden">
     <div class="video-title">Moana 2</div>
     <video id="moanaVideo" controls>
       <source src="Moana(1).mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <button id="moanaStartButton">Start</button>
   </div>
 
   <!-- Buttons for switching between Moana video parts -->
   <div class="buttons-container hidden" id="moanaButtons"></div>
 
   <!-- Third video (The Paris Under) -->
-  <div>
+  <div class="hidden">
     <div class="video-title">The Paris Under</div>
     <video id="theparisunderVideo" controls>
-      <source src="Theparisunder.mp4" type="video/mp4">
+      <source src="Theparisunder.mp4" type="video/webm">
       Your browser does not support the video tag.
     </video>
-    <button id="theparisunderStartButton">Start</button>
   </div>
 
   <!-- Fourth video (The Red One - Full) -->
   <div>
     <div class="video-title">The Red One - Full</div>
-    <video id="redoneFullVideo" controls>
+    <video controls>
       <source src="https://www.dropbox.com/scl/fi/ygwlg742cw4lj15rzyrci/theredonemovie.mp4?rlkey=ftgy82av3zzf8mzeog5yyvzm2&dl=1" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <button id="redoneFullStartButton">Start</button>
   </div>
 
   <!-- Fifth video (Moana 2 - Full) -->
   <div>
     <div class="video-title">Moana 2 - Full</div>
-    <video id="moanaFullVideo" controls>
+    <video controls>
       <source src="https://www.dropbox.com/scl/fi/0kw6n7jkfqicgm94hwkk9/Moana-2_1080P_480P.mp4?rlkey=87jrwv5fjf5l3dyu0uridgq9x&dl=1" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <button id="moanaFullStartButton">Start</button>
   </div>
 
   <!-- Sixth video (The Paris Under - Full) -->
   <div>
     <div class="video-title">The Paris Under - Full</div>
-    <video id="theparisunderFullVideo" controls>
+    <video controls>
       <source src="https://www.dropbox.com/scl/fi/9ku33jabzb7tilyqn78th/Under.Paris.2024.540p.x265.AAC.-9jaRocks.Com.mp4?rlkey=1p7wuean5x9raqi4dvnlo7o7a&dl=1" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <button id="theparisunderFullStartButton">Start</button>
   </div>
 
   <script>
-    // Stickman animation function
-    function playStickman(videoElement, startButton) {
-      const stickmanContainer = document.createElement('div');
-      stickmanContainer.className = 'stickman';
-      stickmanContainer.innerHTML = '<div class="stickman-body"></div><div class="stickman-legs"></div>';
+    // For the first video (The Red One)
+    const redoneVideo = document.getElementById('redoneVideo');
+    const redoneSegments = [
+      'theredone (1).mp4', 'theredone (2).mp4', 'theredone (3).mp4', 'theredone (4).mp4',
+      'theredone (5).mp4', 'theredone (6).mp4', 'theredone (7).mp4', 'theredone (8).mp4',
+      'theredone (9).mp4', 'theredone (10).mp4', 'theredone (11).mp4', 'theredone (12).mp4',
+      'theredone (13).mp4', 'theredone (14).mp4', 'theredone (15).mp4', 'theredone (16).mp4'
+    ];
 
-      videoElement.parentNode.insertBefore(stickmanContainer, startButton);
-      
-      // Stickman jumps once
-      stickmanContainer.style.animation = 'jump 1s ease-in-out forwards';
+    const redoneButtonsContainer = document.getElementById('redoneButtons');
 
-      // Remove the stickman after animation
-      setTimeout(() => {
-        stickmanContainer.remove();
-      }, 1000); // Duration of the jump animation
-    }
+    // Create buttons dynamically for The Red One segments
+    redoneSegments.forEach((segment, index) => {
+      const button = document.createElement('button');
+      button.textContent = `Part ${index + 1}`;
+      button.addEventListener('click', () => {
+        redoneVideo.src = segment;
+        redoneVideo.play();
+      });
+      redoneButtonsContainer.appendChild(button);
+    });
 
-    // Function to play video and show stickman
-    function handleStart(videoId) {
-      const videoElement = document.getElementById(videoId);
-      const startButton = document.getElementById(`${videoId}StartButton`);
+    let currentRedoneSegment = 0;
 
-      if (videoElement && startButton) {
-        playStickman(videoElement, startButton);
-
-        setTimeout(() => {
-          videoElement.play();
-        }, 1000); // Wait for stickman jump animation
+    redoneVideo.addEventListener('ended', () => {
+      currentRedoneSegment++;
+      if (currentRedoneSegment < redoneSegments.length) {
+        redoneVideo.src = redoneSegments[currentRedoneSegment];
+        redoneVideo.play();
       }
-    }
+    });
 
-    // Event listeners for start buttons
-    document.getElementById('redoneStartButton').addEventListener('click', () => handleStart('redoneVideo'));
-    document.getElementById('moanaStartButton').addEventListener('click', () => handleStart('moanaVideo'));
-    document.getElementById('theparisunderStartButton').addEventListener('click', () => handleStart('theparisunderVideo'));
+    // For the second video (Moana)
+    const moanaVideo = document.getElementById('moanaVideo');
+    const moanaSegments = [
+      'Moana(1).mp4', 'Moana(2).mp4', 'Moana(3).mp4', 'Moana(4).mp4',
+      'Moana(5).mp4', 'Moana(6).mp4', 'Moana(7).mp4', 'Moana(8).mp4',
+      'Moana(9).mp4', 'Moana(10).mp4', 'Moana(11).mp4', 'Moana(12).mp4',
+      'Moana(13).mp4', 'Moana(14).mp4', 'Moana(15).mp4', 'Moana(16).mp4',
+      'Moana(17).mp4'
+    ];
 
-    document.getElementById('redoneFullStartButton').addEventListener('click', () => handleStart('redoneFullVideo'));
-    document.getElementById('moanaFullStartButton').addEventListener('click', () => handleStart('moanaFullVideo'));
-    document.getElementById('theparisunderFullStartButton').addEventListener('click', () => handleStart('theparisunderFullVideo'));
+    const moanaButtonsContainer = document.getElementById('moanaButtons');
+
+    // Create buttons dynamically for Moana segments
+    moanaSegments.forEach((segment, index) => {
+      const button = document.createElement('button');
+      button.textContent = `Part ${index + 1}`;
+      button.addEventListener('click', () => {
+        moanaVideo.src = segment;
+        moanaVideo.play();
+      });
+      moanaButtonsContainer.appendChild(button);
+    });
+
+    let currentMoanaSegment = 0;
+
+    moanaVideo.addEventListener('ended', () => {
+      currentMoanaSegment++;
+      if (currentMoanaSegment < moanaSegments.length) {
+        moanaVideo.src = moanaSegments[currentMoanaSegment];
+        moanaVideo.play();
+      }
+    });
+
+    // For The Paris Under video
+    const theparisunderVideo = document.getElementById('theparisunderVideo');
   </script>
 </body>
 </html>
