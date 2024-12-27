@@ -6,42 +6,89 @@
   <title>Simple Video Page</title>
   <style>
     body {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water'); /* Background with gradient and image */
-      background-size: cover; /* Ensure the image covers the entire viewport */
-      background-position: center; /* Center the background image */
-      background-repeat: no-repeat; /* Prevent repeating the image */
+      background-color: white;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       margin: 0;
-      color: white; /* Ensure text contrast against background */
     }
     video {
-      max-width: 100%; /* Ensure videos take up full container width */
+      max-width: 90%;
       max-height: 90%;
-      width: 100%; /* Ensure videos take up full container width */
-      height: auto; /* Maintain aspect ratio */
       margin-bottom: 30px; /* Added extra space */
-      transition: transform 0.5s ease-in-out; /* Smooth transition for size change */
-      transform: scale(1); /* Initial scale */
     }
-    video.smaller {
-      transform: scale(0.5); /* Reduce size to 50% after loading */
+    .buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .buttons-container button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .buttons-container button:hover {
+      background-color: #0056b3;
     }
     .video-title {
       font-size: 18px;
       font-weight: bold;
       margin-bottom: 10px;
     }
+    .redone-buttons-container {
+      width: 400px; /* Fixed width for 4 buttons per line */
+    }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
+  <!-- First video (The Red One) -->
+  <div class="hidden">
+    <div class="video-title">The Red One</div>
+    <video id="redoneVideo" controls>
+      <source src="theredone (1).mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <!-- Buttons for switching between The Red One video parts -->
+  <div class="buttons-container redone-buttons-container hidden" id="redoneButtons"></div>
+
+  <!-- Second video (Moana, split into parts) -->
+  <div class="hidden">
+    <div class="video-title">Moana 2</div>
+    <video id="moanaVideo" controls>
+      <source src="Moana(1).mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <!-- Buttons for switching between Moana video parts -->
+  <div class="buttons-container hidden" id="moanaButtons"></div>
+
+  <!-- Third video (The Paris Under) -->
+  <div class="hidden">
+    <div class="video-title">The Paris Under</div>
+    <video id="theparisunderVideo" controls>
+      <source src="Theparisunder.mp4" type="video/webm">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
   <!-- Fourth video (The Red One - Full) -->
   <div>
     <div class="video-title">The Red One - Full</div>
-    <video id="video4" controls>
+    <video controls>
       <source src="https://www.dropbox.com/scl/fi/ygwlg742cw4lj15rzyrci/theredonemovie.mp4?rlkey=ftgy82av3zzf8mzeog5yyvzm2&dl=1" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -50,7 +97,7 @@
   <!-- Fifth video (Moana 2 - Full) -->
   <div>
     <div class="video-title">Moana 2 - Full</div>
-    <video id="video5" controls>
+    <video controls>
       <source src="https://www.dropbox.com/scl/fi/0kw6n7jkfqicgm94hwkk9/Moana-2_1080P_480P.mp4?rlkey=87jrwv5fjf5l3dyu0uridgq9x&dl=1" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -59,31 +106,80 @@
   <!-- Sixth video (The Paris Under - Full) -->
   <div>
     <div class="video-title">The Paris Under - Full</div>
-    <video id="video6" controls>
+    <video controls>
       <source src="https://www.dropbox.com/scl/fi/9ku33jabzb7tilyqn78th/Under.Paris.2024.540p.x265.AAC.-9jaRocks.Com.mp4?rlkey=1p7wuean5x9raqi4dvnlo7o7a&dl=1" type="video/mp4">
       Your browser does not support the video tag.
     </video>
   </div>
 
   <script>
-    // Helper function to reduce video size after loading
-    function makeVideoSmaller(videoId) {
-      const video = document.getElementById(videoId);
-      video.addEventListener('loadeddata', () => {
-        video.classList.add('smaller'); // Add the 'smaller' class after video finishes loading
+    // For the first video (The Red One)
+    const redoneVideo = document.getElementById('redoneVideo');
+    const redoneSegments = [
+      'theredone (1).mp4', 'theredone (2).mp4', 'theredone (3).mp4', 'theredone (4).mp4',
+      'theredone (5).mp4', 'theredone (6).mp4', 'theredone (7).mp4', 'theredone (8).mp4',
+      'theredone (9).mp4', 'theredone (10).mp4', 'theredone (11).mp4', 'theredone (12).mp4',
+      'theredone (13).mp4', 'theredone (14).mp4', 'theredone (15).mp4', 'theredone (16).mp4'
+    ];
+
+    const redoneButtonsContainer = document.getElementById('redoneButtons');
+
+    // Create buttons dynamically for The Red One segments
+    redoneSegments.forEach((segment, index) => {
+      const button = document.createElement('button');
+      button.textContent = `Part ${index + 1}`;
+      button.addEventListener('click', () => {
+        redoneVideo.src = segment;
+        redoneVideo.play();
       });
-    }
+      redoneButtonsContainer.appendChild(button);
+    });
 
-    // Apply the function to videos 4, 5, and 6
-    makeVideoSmaller('video4');
-    makeVideoSmaller('video5');
-    makeVideoSmaller('video6');
+    let currentRedoneSegment = 0;
+
+    redoneVideo.addEventListener('ended', () => {
+      currentRedoneSegment++;
+      if (currentRedoneSegment < redoneSegments.length) {
+        redoneVideo.src = redoneSegments[currentRedoneSegment];
+        redoneVideo.play();
+      }
+    });
+
+    // For the second video (Moana)
+    const moanaVideo = document.getElementById('moanaVideo');
+    const moanaSegments = [
+      'Moana(1).mp4', 'Moana(2).mp4', 'Moana(3).mp4', 'Moana(4).mp4',
+      'Moana(5).mp4', 'Moana(6).mp4', 'Moana(7).mp4', 'Moana(8).mp4',
+      'Moana(9).mp4', 'Moana(10).mp4', 'Moana(11).mp4', 'Moana(12).mp4',
+      'Moana(13).mp4', 'Moana(14).mp4', 'Moana(15).mp4', 'Moana(16).mp4',
+      'Moana(17).mp4'
+    ];
+
+    const moanaButtonsContainer = document.getElementById('moanaButtons');
+
+    // Create buttons dynamically for Moana segments
+    moanaSegments.forEach((segment, index) => {
+      const button = document.createElement('button');
+      button.textContent = `Part ${index + 1}`;
+      button.addEventListener('click', () => {
+        moanaVideo.src = segment;
+        moanaVideo.play();
+      });
+      moanaButtonsContainer.appendChild(button);
+    });
+
+    let currentMoanaSegment = 0;
+
+    moanaVideo.addEventListener('ended', () => {
+      currentMoanaSegment++;
+      if (currentMoanaSegment < moanaSegments.length) {
+        moanaVideo.src = moanaSegments[currentMoanaSegment];
+        moanaVideo.play();
+      }
+    });
+
+    // For The Paris Under video
+    const theparisunderVideo = document.getElementById('theparisunderVideo');
   </script>
-
-  <!-- Credit Section -->
-  <footer>
-    <p>Website created by <strong>Hyperturret</strong></p>
-  </footer>
-
 </body>
 </html>
