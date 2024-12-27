@@ -65,11 +65,14 @@
       text-align: center;
       background-color: #28a745;
       color: white;
-      padding: 10px 15px;
+      padding: 6px 10px;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 10px;
       text-decoration: none;
+      position: absolute;
+      bottom: 10px;  /* Adjust position relative to the bottom-left of video */
+      left: 10px;    /* Adjust position closer to the video */
     }
     .download-button:hover {
       background-color: #218838;
@@ -85,6 +88,7 @@
       <source src="theredone (1).mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+    <a href="#" class="download-button">Download Video</a>
   </div>
 
   <!-- Buttons for switching between The Red One video parts -->
@@ -97,6 +101,7 @@
       <source src="https://vimeo.com/1042502734" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+    <a href="#" class="download-button">Download Video</a>
   </div>
 
   <!-- Buttons for switching between Moana video parts -->
@@ -109,6 +114,7 @@
       <source src="Theparisunder.mp4" type="video/webm">
       Your browser does not support the video tag.
     </video>
+    <a href="#" class="download-button">Download Video</a>
   </div>
 
   <!-- Fourth video (The Red One - Full) -->
