@@ -59,23 +59,20 @@
     .hidden {
       display: none;
     }
-    .download-button {
-      display: block;
-      margin-top: 10px;
-      text-align: center;
-      background-color: #28a745;
-      color: white;
+    .download-btn {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
       padding: 6px 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 10px;
-      text-decoration: none;
-      position: absolute;
-      bottom: 10px;  /* Adjust position relative to the bottom-left of video */
-      left: 10px;    /* Adjust position closer to the video */
+      font-size: 12px;
     }
-    .download-button:hover {
-      background-color: #218838;
+    .download-btn:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
@@ -88,7 +85,6 @@
       <source src="theredone (1).mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <a href="#" class="download-button">Download Video</a>
   </div>
 
   <!-- Buttons for switching between The Red One video parts -->
@@ -101,7 +97,6 @@
       <source src="https://vimeo.com/1042502734" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <a href="#" class="download-button">Download Video</a>
   </div>
 
   <!-- Buttons for switching between Moana video parts -->
@@ -114,7 +109,6 @@
       <source src="Theparisunder.mp4" type="video/webm">
       Your browser does not support the video tag.
     </video>
-    <a href="#" class="download-button">Download Video</a>
   </div>
 
   <!-- Fourth video (The Red One - Full) -->
@@ -122,9 +116,8 @@
     <div class="video-title">The Red One - Full</div>
     <video controls>
       <source src="https://vimeo.com/1042502734" type="video/mp4">
-      Your browser does not support the video tag.
     </video>
-    <a href="#" class="download-button">Download Video</a>
+    <button class="download-btn">Download</button>
   </div>
 
   <!-- Fifth video (Moana 2 - Full) -->
@@ -132,9 +125,8 @@
     <div class="video-title">Moana 2 - Full</div>
     <video controls>
       <source src="https://download1589.mediafire.com/0m8jbxyz13dg/seol5d5xcsekh6i/Moana_2_1080P_480P.mp4" type="video/mp4">
-      Your browser does not support the video tag.
     </video>
-    <a href="#" class="download-button">Download Video</a>
+    <button class="download-btn">Download</button>
   </div>
 
   <!-- Sixth video (The Paris Under - Full) -->
@@ -142,9 +134,8 @@
     <div class="video-title">The Paris Under - Full</div>
     <video controls>
       <source src="https://vimeo.com/1042502734" type="video/mp4">
-      Your browser does not support the video tag.
     </video>
-    <a href="#" class="download-button">Download Video</a>
+    <button class="download-btn">Download</button>
   </div>
 
   <script>
