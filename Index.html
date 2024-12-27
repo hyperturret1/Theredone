@@ -61,8 +61,10 @@
     }
     .download-button {
       display: block;
-      margin-top: 10px;
-      text-align: center;
+      position: absolute;
+      bottom: 22%; /* Increased Y-axis by 2% */
+      left: 80%; /* Moved 80% to the right */
+      transform: translateX(-50%);
       background-color: #28a745;
       color: white;
       padding: 5px 10px;
@@ -76,14 +78,6 @@
     }
     .video-container {
       position: relative;
-    }
-    .download-button-container {
-      position: absolute;
-      bottom: 10px;
-      left: 0;
-      display: flex;
-      justify-content: center;
-      width: 100%;
     }
   </style>
 </head>
