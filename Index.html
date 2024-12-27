@@ -37,16 +37,19 @@
       margin-bottom: 20px;
     }
     .buttons-container button {
-      padding: 8px 12px;
+      padding: 12px 18px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       background-color: #007bff;
       color: white;
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
     }
     .buttons-container button:hover {
       background-color: #0056b3;
+      transform: scale(1.05);
     }
     .video-title {
       font-size: 18px;
@@ -65,14 +68,17 @@
       text-align: center;
       background-color: #28a745;
       color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
+      padding: 8px 16px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: bold;
       text-decoration: none;
+      transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
     }
     .download-button:hover {
       background-color: #218838;
+      transform: scale(1.05);
     }
     .video-container {
       position: relative;
@@ -80,7 +86,8 @@
     .download-button-container {
       position: absolute;
       bottom: 10px;
-      left: 0;
+      left: 80%;
+      transform: translateX(-80%);
       display: flex;
       justify-content: center;
       width: 100%;
@@ -97,7 +104,7 @@
       Your browser does not support the video tag.
     </video>
     <div class="download-button-container">
-      <a href="#" class="download-button" style="left: 80%;">Download</a>
+      <a href="#" class="download-button">Download</a>
     </div>
   </div>
 
@@ -109,7 +116,7 @@
       Your browser does not support the video tag.
     </video>
     <div class="download-button-container">
-      <a href="#" class="download-button" style="left: 80%;">Download</a>
+      <a href="#" class="download-button">Download</a>
     </div>
   </div>
 
@@ -121,7 +128,7 @@
       Your browser does not support the video tag.
     </video>
     <div class="download-button-container">
-      <a href="#" class="download-button" style="left: 80%;">Download</a>
+      <a href="#" class="download-button">Download</a>
     </div>
   </div>
 
