@@ -44,9 +44,6 @@
       color: white;
       font-size: 12px;
       cursor: pointer;
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
     }
     .buttons-container button:hover {
       background-color: #0056b3;
@@ -62,71 +59,71 @@
     .hidden {
       display: none;
     }
+    .download-button {
+      display: block;
+      margin-top: 10px;
+      text-align: center;
+      background-color: #28a745;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .download-button:hover {
+      background-color: #218838;
+    }
+    .video-container {
+      position: relative;
+    }
+    .download-button-container {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
 
-  <!-- First video (The Red One) -->
-  <div class="hidden">
-    <div class="video-title">The Red One</div>
-    <video id="redoneVideo" controls>
-      <source src="theredone (1).mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
-
-  <!-- Buttons for switching between The Red One video parts -->
-  <div class="buttons-container redone-buttons-container hidden" id="redoneButtons"></div>
-
-  <!-- Second video (Moana, split into parts) -->
-  <div class="hidden">
-    <div class="video-title">Moana 2</div>
-    <video id="moanaVideo" controls>
-      <source src="https://vimeo.com/1042502734" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
-
-  <!-- Buttons for switching between Moana video parts -->
-  <div class="buttons-container hidden" id="moanaButtons"></div>
-
-  <!-- Third video (The Paris Under) -->
-  <div class="hidden">
-    <div class="video-title">The Paris Under</div>
-    <video id="theparisunderVideo" controls>
-      <source src="Theparisunder.mp4" type="video/webm">
-      Your browser does not support the video tag.
-    </video>
-  </div>
-
   <!-- Fourth video (The Red One - Full) -->
-  <div>
+  <div class="video-container">
     <div class="video-title">The Red One - Full</div>
     <video controls>
       <source src="https://vimeo.com/1042502734" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <button class="download-btn">Download</button>
+    <div class="download-button-container">
+      <a href="#" class="download-button">Download Video</a>
+    </div>
   </div>
 
   <!-- Fifth video (Moana 2 - Full) -->
-  <div>
+  <div class="video-container">
     <div class="video-title">Moana 2 - Full</div>
     <video controls>
       <source src="https://download1589.mediafire.com/0m8jbxyz13dg/seol5d5xcsekh6i/Moana_2_1080P_480P.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <button class="download-btn">Download</button>
+    <div class="download-button-container">
+      <a href="#" class="download-button">Download Video</a>
+    </div>
   </div>
 
   <!-- Sixth video (The Paris Under - Full) -->
-  <div>
+  <div class="video-container">
     <div class="video-title">The Paris Under - Full</div>
     <video controls>
       <source src="https://vimeo.com/1042502734" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <button class="download-btn">Download</button>
+    <div class="download-button-container">
+      <a href="#" class="download-button">Download Video</a>
+    </div>
   </div>
 
   <script>
