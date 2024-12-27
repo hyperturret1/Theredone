@@ -93,11 +93,11 @@
   <div class="video-container">
     <div class="video-title">The Red One - Full</div>
     <video controls>
-      <source src="https://drive.google.com/uc?id=1-0bRCF7lyH6KYY-F2-jzpXTLWBOClDRe" type="video/mp4">
+      <source src="https://drive.google.com/file/d/1-0bRCF7lyH6KYY-F2-jzpXTLWBOClDRe/view?usp=drivesdk" type="video/mp4">
       Your browser does not support the video tag.
     </video>
     <div class="download-button-container">
-      <a href="https://www.mediafire.com/file/n5zvgbdvassnqw6/theredonemovie.mp4/file" class="download-button">Download</a>
+      <a href="https://drive.google.com/file/d/1-0bRCF7lyH6KYY-F2-jzpXTLWBOClDRe/download" class="download-button">Download</a>
     </div>
   </div>
 
@@ -178,9 +178,24 @@
         moanaVideo.src = segment;
         moanaVideo.play();
       });
+      moanaButtonsContainer.appendChild(button);
     });
+
+    let currentMoanaSegment = 0;
+
+    moanaVideo.addEventListener('ended', () => {
+      currentMoanaSegment++;
+      if (currentMoanaSegment < moanaSegments.length) {
+        moanaVideo.src = moanaSegments[currentMoanaSegment];
+        moanaVideo.play();
+      }
+    });
+
+    // For The Paris Under video
+    const theparisunderVideo = document.getElementById('theparisunderVideo');
   </script>
 
+  <!-- Credit Section -->
   <footer>
     <p>Website created by <strong>Hyperturret</strong></p>
   </footer>
