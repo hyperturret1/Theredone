@@ -51,7 +51,9 @@
     .video-title {
       font-size: 18px;
       font-weight: bold;
-      margin-bottom: 10px;
+      position: absolute;
+      left: 10px;
+      top: 10px;
     }
     .redone-buttons-container {
       width: 400px;
@@ -60,11 +62,12 @@
       display: none;
     }
     .download-button {
-      display: block;
       position: absolute;
-      bottom: 22%; /* Increased Y-axis by 2% */
-      left: 80%; /* Moved 80% to the right */
+      bottom: 22%;  /* Increased Y-axis by 2% */
+      left: 80%;     /* 80% from the left */
       transform: translateX(-50%);
+      display: block;
+      text-align: center;
       background-color: #28a745;
       color: white;
       padding: 5px 10px;
@@ -78,6 +81,15 @@
     }
     .video-container {
       position: relative;
+    }
+    .download-button-container {
+      position: absolute;
+      bottom: 22%;  /* 22% from the bottom */
+      left: 80%;    /* 80% from the left */
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      width: 100%;
     }
   </style>
 </head>
