@@ -51,9 +51,7 @@
     .video-title {
       font-size: 18px;
       font-weight: bold;
-      position: absolute;
-      left: 10px;
-      top: 10px;
+      margin-bottom: 10px;
     }
     .redone-buttons-container {
       width: 400px;
@@ -62,11 +60,8 @@
       display: none;
     }
     .download-button {
-      position: absolute;
-      bottom: 22%;  /* Increased Y-axis by 2% */
-      left: 80%;     /* 80% from the left */
-      transform: translateX(-50%);
       display: block;
+      margin-top: 10px;
       text-align: center;
       background-color: #28a745;
       color: white;
@@ -84,9 +79,8 @@
     }
     .download-button-container {
       position: absolute;
-      bottom: 22%;  /* 22% from the bottom */
-      left: 80%;    /* 80% from the left */
-      transform: translateX(-50%);
+      bottom: 10px;
+      left: 0;
       display: flex;
       justify-content: center;
       width: 100%;
@@ -103,7 +97,7 @@
       Your browser does not support the video tag.
     </video>
     <div class="download-button-container">
-      <a href="#" class="download-button">Download</a>
+      <a href="#" class="download-button" style="left: 80%;">Download</a>
     </div>
   </div>
 
@@ -115,7 +109,7 @@
       Your browser does not support the video tag.
     </video>
     <div class="download-button-container">
-      <a href="#" class="download-button">Download</a>
+      <a href="#" class="download-button" style="left: 80%;">Download</a>
     </div>
   </div>
 
@@ -127,7 +121,7 @@
       Your browser does not support the video tag.
     </video>
     <div class="download-button-container">
-      <a href="#" class="download-button">Download</a>
+      <a href="#" class="download-button" style="left: 80%;">Download</a>
     </div>
   </div>
 
