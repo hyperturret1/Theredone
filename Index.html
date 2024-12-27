@@ -6,28 +6,28 @@
   <title>Simple Video Page</title>
   <style>
     body {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water'); /* Background with gradient and image */
-      background-size: cover; /* Ensure the image covers the entire viewport */
-      background-position: center; /* Center the background image */
-      background-repeat: no-repeat; /* Prevent repeating the image */
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       margin: 0;
-      color: white; /* Ensure text contrast against background */
+      color: white;
     }
     video {
-      max-width: 100%; /* Ensure videos take up full container width */
+      max-width: 100%;
       max-height: 90%;
-      width: 100%; /* Ensure videos take up full container width */
-      height: auto; /* Maintain aspect ratio */
-      margin-bottom: 30px; /* Added extra space */
-      transition: transform 0.3s ease-in-out; /* Smooth transition for size change */
-      transform: scale(1); /* Initial scale */
+      width: 100%;
+      height: auto;
+      margin-bottom: 30px;
+      transition: transform 0.3s ease-in-out;
+      transform: scale(1);
     }
     video.loaded {
-      transform: scale(0.8); /* Scale down by 20% after loading */
+      transform: scale(0.8);
     }
     .buttons-container {
       display: flex;
@@ -54,7 +54,7 @@
       margin-bottom: 10px;
     }
     .redone-buttons-container {
-      width: 400px; /* Fixed width for 4 buttons per line */
+      width: 400px;
     }
     .hidden {
       display: none;
@@ -109,7 +109,7 @@
   <div>
     <div class="video-title">Moana 2 - Full</div>
     <video controls>
-      <source src="https://vimeo.com/1042502734" type="video/mp4">
+      <source src="https://download1589.mediafire.com/0m8jbxyz13dg/seol5d5xcsekh6i/Moana_2_1080P_480P.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
   </div>
