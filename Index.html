@@ -3,110 +3,202 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Page</title>
+  <title>Simple Video Page</title>
   <style>
     body {
-      background-color: #121212;
-      color: white;
-      font-family: Arial, sans-serif;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      padding: 20px;
+      align-items: center;
       margin: 0;
-    }
-    .video-container {
-      margin-bottom: 20px;
-      text-align: center;
+      color: white;
     }
     video {
+      max-width: 100%;
+      max-height: 90%;
       width: 100%;
-      max-width: 800px;
-      border: 2px solid #333;
-      border-radius: 8px;
+      height: auto;
+      margin-bottom: 30px;
+      transition: transform 0.3s ease-in-out;
+      transform: scale(1);
     }
-    .video-title {
-      margin: 10px 0;
-      font-size: 18px;
-      font-weight: bold;
+    video.loaded {
+      transform: scale(0.8);
     }
-    .download-button {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 15px;
+    .buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .buttons-container button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
       background-color: #007bff;
       color: white;
-      text-decoration: none;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .buttons-container button:hover {
+      background-color: #0056b3;
+    }
+    .video-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .redone-buttons-container {
+      width: 400px;
+    }
+    .hidden {
+      display: none;
+    }
+    .download-button {
+      display: block;
+      margin-top: 10px;
+      text-align: center;
+      background-color: #28a745;
+      color: white;
+      padding: 5px 10px;
       border-radius: 5px;
-      font-size: 14px;
+      cursor: pointer;
+      font-size: 12px;
+      text-decoration: none;
     }
     .download-button:hover {
-      background-color: #0056b3;
+      background-color: #218838;
+    }
+    .video-container {
+      position: relative;
+    }
+    .download-button-container {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      width: 100%;
     }
   </style>
 </head>
 <body>
 
-  <!-- First video -->
-  <div class="video-container">
-    <div class="video-title">Video 1 - Full</div>
-    <video controls>
-      <source src="https://example.com/video1.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <a href="https://example.com/download1" class="download-button">Download</a>
-  </div>
-
-  <!-- Second video -->
-  <div class="video-container">
-    <div class="video-title">Video 2 - Full</div>
-    <video controls>
-      <source src="https://example.com/video2.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <a href="https://example.com/download2" class="download-button">Download</a>
-  </div>
-
-  <!-- Third video -->
-  <div class="video-container">
-    <div class="video-title">Video 3 - Full</div>
-    <video controls>
-      <source src="https://example.com/video3.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <a href="https://example.com/download3" class="download-button">Download</a>
-  </div>
-
-  <!-- Fourth video -->
+  <!-- Fourth video (The Red One - Full) -->
   <div class="video-container">
     <div class="video-title">The Red One - Full</div>
     <video controls>
-      <source src="https://drive.google.com/uc?export=download&id=1-0bRCF7lyH6KYY-F2-jzpXTLWBOClDRe" type="video/mp4">
+      <source src="https://drive.google.com/file/d/1-0bRCF7lyH6KYY-F2-jzpXTLWBOClDRe/view?usp=drivesdk" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <a href="https://www.mediafire.com/file/n5zvgbdvassnqw6/theredonemovie.mp4/file" class="download-button">Download</a>
+    <div class="download-button-container">
+      <a href="https://www.mediafire.com/file/n5zvgbdvassnqw6/theredonemovie.mp4/file" class="download-button">Download</a>
+    </div>
   </div>
 
-  <!-- Fifth video -->
+  <!-- Fifth video (Moana 2 - Full) -->
   <div class="video-container">
     <div class="video-title">Moana 2 - Full</div>
     <video controls>
       <source src="https://drive.google.com/uc?export=download&id=1-0uXp6kXJ76LGnA1Qw89bL_VI23ztGXR" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <a href="https://www.mediafire.com/file/seol5d5xcsekh6i/Moana_2_1080P_480P.mp4/file" class="download-button">Download</a>
+    <div class="download-button-container">
+      <a href="https://www.mediafire.com/file/seol5d5xcsekh6i/Moana_2_1080P_480P.mp4/file" class="download-button">Download</a>
+    </div>
   </div>
 
-  <!-- Sixth video -->
+  <!-- Sixth video (The Paris Under - Full) -->
   <div class="video-container">
     <div class="video-title">The Paris Under - Full</div>
     <video controls>
-      <source src="https://example.com/video6.mp4" type="video/mp4">
+      <source src="https://drive.google.com/uc?export=download&id=1-0uXp6kXJ76LGnA1Qw89bL_VI23ztGXR" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <a href="https://www.mediafire.com/file/qip02ufuv53ybrl/Under.Paris.2024.540p.x265.AAC.%255B9jaRocks.Com%255D.mkv/file" class="download-button">Download</a>
+    <div class="download-button-container">
+      <a href="https://www.mediafire.com/file/qip02ufuv53ybrl/Under.Paris.2024.540p.x265.AAC.%255B9jaRocks.Com%255D.mkv/file" class="download-button">Download</a>
+    </div>
   </div>
+
+  <script>
+    // For the first video (The Red One)
+    const redoneVideo = document.getElementById('redoneVideo');
+    const redoneSegments = [
+      'theredone (1).mp4', 'theredone (2).mp4', 'theredone (3).mp4', 'theredone (4).mp4',
+      'theredone (5).mp4', 'theredone (6).mp4', 'theredone (7).mp4', 'theredone (8).mp4',
+      'theredone (9).mp4', 'theredone (10).mp4', 'theredone (11).mp4', 'theredone (12).mp4',
+      'theredone (13).mp4', 'theredone (14).mp4', 'theredone (15).mp4', 'theredone (16).mp4'
+    ];
+
+    const redoneButtonsContainer = document.getElementById('redoneButtons');
+
+    // Create buttons dynamically for The Red One segments
+    redoneSegments.forEach((segment, index) => {
+      const button = document.createElement('button');
+      button.textContent = `Part ${index + 1}`;
+      button.addEventListener('click', () => {
+        redoneVideo.src = segment;
+        redoneVideo.play();
+      });
+      redoneButtonsContainer.appendChild(button);
+    });
+
+    let currentRedoneSegment = 0;
+
+    redoneVideo.addEventListener('ended', () => {
+      currentRedoneSegment++;
+      if (currentRedoneSegment < redoneSegments.length) {
+        redoneVideo.src = redoneSegments[currentRedoneSegment];
+        redoneVideo.play();
+      }
+    });
+
+    // For the second video (Moana)
+    const moanaVideo = document.getElementById('moanaVideo');
+    const moanaSegments = [
+      'Moana(1).mp4', 'Moana(2).mp4', 'Moana(3).mp4', 'Moana(4).mp4',
+      'Moana(5).mp4', 'Moana(6).mp4', 'Moana(7).mp4', 'Moana(8).mp4',
+      'Moana(9).mp4', 'Moana(10).mp4', 'Moana(11).mp4', 'Moana(12).mp4',
+      'Moana(13).mp4', 'Moana(14).mp4', 'Moana(15).mp4', 'Moana(16).mp4',
+      'Moana(17).mp4'
+    ];
+
+    const moanaButtonsContainer = document.getElementById('moanaButtons');
+
+    // Create buttons dynamically for Moana segments
+    moanaSegments.forEach((segment, index) => {
+      const button = document.createElement('button');
+      button.textContent = `Part ${index + 1}`;
+      button.addEventListener('click', () => {
+        moanaVideo.src = segment;
+        moanaVideo.play();
+      });
+      moanaButtonsContainer.appendChild(button);
+    });
+
+    let currentMoanaSegment = 0;
+
+    moanaVideo.addEventListener('ended', () => {
+      currentMoanaSegment++;
+      if (currentMoanaSegment < moanaSegments.length) {
+        moanaVideo.src = moanaSegments[currentMoanaSegment];
+        moanaVideo.play();
+      }
+    });
+
+    // For The Paris Under video
+    const theparisunderVideo = document.getElementById('theparisunderVideo');
+  </script>
+
+  <!-- Credit Section -->
+  <footer>
+    <p>Website created by <strong>Hyperturret</strong></p>
+  </footer>
 
 </body>
 </html>
