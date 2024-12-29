@@ -93,7 +93,7 @@
   <div class="video-container">
     <div class="video-title">The Red One - Full</div>
     <video controls>
-      <source src="https://vimeo.com/1042502734" type="video/mp4">
+      <source src="https://www.dropbox.com/scl/fi/k71y0aonfgw50k7cchu57/merge_video_1735489846834-3.mp4?rlkey=v7yya9y5ayp18yr543wlda17k&st=z3jfkwpr&dl=0" type="video/mp4">
       Your browser does not support the video tag.
     </video>
     <div class="download-button-container">
@@ -105,7 +105,7 @@
   <div class="video-container">
     <div class="video-title">Moana 2 - Full</div>
     <video controls>
-      <source src="https://www.dropbox.com/scl/fi/exe006fi0c381qtfsdiby/merge_video_1735487235717.mp4?rlkey=avzpc95ctgq2oty2ftdydf2y6&st=vcqtvbhz&dl=1" type="video/mp4">
+      <source src="https://www.dropbox.com/scl/fi/exe006fi0c381qtfsdiby/merge_video_1735487235717.mp4?rlkey=avzpc95ctgq2oty2ftdydf2y6&st=vcqtvbhz&dl=0" type="video/mp4">
       Your browser does not support the video tag.
     </video>
     <div class="download-button-container">
@@ -117,7 +117,7 @@
   <div class="video-container">
     <div class="video-title">The Paris Under - Full</div>
     <video controls>
-      <source src="https://www.dropbox.com/scl/fi/jj00o31tkvupzjr4qvbjo/merge_video_1735485079240.mp4?rlkey=5tg7m7h1l2mn2078x22teyupu&st=u0vkdov7&dl=1" type="video/mp4">
+      <source src="https://www.dropbox.com/scl/fi/jj00o31tkvupzjr4qvbjo/merge_video_1735485079240.mp4?rlkey=5tg7m7h1l2mn2078x22teyupu&st=u0vkdov7&dl=0" type="video/mp4">
       Your browser does not support the video tag.
     </video>
     <div class="download-button-container">
@@ -125,77 +125,6 @@
     </div>
   </div>
 
-  <script>
-    // For the first video (The Red One)
-    const redoneVideo = document.getElementById('redoneVideo');
-    const redoneSegments = [
-      'theredone (1).mp4', 'theredone (2).mp4', 'theredone (3).mp4', 'theredone (4).mp4',
-      'theredone (5).mp4', 'theredone (6).mp4', 'theredone (7).mp4', 'theredone (8).mp4',
-      'theredone (9).mp4', 'theredone (10).mp4', 'theredone (11).mp4', 'theredone (12).mp4',
-      'theredone (13).mp4', 'theredone (14).mp4', 'theredone (15).mp4', 'theredone (16).mp4'
-    ];
-
-    const redoneButtonsContainer = document.getElementById('redoneButtons');
-
-    // Create buttons dynamically for The Red One segments
-    redoneSegments.forEach((segment, index) => {
-      const button = document.createElement('button');
-      button.textContent = `Part ${index + 1}`;
-      button.addEventListener('click', () => {
-        redoneVideo.src = segment;
-        redoneVideo.play();
-      });
-      redoneButtonsContainer.appendChild(button);
-    });
-
-    let currentRedoneSegment = 0;
-
-    redoneVideo.addEventListener('ended', () => {
-      currentRedoneSegment++;
-      if (currentRedoneSegment < redoneSegments.length) {
-        redoneVideo.src = redoneSegments[currentRedoneSegment];
-        redoneVideo.play();
-      }
-    });
-
-    // For the second video (Moana)
-    const moanaVideo = document.getElementById('moanaVideo');
-    const moanaSegments = [
-      'Moana(1).mp4', 'Moana(2).mp4', 'Moana(3).mp4', 'Moana(4).mp4',
-      'Moana(5).mp4', 'Moana(6).mp4', 'Moana(7).mp4', 'Moana(8).mp4',
-      'Moana(9).mp4', 'Moana(10).mp4', 'Moana(11).mp4', 'Moana(12).mp4',
-      'Moana(13).mp4', 'Moana(14).mp4', 'Moana(15).mp4', 'Moana(16).mp4',
-      'Moana(17).mp4'
-    ];
-
-    const moanaButtonsContainer = document.getElementById('moanaButtons');
-
-    // Create buttons dynamically for Moana segments
-    moanaSegments.forEach((segment, index) => {
-      const button = document.createElement('button');
-      button.textContent = `Part ${index + 1}`;
-      button.addEventListener('click', () => {
-        moanaVideo.src = segment;
-        moanaVideo.play();
-      });
-      moanaButtonsContainer.appendChild(button);
-    });
-
-    let currentMoanaSegment = 0;
-
-    moanaVideo.addEventListener('ended', () => {
-      currentMoanaSegment++;
-      if (currentMoanaSegment < moanaSegments.length) {
-        moanaVideo.src = moanaSegments[currentMoanaSegment];
-        moanaVideo.play();
-      }
-    });
-
-    // For The Paris Under video
-    const theparisunderVideo = document.getElementById('theparisunderVideo');
-  </script>
-
-  <!-- Credit Section -->
   <footer>
     <p>Website created by <strong>Hyperturret</strong></p>
   </footer>
