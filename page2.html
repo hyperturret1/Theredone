@@ -38,17 +38,18 @@
       transition: transform 0.1s ease-in-out;
       outline: none; /* Remove blue outline */
       user-select: none; /* Prevent text selection */
+      -webkit-tap-highlight-color: transparent; /* Disable highlight on touch */
     }
     .click-circle:focus,
     .click-circle:focus-visible {
-      outline: none; /* Ensure no outline on focus */
+      outline: none !important; /* Ensure no outline on focus */
     }
     .chocolate-chip {
       position: absolute;
       background-color: #3E2723; /* Dark brown color */
       border-radius: 50%;
       border: 0.5px solid white; /* Thinner white border */
-      transition: transform 0.1s ease-in-out;
+      pointer-events: none; /* Prevent chips from triggering events */
     }
     .chocolate-chip:nth-child(1) { width: 8px; height: 8px; top: 15%; left: 15%; }
     .chocolate-chip:nth-child(2) { width: 6px; height: 6px; top: 25%; left: 60%; }
@@ -151,7 +152,6 @@
         let score = await getScore();
         score++;
         document.getElementById('score').textContent = score;
-        await updateScore(score);
         const circle = document.querySelector('.click-circle');
         circle.style.transform = 'scale(0.9)';
         setTimeout(() => {
