@@ -6,63 +6,63 @@
   <title>Cookie Clicker Game</title>
   <style>
     body {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      color: white;
-      text-align: center;
-    }
-    .game-container {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .click-circle {
-      width: 100px;
-      height: 100px;
-      background-color: #8B4513; /* Brown color */
-      border-radius: 50%;
-      cursor: pointer;
-      margin-bottom: 20px;
-      position: relative;
-      transition: transform 0.1s ease-in-out;
-      outline: none; /* Remove blue outline */
-    }
-    .click-circle:focus {
-      outline: none;
-    }
-    .chocolate-chip {
-      position: absolute;
-      background-color: #3E2723; /* Dark brown color */
-      border-radius: 50%;
-      border: 0.5px solid white; /* Thinner white border */
-      transition: transform 0.1s ease-in-out;
-    }
-    .chocolate-chip:nth-child(1) { width: 8px; height: 8px; top: 15%; left: 15%; }
-    .chocolate-chip:nth-child(2) { width: 6px; height: 6px; top: 25%; left: 60%; }
-    .chocolate-chip:nth-child(3) { width: 10px; height: 10px; top: 45%; left: 35%; }
-    .chocolate-chip:nth-child(4) { width: 8px; height: 8px; top: 65%; left: 25%; }
-    .chocolate-chip:nth-child(5) { width: 9px; height: 9px; top: 75%; left: 65%; }
-    .chocolate-chip:nth-child(6) { width: 7px; height: 7px; top: 55%; left: 75%; }
-    .chocolate-chip:nth-child(7) { width: 11px; height: 11px; top: 35%; left: 5%; }
-    .chocolate-chip:nth-child(8) { width: 8px; height: 8px; top: 15%; left: 75%; }
-    .chocolate-chip:nth-child(9) { width: 8px; height: 8px; top: 5%; left: 45%; }
-    .chocolate-chip:nth-child(10) { width: 6px; height: 6px; top: 25%; left: 5%; }
-    footer {
-      position: absolute;
-      bottom: 10px;
-      width: 100%;
-    }
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  color: white;
+  text-align: center;
+}
+.game-container {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.click-circle {
+  width: 100px;
+  height: 100px;
+  background-color: #8B4513; /* Brown color */
+  border-radius: 50%;
+  cursor: pointer;
+  margin-bottom: 20px;
+  position: relative;
+  transition: transform 0.1s ease-in-out;
+  outline: none; /* Remove blue outline */
+}
+.click-circle:focus {
+  outline: none; /* Remove blue outline on focus */
+}
+.chocolate-chip {
+  position: absolute;
+  background-color: #3E2723; /* Dark brown color */
+  border-radius: 50%;
+  border: 0.5px solid white; /* Thinner white border */
+  transition: transform 0.1s ease-in-out;
+}
+.chocolate-chip:nth-child(1) { width: 8px; height: 8px; top: 15%; left: 15%; }
+.chocolate-chip:nth-child(2) { width: 6px; height: 6px; top: 25%; left: 60%; }
+.chocolate-chip:nth-child(3) { width: 10px; height: 10px; top: 45%; left: 35%; }
+.chocolate-chip:nth-child(4) { width: 8px; height: 8px; top: 65%; left: 25%; }
+.chocolate-chip:nth-child(5) { width: 9px; height: 9px; top: 75%; left: 65%; }
+.chocolate-chip:nth-child(6) { width: 7px; height: 7px; top: 55%; left: 75%; }
+.chocolate-chip:nth-child(7) { width: 11px; height: 11px; top: 35%; left: 5%; }
+.chocolate-chip:nth-child(8) { width: 8px; height: 8px; top: 15%; left: 75%; }
+.chocolate-chip:nth-child(9) { width: 8px; height: 8px; top: 5%; left: 45%; }
+.chocolate-chip:nth-child(10) { width: 6px; height: 6px; top: 25%; left: 5%; }
+footer {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+}
   </style>
 </head>
 <body>
