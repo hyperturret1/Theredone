@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Video Page - Page 2</title>
+  <title>Page 2</title>
   <style>
     body {
       background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
@@ -14,20 +14,17 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      height: 100vh; /* Full height */
       margin: 0;
       color: white;
+      text-align: center;
     }
     video {
       max-width: 100%;
-      max-height: 90%;
-      width: 100%;
-      height: auto;
+      width: 80%;
       margin-bottom: 30px;
       transition: transform 0.3s ease-in-out;
       transform: scale(1);
-    }
-    video.loaded {
-      transform: scale(0.8);
     }
     .buttons-container {
       display: flex;
@@ -48,45 +45,6 @@
     .buttons-container button:hover {
       background-color: #0056b3;
     }
-    .video-title {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .redone-buttons-container {
-      width: 400px;
-    }
-    .hidden {
-      display: none;
-    }
-    .download-button {
-      display: block;
-      margin-top: 10px;
-      text-align: center;
-      background-color: #28a745;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 12px;
-      text-decoration: none;
-    }
-    .download-button:hover {
-      background-color: #218838;
-    }
-    .video-container {
-      position: relative;
-    }
-    .download-button-container {
-      position: absolute;
-      bottom: 10px;
-      left: 0;
-      display: flex;
-      justify-content: center;
-      width: 100%;
-    }
-
-    /* New Button Styling */
     .redirect-button {
       display: block;
       margin-top: 20px;
@@ -99,7 +57,6 @@
       font-size: 14px;
       text-decoration: none;
     }
-
     .redirect-button:hover {
       background-color: #0056b3;
     }
@@ -107,11 +64,22 @@
 </head>
 <body>
 
-  <!-- New Button at the bottom -->
+  <div class="video-container">
+    <div class="video-title">Video Title</div>
+    <video controls>
+      <source src="https://www.dropbox.com/scl/fi/your-video.mp4?rlkey=your-link&dl=1" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="download-button-container">
+      <a href="https://www.mediafire.com/file/your-download-link" class="download-button">Download</a>
+    </div>
+  </div>
+
+  <!-- New Button at the center of the screen -->
   <a href="index.html" class="redirect-button">Go back to Main Page</a>
 
   <script>
-    // You can add any additional scripts here if needed
+    // Add any additional JavaScript if needed
   </script>
 
   <!-- Credit Section -->
