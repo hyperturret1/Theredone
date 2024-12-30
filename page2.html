@@ -36,13 +36,9 @@
       margin-bottom: 20px;
       position: relative;
       transition: transform 0.1s ease-in-out;
-      outline: none; /* Remove blue outline */
+      outline: 2px solid transparent; /* Transparent focus outline */
       user-select: none; /* Prevent text selection */
       -webkit-tap-highlight-color: transparent; /* Disable highlight on touch */
-    }
-    .click-circle:focus,
-    .click-circle:focus-visible {
-      outline: none !important; /* Ensure no outline on focus */
     }
     .chocolate-chip {
       position: absolute;
@@ -71,7 +67,7 @@
 <body>
 
   <div class="game-container">
-    <div class="click-circle" onclick="incrementScore()" tabindex="-1">
+    <div class="click-circle" onclick="incrementScore()" tabindex="0">
       <!-- Chocolate chips -->
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
@@ -152,10 +148,12 @@
         let score = await getScore();
         score++;
         document.getElementById('score').textContent = score;
+        await updateScore(score);
         const circle = document.querySelector('.click-circle');
         circle.style.transform = 'scale(0.9)';
         setTimeout(() => {
           circle.style.transform = 'scale(1)';
+          circle.focus(); // Ensure focus remains
         }, 100);
       } catch (error) {
         console.error('Error handling score:', error);
