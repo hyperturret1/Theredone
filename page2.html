@@ -36,16 +36,13 @@
       margin-bottom: 20px;
       position: relative;
       transition: transform 0.1s ease-in-out;
-      outline: 2px solid transparent; /* Transparent focus outline */
-      user-select: none; /* Prevent text selection */
-      -webkit-tap-highlight-color: transparent; /* Disable highlight on touch */
+      user-select: none;
     }
     .chocolate-chip {
       position: absolute;
       background-color: #3E2723; /* Dark brown color */
       border-radius: 50%;
       border: 0.5px solid white; /* Thinner white border */
-      pointer-events: none; /* Prevent chips from triggering events */
     }
     .chocolate-chip:nth-child(1) { width: 8px; height: 8px; top: 15%; left: 15%; }
     .chocolate-chip:nth-child(2) { width: 6px; height: 6px; top: 25%; left: 60%; }
@@ -67,8 +64,7 @@
 <body>
 
   <div class="game-container">
-    <div class="click-circle" onclick="incrementScore()" tabindex="0">
-      <!-- Chocolate chips -->
+    <div class="click-circle" onclick="incrementScore()">
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
@@ -149,12 +145,6 @@
         score++;
         document.getElementById('score').textContent = score;
         await updateScore(score);
-        const circle = document.querySelector('.click-circle');
-        circle.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-          circle.style.transform = 'scale(1)';
-          circle.focus(); // Ensure focus remains
-        }, 100);
       } catch (error) {
         console.error('Error handling score:', error);
       }
