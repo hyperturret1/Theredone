@@ -41,19 +41,19 @@
       position: absolute;
       background-color: #3E2723; /* Dark brown color */
       border-radius: 50%;
-      border: 1px solid white; /* Thinner white border */
+      border: 0.5px solid white; /* Thinner white border */
       transition: transform 0.1s ease-in-out;
     }
-    .chocolate-chip:nth-child(1) { width: 10px; height: 10px; top: 15%; left: 15%; }
-    .chocolate-chip:nth-child(2) { width: 8px; height: 8px; top: 25%; left: 60%; }
-    .chocolate-chip:nth-child(3) { width: 12px; height: 12px; top: 45%; left: 35%; }
-    .chocolate-chip:nth-child(4) { width: 10px; height: 10px; top: 65%; left: 25%; }
-    .chocolate-chip:nth-child(5) { width: 11px; height: 11px; top: 75%; left: 65%; }
-    .chocolate-chip:nth-child(6) { width: 9px; height: 9px; top: 55%; left: 75%; }
-    .chocolate-chip:nth-child(7) { width: 13px; height: 13px; top: 35%; left: 5%; }
-    .chocolate-chip:nth-child(8) { width: 10px; height: 10px; top: 15%; left: 75%; }
-    .chocolate-chip:nth-child(9) { width: 10px; height: 10px; top: 5%; left: 45%; }
-    .chocolate-chip:nth-child(10) { width: 8px; height: 8px; top: 25%; left: 5%; }
+    .chocolate-chip:nth-child(1) { width: 8px; height: 8px; top: 15%; left: 15%; }
+    .chocolate-chip:nth-child(2) { width: 6px; height: 6px; top: 25%; left: 60%; }
+    .chocolate-chip:nth-child(3) { width: 10px; height: 10px; top: 45%; left: 35%; }
+    .chocolate-chip:nth-child(4) { width: 8px; height: 8px; top: 65%; left: 25%; }
+    .chocolate-chip:nth-child(5) { width: 9px; height: 9px; top: 75%; left: 65%; }
+    .chocolate-chip:nth-child(6) { width: 7px; height: 7px; top: 55%; left: 75%; }
+    .chocolate-chip:nth-child(7) { width: 11px; height: 11px; top: 35%; left: 5%; }
+    .chocolate-chip:nth-child(8) { width: 8px; height: 8px; top: 15%; left: 75%; }
+    .chocolate-chip:nth-child(9) { width: 8px; height: 8px; top: 5%; left: 45%; }
+    .chocolate-chip:nth-child(10) { width: 6px; height: 6px; top: 25%; left: 5%; }
     footer {
       position: absolute;
       bottom: 10px;
@@ -158,4 +158,23 @@
       }
     }
 
-    // Initialize score9
+    // Initialize score on page load
+    async function initialize() {
+      try {
+        const score = await getScore();
+        document.getElementById('score').textContent = score;
+      } catch (error) {
+        console.error('Error initializing score:', error);
+      }
+    }
+
+    initialize();
+  </script>
+
+  <!-- Credit Section -->
+  <footer>
+    <p>Website created by <strong>Hyperturret</strong></p>
+  </footer>
+
+</body>
+</html>
