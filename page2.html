@@ -81,24 +81,94 @@
   </div>
 
   <script>
-    // Retrieve the stored score from localStorage, defaulting to 0 if not found
-    let score = parseInt(localStorage.getItem('cookieClickerScore')) || 0;
+    // Open the IndexedDB and retrieve or set the score
+    async function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open('cookieClickerDB', 1);
 
-    // Update the displayed score
-    document.getElementById('score').textContent = score;
+        request.onerror = (event) => {
+          console.error('Database error:', event.target.error);
+          reject(event.target.error);
+        };
 
-    function incrementScore() {
-      score++;
-      document.getElementById('score').textContent = score;
-      // Store the updated score in localStorage
-      localStorage.setItem('cookieClickerScore', score);
-      // Apply shrink effect
-      const circle = document.querySelector('.click-circle');
-      circle.style.transform = 'scale(0.9)';
-      setTimeout(() => {
-        circle.style.transform = 'scale(1)';
-      }, 100);
+        request.onsuccess = (event) => {
+          resolve(event.target.result);
+        };
+
+        request.onupgradeneeded = (event) => {
+          const db = event.target.result;
+          if (!db.objectStoreNames.contains('scores')) {
+            db.createObjectStore('scores', { keyPath: 'id' });
+          }
+        };
+      });
     }
+
+    async function getScore() {
+      const db = await openDatabase();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction('scores', 'readonly');
+        const store = transaction.objectStore('scores');
+        const request = store.get(1);
+
+        request.onerror = (event) => {
+          console.error('Error retrieving score:', event.target.error);
+          reject(event.target.error);
+        };
+
+        request.onsuccess = (event) => {
+          const result = event.target.result;
+          resolve(result ? result.value : 0);
+        };
+      });
+    }
+
+    async function updateScore(score) {
+      const db = await openDatabase();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction('scores', 'readwrite');
+        const store = transaction.objectStore('scores');
+        const request = store.put({ id: 1, value: score });
+
+        request.onerror = (event) => {
+          console.error('Error updating score:', event.target.error);
+          reject(event.target.error);
+        };
+
+        request.onsuccess = () => {
+          resolve();
+        };
+      });
+    }
+
+    async function incrementScore() {
+      try {
+        let score = await getScore();
+        score++;
+        document.getElementById('score').textContent = score;
+        await updateScore(score);
+        // Apply shrink effect
+        const circle = document.querySelector('.click-circle');
+        circle.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          circle.style.transform = 'scale(1)';
+        }, 100);
+      } catch (error) {
+        console.error('Error handling score:', error);
+      }
+    }
+
+    // Initialize score on page load
+    async function initialize() {
+      try {
+        const score = await getScore();
+        document.getElementById('score').textContent = score;
+      } catch (error) {
+        console.error('Error initializing score:', error);
+      }
+    }
+
+    initialize();
   </script>
 
   <!-- Credit Section -->
