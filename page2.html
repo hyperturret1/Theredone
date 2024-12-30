@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page 2 with Video</title>
+  <style>
+    body {
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      color: #666;
+    }
+    video {
+      max-width: 100%;
+      height: auto;
+      margin-top: 20px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+    }
+    .back-button {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .back-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to Page 2</h1>
+  <p>This page contains a video embedded from your source.</p>
+  
+  <video controls>
+    <source src="https://www.example.com/path-to-your-video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  
+  <a href="index.html" class="back-button">Go Back to Main Page</a>
+
+</body>
+</html>
