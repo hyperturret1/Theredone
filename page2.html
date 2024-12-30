@@ -81,11 +81,17 @@
   </div>
 
   <script>
-    let score = 0;
+    // Retrieve the stored score from localStorage, defaulting to 0 if not found
+    let score = parseInt(localStorage.getItem('cookieClickerScore')) || 0;
+
+    // Update the displayed score
+    document.getElementById('score').textContent = score;
 
     function incrementScore() {
       score++;
       document.getElementById('score').textContent = score;
+      // Store the updated score in localStorage
+      localStorage.setItem('cookieClickerScore', score);
       // Apply shrink effect
       const circle = document.querySelector('.click-circle');
       circle.style.transform = 'scale(0.9)';
