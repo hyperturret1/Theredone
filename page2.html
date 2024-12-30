@@ -31,10 +31,38 @@
     <a href="https://www.mediafire.com/file/your-download-link" class="download-button">Download</a>
   </div>
 
-  <!-- New Button at the bottom of the page -->
-  <a href="index.html" class="redirect-button">Go back to Main Page</a>
-
   <script>
     // Check if localStorage is available
     if (typeof(Storage) !== "undefined") {
-      // Retrieve the click count from localStorage, defaulting to 0
+      // Retrieve the click count from localStorage, defaulting to 0 if not found
+      let score = localStorage.getItem('clickCount') ? parseInt(localStorage.getItem('clickCount')) : 0;
+
+      // Function to increment the score
+      function incrementScore() {
+        score++;
+        document.getElementById('score').textContent = score;
+        // Save the updated score to localStorage
+        localStorage.setItem('clickCount', score);
+        // Apply shrink effect
+        const circle = document.querySelector('.click-circle');
+        circle.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          circle.style.transform = 'scale(1)';
+        }, 100);
+      }
+
+      // Initialize the score display
+      document.getElementById('score').textContent = score;
+    } else {
+      // If localStorage is not supported, alert the user
+      alert("Your browser does not support local storage. Click count will not persist.");
+    }
+  </script>
+
+  <!-- Credit Section -->
+  <footer>
+    <p>Website created by <strong>Hyperturret</strong></p>
+  </footer>
+
+</body>
+</html>
