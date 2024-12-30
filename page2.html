@@ -19,13 +19,6 @@
       color: white;
       text-align: center;
     }
-    video {
-      max-width: 100%;
-      width: 80%;
-      margin-bottom: 30px;
-      transition: transform 0.3s ease-in-out;
-      transform: scale(1);
-    }
     .buttons-container {
       display: flex;
       flex-wrap: wrap;
@@ -60,22 +53,20 @@
     .redirect-button:hover {
       background-color: #0056b3;
     }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
 
-  <div class="video-container">
-    <div class="video-title">Video Title</div>
-    <video controls>
-      <source src="https://www.dropbox.com/scl/fi/your-video.mp4?rlkey=your-link&dl=1" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="download-button-container">
-      <a href="https://www.mediafire.com/file/your-download-link" class="download-button">Download</a>
-    </div>
+  <div class="download-button-container">
+    <a href="https://www.mediafire.com/file/your-download-link" class="download-button">Download</a>
   </div>
 
-  <!-- New Button at the center of the screen -->
+  <!-- New Button at the bottom of the page -->
   <a href="index.html" class="redirect-button">Go back to Main Page</a>
 
   <script>
