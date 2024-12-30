@@ -3,9 +3,96 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cookie Clicker Game</title>
+  <title>Page 2</title>
   <style>
-    /* Your existing styles */
+    body {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: white;
+      text-align: center;
+    }
+    .buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .buttons-container button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .buttons-container button:hover {
+      background-color: #0056b3;
+    }
+    .redirect-button {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .redirect-button:hover {
+      background-color: #0056b3;
+    }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+    }
+    .game-container {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .click-circle {
+      width: 100px;
+      height: 100px;
+      background-color: #8B4513; /* Brown color */
+      border-radius: 50%;
+      cursor: pointer;
+      margin-bottom: 20px;
+      position: relative;
+      transition: transform 0.1s ease-in-out;
+    }
+    .chocolate-chip {
+      position: absolute;
+      background-color: #3E2723; /* Dark brown color */
+      border-radius: 50%;
+      border: 2px solid white; /* Thin white border */
+      transition: transform 0.1s ease-in-out;
+    }
+    .chocolate-chip:nth-child(1) { width: 15px; height: 15px; top: 20%; left: 20%; }
+    .chocolate-chip:nth-child(2) { width: 12px; height: 12px; top: 30%; left: 60%; }
+    .chocolate-chip:nth-child(3) { width: 18px; height: 18px; top: 50%; left: 40%; }
+    .chocolate-chip:nth-child(4) { width: 14px; height: 14px; top: 70%; left: 30%; }
+    .chocolate-chip:nth-child(5) { width: 16px; height: 16px; top: 80%; left: 70%; }
+    .chocolate-chip:nth-child(6) { width: 13px; height: 13px; top: 60%; left: 80%; }
+    .chocolate-chip:nth-child(7) { width: 17px; height: 17px; top: 40%; left: 10%; }
+    .chocolate-chip:nth-child(8) { width: 14px; height: 14px; top: 20%; left: 80%; }
+    .chocolate-chip:nth-child(9) { width: 15px; height: 15px; top: 10%; left: 50%; }
+    .chocolate-chip:nth-child(10) { width: 12px; height: 12px; top: 30%; left: 10%; }
   </style>
 </head>
 <body>
@@ -31,31 +118,21 @@
     <a href="https://www.mediafire.com/file/your-download-link" class="download-button">Download</a>
   </div>
 
+  <!-- New Button at the bottom of the page -->
+  <a href="index.html" class="redirect-button">Go back to Main Page</a>
+
   <script>
-    // Check if localStorage is available
-    if (typeof(Storage) !== "undefined") {
-      // Retrieve the click count from localStorage, defaulting to 0 if not found
-      let score = localStorage.getItem('clickCount') ? parseInt(localStorage.getItem('clickCount')) : 0;
+    let score = 0;
 
-      // Function to increment the score
-      function incrementScore() {
-        score++;
-        document.getElementById('score').textContent = score;
-        // Save the updated score to localStorage
-        localStorage.setItem('clickCount', score);
-        // Apply shrink effect
-        const circle = document.querySelector('.click-circle');
-        circle.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-          circle.style.transform = 'scale(1)';
-        }, 100);
-      }
-
-      // Initialize the score display
+    function incrementScore() {
+      score++;
       document.getElementById('score').textContent = score;
-    } else {
-      // If localStorage is not supported, alert the user
-      alert("Your browser does not support local storage. Click count will not persist.");
+      // Apply shrink effect
+      const circle = document.querySelector('.click-circle');
+      circle.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        circle.style.transform = 'scale(1)';
+      }, 100);
     }
   </script>
 
