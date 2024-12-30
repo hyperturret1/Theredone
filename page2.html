@@ -3,29 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page 2 with Video</title>
+  <title>Simple Video Page - Page 2</title>
   <style>
     body {
-      background-color: #f4f4f4;
-      font-family: Arial, sans-serif;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
-    h1 {
-      color: #333;
-    }
-    p {
-      color: #666;
+      color: white;
     }
     video {
       max-width: 100%;
+      max-height: 90%;
+      width: 100%;
       height: auto;
-      margin-top: 20px;
-      border: 2px solid #ddd;
-      border-radius: 10px;
+      margin-bottom: 30px;
+      transition: transform 0.3s ease-in-out;
+      transform: scale(1);
     }
-    .back-button {
+    video.loaded {
+      transform: scale(0.8);
+    }
+    .buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .buttons-container button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .buttons-container button:hover {
+      background-color: #0056b3;
+    }
+    .video-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .redone-buttons-container {
+      width: 400px;
+    }
+    .hidden {
+      display: none;
+    }
+    .download-button {
+      display: block;
+      margin-top: 10px;
+      text-align: center;
+      background-color: #28a745;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .download-button:hover {
+      background-color: #218838;
+    }
+    .video-container {
+      position: relative;
+    }
+    .download-button-container {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* New Button Styling */
+    .redirect-button {
       display: block;
       margin-top: 20px;
       text-align: center;
@@ -37,22 +99,25 @@
       font-size: 14px;
       text-decoration: none;
     }
-    .back-button:hover {
+
+    .redirect-button:hover {
       background-color: #0056b3;
     }
   </style>
 </head>
 <body>
 
-  <h1>Welcome to Page 2</h1>
-  <p>This page contains a video embedded from your source.</p>
-  
-  <video controls>
-    <source src="https://www.example.com/path-to-your-video.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-  
-  <a href="index.html" class="back-button">Go Back to Main Page</a>
+  <!-- New Button at the bottom -->
+  <a href="index.html" class="redirect-button">Go back to Main Page</a>
+
+  <script>
+    // You can add any additional scripts here if needed
+  </script>
+
+  <!-- Credit Section -->
+  <footer>
+    <p>Website created by <strong>Hyperturret</strong></p>
+  </footer>
 
 </body>
 </html>
