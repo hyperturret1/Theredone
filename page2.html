@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page 2</title>
+  <title>Cookie Clicker Game</title>
   <style>
     body {
       background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
@@ -18,45 +18,6 @@
       margin: 0;
       color: white;
       text-align: center;
-    }
-    .buttons-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .buttons-container button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 5px;
-      background-color: #007bff;
-      color: white;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .buttons-container button:hover {
-      background-color: #0056b3;
-    }
-    .redirect-button {
-      display: block;
-      margin-top: 20px;
-      text-align: center;
-      background-color: #007bff;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-      text-decoration: none;
-    }
-    .redirect-button:hover {
-      background-color: #0056b3;
-    }
-    footer {
-      position: absolute;
-      bottom: 10px;
-      width: 100%;
     }
     .game-container {
       position: absolute;
@@ -93,6 +54,11 @@
     .chocolate-chip:nth-child(8) { width: 14px; height: 14px; top: 20%; left: 80%; }
     .chocolate-chip:nth-child(9) { width: 15px; height: 15px; top: 10%; left: 50%; }
     .chocolate-chip:nth-child(10) { width: 12px; height: 12px; top: 30%; left: 10%; }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
@@ -113,13 +79,6 @@
     </div>
     <div class="score" id="score">0</div>
   </div>
-
-  <div class="download-button-container">
-    <a href="https://www.mediafire.com/file/your-download-link" class="download-button">Download</a>
-  </div>
-
-  <!-- New Button at the bottom of the page -->
-  <a href="index.html" class="redirect-button">Go back to Main Page</a>
 
   <script>
     let score = 0;
