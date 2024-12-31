@@ -7,9 +7,6 @@
   <style>
     body {
       background-image: linear-gradient(to bottom, #00509E, #001F54);
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
       margin: 0;
       display: flex;
       flex-direction: column;
@@ -28,36 +25,34 @@
       padding: 10px;
       font-size: 1.5em;
       font-weight: bold;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .game-container {
+      flex-grow: 1;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      flex-grow: 1;
+      position: relative;
     }
 
     .click-circle {
       width: 300px;
       height: 300px;
-      background-color: #8B4513; /* Cookie color */
+      background-color: #8B4513;
       border-radius: 50%;
       position: relative;
       cursor: pointer;
       transition: transform 0.1s ease-in-out;
-      z-index: 10; /* Ensures cookie click area is above other elements */
-      border: none; /* Remove the border around the circle */
-      outline: none; /* Remove the blue outline when clicked */
     }
 
-    /* Chocolate chip styles */
+    .click-circle:active {
+      transform: scale(1.1);
+    }
+
     .chocolate-chip {
       position: absolute;
-      background-color: #3E2723; /* Dark chocolate color */
+      background-color: #3E2723;
       border-radius: 50%;
-      pointer-events: auto; /* Allow interaction with chips */
     }
 
     .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
@@ -65,11 +60,19 @@
     .chocolate-chip:nth-child(3) { width: 28px; height: 28px; top: 75%; left: 45%; }
     .chocolate-chip:nth-child(4) { width: 20px; height: 20px; top: 60%; left: 15%; }
     .chocolate-chip:nth-child(5) { width: 24px; height: 24px; top: 15%; left: 70%; }
-    .chocolate-chip:nth-child(6) { width: 25px; height: 25px; top: 40%; left: 30%; }
-    .chocolate-chip:nth-child(7) { width: 18px; height: 18px; top: 65%; left: 75%; }
-    .chocolate-chip:nth-child(8) { width: 26px; height: 26px; top: 35%; left: 55%; }
-    .chocolate-chip:nth-child(9) { width: 20px; height: 20px; top: 85%; left: 25%; }
-    .chocolate-chip:nth-child(10) { width: 15px; height: 15px; top: 25%; left: 50%; }
+
+    .floating-particle {
+      position: absolute;
+      color: yellow;
+      font-size: 1.2em;
+      animation: float-up 1s ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes float-up {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-50px); }
+    }
 
     .gui {
       position: absolute;
@@ -79,14 +82,12 @@
       width: 80%;
       height: 60%;
       background-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
       display: none;
       z-index: 20;
       border-radius: 10px;
       padding: 20px;
       text-align: center;
       color: black;
-      pointer-events: auto; /* Allow interaction */
     }
 
     footer {
@@ -96,7 +97,6 @@
       justify-content: space-around;
       align-items: center;
       padding: 10px 0;
-      box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
       position: absolute;
       bottom: 0;
     }
@@ -106,9 +106,7 @@
       background: transparent;
       border: none;
       font-size: 1em;
-      font-weight: bold;
       cursor: pointer;
-      padding: 5px 15px;
     }
 
     .footer-button:hover {
@@ -134,7 +132,7 @@
     }
 
     .upgrade-button {
-      padding: 10px 20px; /* Restored button size and design */
+      padding: 10px 20px;
       background-color: #00509E;
       color: white;
       border: none;
@@ -154,18 +152,34 @@
   </div>
 
   <div class="game-container">
-    <div class="click-circle" onclick="incrementScore()">
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
+    <div class="click-circle" onclick="incrementScore(event)">
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
     </div>
+  </div>
+
+  <div class="gui" id="storeGUI">
+    <h2>Store</h2>
+    <p>Buy upgrades here!</p>
+    <button onclick="add10Cookies()">10 🍪</button>
+  </div>
+
+  <div class="gui" id="specialGUI">
+    <h2>Special</h2>
+    <p>Special events and items.</p>
+  </div>
+
+  <div class="gui" id="statsGUI">
+    <h2>Stats</h2>
+    <p>Check your progress here.</p>
+  </div>
+
+  <div class="gui" id="miscGUI">
+    <h2>Misc</h2>
+    <p>Extra settings and options.</p>
   </div>
 
   <footer>
@@ -179,16 +193,45 @@
     let score = 0;
     let cookiesPerClick = 1;
 
-    function incrementScore() {
+    function incrementScore(event) {
       score += cookiesPerClick;
       document.getElementById('score').textContent = score;
+      createFloatingParticle(event.clientX, event.clientY, `+${cookiesPerClick}`);
+      saveToIndexedDB();
+    }
+
+    function createFloatingParticle(x, y, text) {
+      const particle = document.createElement('div');
+      particle.className = 'floating-particle';
+      particle.textContent = text;
+      document.body.appendChild(particle);
+      particle.style.left = `${x}px`;
+      particle.style.top = `${y}px`;
+
+      setTimeout(() => {
+        particle.remove();
+      }, 1000);
     }
 
     function toggleGUI(guiId) {
-      const guis = document.querySelectorAll('.gui');
-      guis.forEach(gui => {
-        gui.style.display = gui.id === guiId ? (gui.style.display === 'block' ? 'none' : 'block') : 'none';
-      });
+      const gui = document.getElementById(guiId);
+      gui.style.display = gui.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function saveToIndexedDB() {
+      const dbRequest = indexedDB.open('cookieClickerDB', 1);
+
+      dbRequest.onupgradeneeded = function () {
+        const db = dbRequest.result;
+        db.createObjectStore('gameData', { keyPath: 'id' });
+      };
+
+      dbRequest.onsuccess = function () {
+        const db = dbRequest.result;
+        const transaction = db.transaction('gameData', 'readwrite');
+        const store = transaction.objectStore('gameData');
+        store.put({ id: 'score', value: score });
+      };
     }
   </script>
 </body>
