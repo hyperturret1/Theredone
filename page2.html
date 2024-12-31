@@ -178,7 +178,7 @@
     <div class="upgrade-line">
       <div>
         <p>Clicks</p>
-        <p>+1 cookie per click</p>
+        <p id="clicksPerClick">+1 cookie per click</p>
       </div>
       <button class="upgrade-button" onclick="add10Cookies()">10 🍪</button>
     </div>
@@ -207,12 +207,13 @@
 
   <script>
     let score = 0;
+    let cookiesPerClick = 1; // Base value of cookies per click
     const dbName = 'cookieClickerDB';
     const dbVersion = 1;
     const dbStoreName = 'clicks';
 
     function incrementScore() {
-      score++;
+      score += cookiesPerClick;
       document.getElementById('score').textContent = score;
       saveToIndexedDB(score);
     }
@@ -220,7 +221,9 @@
     function add10Cookies() {
       if (score >= 10) {
         score -= 10;
+        cookiesPerClick++; // Increase cookies per click
         document.getElementById('score').textContent = score;
+        document.getElementById('clicksPerClick').textContent = `+${cookiesPerClick} cookie per click`; // Update display
         saveToIndexedDB(score);
       }
     }
@@ -240,25 +243,43 @@
 
     function saveToIndexedDB(score) {
       const request = indexedDB.open(dbName, dbVersion);
-      request.onupgradeneeded = function(event) {
+
+      request.onsuccess = function (event) {
         const db = event.target.result;
-        if (!db.objectStoreNames.contains(dbStoreName)) {
-          db.createObjectStore(dbStoreName, { keyPath: 'id', autoIncrement: true });
-        }
-      };
-      
-      request.onsuccess = function(event) {
-        const db = event.target.result;
-        const transaction = db.transaction([dbStoreName], 'readwrite');
+        const transaction = db.transaction(dbStoreName, 'readwrite');
         const store = transaction.objectStore(dbStoreName);
         store.put({ score });
       };
-      
-      request.onerror = function(event) {
-        console.error('Error accessing IndexedDB:', event.target.errorCode);
+
+      request.onerror = function (event) {
+        console.error('Database error:', event.target.errorCode);
       };
     }
-  </script>
 
+    function loadFromIndexedDB() {
+      const request = indexedDB.open(dbName, dbVersion);
+      request.onsuccess = function (event) {
+        const db = event.target.result;
+        const transaction = db.transaction(dbStoreName, 'readonly');
+        const store = transaction.objectStore(dbStoreName);
+        const getRequest = store.get('score');
+
+        getRequest.onsuccess = function (event) {
+          const result = event.target.result;
+          if (result) {
+            score = result.score;
+            document.getElementById('score').textContent = score;
+          }
+        };
+      };
+      request.onerror = function (event) {
+        console.error('Database error:', event.target.errorCode);
+      };
+    }
+
+    // Load the score from IndexedDB when the page loads
+    window.onload = loadFromIndexedDB;
+
+  </script>
 </body>
 </html>
