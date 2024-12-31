@@ -57,7 +57,7 @@
       position: absolute;
       background-color: #3E2723; /* Dark chocolate color */
       border-radius: 50%;
-      pointer-events: none; /* Prevent chips from triggering events */
+      pointer-events: none;
       box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.5); /* White fading inside the chips */
     }
 
@@ -170,7 +170,6 @@
 
   <div class="game-container">
     <div class="click-circle" onclick="incrementScore()">
-      <!-- Chocolate chips -->
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
@@ -193,7 +192,7 @@
         <p>clicks</p>
         <p>plus one cookie per click</p>
       </div>
-      <button class="upgrade-button">10 🍪</button>
+      <button class="upgrade-button" onclick="purchaseUpgrade()">10 🍪</button>
     </div>
   </div>
 
@@ -229,7 +228,7 @@
           if (!db.objectStoreNames.contains('scores')) {
             db.createObjectStore('scores', { keyPath: 'id' });
           }
-        };
+        });
       });
     }
 
@@ -250,14 +249,29 @@
       store.put({ id: 1, value });
     }
 
+    let score = 0;
+    let cookiesPerClick = 1;
+
     async function incrementScore() {
-      score++;
+      score += cookiesPerClick;
       document.getElementById('score').textContent = score;
       await updateScore(score);
 
       const circle = document.querySelector('.click-circle');
       circle.style.transform = 'scale(1.1)';
       setTimeout(() => circle.style.transform = 'scale(1)', 100);
+    }
+
+    async function purchaseUpgrade() {
+      if (score >= 10) {
+        score -= 10;
+        cookiesPerClick += 1;
+        document.getElementById('score').textContent = score;
+        await updateScore(score);
+        alert("Upgrade purchased! Your clicks are now stronger.");
+      } else {
+        alert("Not enough cookies to purchase this upgrade.");
+      }
     }
 
     async function initialize() {
@@ -279,7 +293,6 @@
       }
     }
 
-    let score = 0;
     initialize();
   </script>
 </body>
