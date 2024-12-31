@@ -251,16 +251,13 @@
     }
 
     async function incrementScore() {
-      // Check if there are enough cookies to buy the upgrade
-      if (score >= 10) {
-        score += 1;
-        document.getElementById('score').textContent = score;
-        await updateScore(score);
+      score += 1;
+      document.getElementById('score').textContent = score;
+      await updateScore(score);
 
-        const circle = document.querySelector('.click-circle');
-        circle.style.transform = 'scale(1.1)';
-        setTimeout(() => circle.style.transform = 'scale(1)', 100);
-      }
+      const circle = document.querySelector('.click-circle');
+      circle.style.transform = 'scale(1.1)';
+      setTimeout(() => circle.style.transform = 'scale(1)', 100);
     }
 
     async function decrementScore() {
