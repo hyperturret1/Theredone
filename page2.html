@@ -46,8 +46,10 @@
       border-radius: 50%;
       position: relative;
       cursor: pointer;
-      transition: transform 0.1s ease-in-out, width 0.1s ease-in-out, height 0.1s ease-in-out;
+      transition: transform 0.1s ease-in-out;
       z-index: 10; /* Ensures cookie click area is above other elements */
+      border: none; /* Remove the border around the circle */
+      outline: none; /* Remove the blue outline when clicked */
     }
 
     /* Chocolate chip styles */
@@ -55,7 +57,7 @@
       position: absolute;
       background-color: #3E2723; /* Dark chocolate color */
       border-radius: 50%;
-      pointer-events: none;
+      pointer-events: auto; /* Allow interaction with chips */
     }
 
     .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
@@ -84,6 +86,7 @@
       padding: 20px;
       text-align: center;
       color: black;
+      pointer-events: auto; /* Allow interaction */
     }
 
     footer {
@@ -131,7 +134,7 @@
     }
 
     .upgrade-button {
-      padding: 10px 20px;
+      padding: 10px 20px; /* Restored button size and design */
       background-color: #00509E;
       color: white;
       border: none;
@@ -146,14 +149,12 @@
   </style>
 </head>
 <body>
-
   <div class="counter-box">
     <span id="score">0</span> cookies
   </div>
 
   <div class="game-container">
     <div class="click-circle" onclick="incrementScore()">
-      <!-- Chocolate chips -->
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
@@ -164,58 +165,31 @@
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
-    </div>
-  </div>
-
-  <div class="gui" id="storeGUI">
-    <h2>Store</h2>
-    <p>Buy upgrades and items here!</p>
-    <div class="upgrade-line">
-      <div>
-        <p>Clicks <span id="level">lvl 1</span></p>
-        <p id="clicksPerClick">+1 cookie per click</p>
-      </div>
-      <button class="upgrade-button" onclick="add10Cookies()">10 🍪</button>
     </div>
   </div>
 
   <footer>
     <button class="footer-button" onclick="toggleGUI('storeGUI')">Store</button>
+    <button class="footer-button" onclick="toggleGUI('specialGUI')">Special</button>
+    <button class="footer-button" onclick="toggleGUI('statsGUI')">Stats</button>
+    <button class="footer-button" onclick="toggleGUI('miscGUI')">Misc</button>
   </footer>
 
   <script>
     let score = 0;
-    let cookiesPerClick = 1; 
-    let level = 1; 
+    let cookiesPerClick = 1;
 
     function incrementScore() {
       score += cookiesPerClick;
       document.getElementById('score').textContent = score;
-      const cookie = document.querySelector('.click-circle');
-      cookie.style.transform = 'scale(1.1)';
-      setTimeout(() => cookie.style.transform = 'scale(1)', 100);
-    }
-
-    function add10Cookies() {
-      if (score >= 10) {
-        score -= 10;
-        cookiesPerClick++;
-        level++;
-        document.getElementById('score').textContent = score;
-        document.getElementById('clicksPerClick').textContent = `+${cookiesPerClick} cookies per click`;
-        document.getElementById('level').textContent = `lvl ${level}`;
-      } else {
-        alert("Not enough cookies!");
-      }
     }
 
     function toggleGUI(guiId) {
       const guis = document.querySelectorAll('.gui');
       guis.forEach(gui => {
-        gui.style.display = gui.id === guiId && gui.style.display !== 'block' ? 'block' : 'none';
+        gui.style.display = gui.id === guiId ? (gui.style.display === 'block' ? 'none' : 'block') : 'none';
       });
     }
   </script>
-
 </body>
 </html>
