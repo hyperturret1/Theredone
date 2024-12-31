@@ -6,93 +6,99 @@
   <title>Cookie Clicker Game</title>
   <style>
     body {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
+      background-image: linear-gradient(to bottom, #00509E, #001F54);
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      margin: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: space-between;
       height: 100vh;
-      margin: 0;
+      font-family: Arial, sans-serif;
       color: white;
+    }
+    .counter-box {
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
       text-align: center;
+      padding: 10px;
+      font-size: 1.5em;
+      font-weight: bold;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
     }
     .game-container {
-      position: absolute;
-      right: 50px;
       display: flex;
       flex-direction: column;
       align-items: center;
-    }
-    .score-container {
-      background-color: #8B4513; /* Brown */
-      border: 3px solid #FFD700; /* Gold border */
-      border-radius: 10px;
-      padding: 5px 15px; /* Thinner height */
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      font-size: 1.5em;
-      color: #FFD700; /* Gold text */
-      margin-bottom: 10px; /* Slightly closer to the cookie */
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+      justify-content: center;
+      flex-grow: 1;
     }
     .click-circle {
-      width: 100px;
-      height: 100px;
-      background-color: #8B4513; /* Brown color */
+      width: 300px;
+      height: 300px;
+      background-color: #8B4513;
       border-radius: 50%;
-      cursor: pointer;
       position: relative;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
       transition: transform 0.1s ease-in-out;
-      outline: 2px solid transparent; /* Transparent focus outline */
-      user-select: none; /* Prevent text selection */
-      -webkit-tap-highlight-color: transparent; /* Disable highlight on touch */
     }
     .chocolate-chip {
       position: absolute;
-      background-color: #3E2723; /* Dark brown color */
+      background-color: #3E2723;
       border-radius: 50%;
-      border: 0.5px solid white; /* Thinner white border */
-      pointer-events: none; /* Prevent chips from triggering events */
+      pointer-events: none;
     }
-    .chocolate-chip:nth-child(1) { width: 8px; height: 8px; top: 15%; left: 15%; }
-    .chocolate-chip:nth-child(2) { width: 6px; height: 6px; top: 25%; left: 60%; }
-    .chocolate-chip:nth-child(3) { width: 10px; height: 10px; top: 45%; left: 35%; }
-    .chocolate-chip:nth-child(4) { width: 8px; height: 8px; top: 65%; left: 25%; }
-    .chocolate-chip:nth-child(5) { width: 9px; height: 9px; top: 75%; left: 65%; }
-    .chocolate-chip:nth-child(6) { width: 7px; height: 7px; top: 55%; left: 75%; }
-    .chocolate-chip:nth-child(7) { width: 11px; height: 11px; top: 35%; left: 5%; }
-    .chocolate-chip:nth-child(8) { width: 8px; height: 8px; top: 15%; left: 75%; }
-    .chocolate-chip:nth-child(9) { width: 8px; height: 8px; top: 5%; left: 45%; }
-    .chocolate-chip:nth-child(10) { width: 6px; height: 6px; top: 25%; left: 5%; }
+    .chocolate-chip:nth-child(1) { width: 10px; height: 10px; top: 15%; left: 25%; }
+    .chocolate-chip:nth-child(2) { width: 8px; height: 8px; top: 45%; left: 60%; }
+    .chocolate-chip:nth-child(3) { width: 12px; height: 12px; top: 75%; left: 35%; }
     footer {
-      position: absolute;
-      bottom: 10px;
       width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0;
+      box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
+    }
+    .footer-button {
+      color: white;
+      background: transparent;
+      border: none;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+    .footer-button:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
+  <div class="counter-box">
+    <span id="score">0</span> cookies
+  </div>
+
   <div class="game-container">
-    <div class="score-container">
-      Clicks: <span id="score">0</span>
-    </div>
     <div class="click-circle" onclick="incrementScore()" tabindex="0">
       <!-- Chocolate chips -->
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
     </div>
   </div>
+
+  <footer>
+    <button class="footer-button">Cookie</button>
+    <button class="footer-button">Store</button>
+    <button class="footer-button">Special</button>
+    <button class="footer-button">Stats</button>
+    <button class="footer-button">Misc</button>
+  </footer>
 
   <script>
     async function openDatabase() {
@@ -164,7 +170,6 @@
         circle.style.transform = 'scale(0.9)';
         setTimeout(() => {
           circle.style.transform = 'scale(1)';
-          circle.focus(); // Ensure focus remains
         }, 100);
       } catch (error) {
         console.error('Error handling score:', error);
@@ -182,10 +187,6 @@
 
     initialize();
   </script>
-
-  <footer>
-    <p>Game created by <strong>Hyperturret</strong></p>
-  </footer>
 
 </body>
 </html>
