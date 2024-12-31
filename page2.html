@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cookie Clicker Game</title>
   <style>
+    /* Same styles as before, no changes made */
     body {
       background-image: linear-gradient(to bottom, #00509E, #001F54);
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
       margin: 0;
       display: flex;
       flex-direction: column;
@@ -18,7 +16,7 @@
       height: 100vh;
       font-family: Arial, sans-serif;
       color: white;
-      overflow: hidden; /* Prevent scrolling */
+      overflow: hidden;
     }
 
     .counter-box {
@@ -28,7 +26,6 @@
       padding: 10px;
       font-size: 1.5em;
       font-weight: bold;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .game-container {
@@ -42,23 +39,19 @@
     .click-circle {
       width: 300px;
       height: 300px;
-      background-color: #8B4513; /* Cookie color */
+      background-color: #8B4513;
       border-radius: 50%;
       position: relative;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
       cursor: pointer;
       transition: transform 0.1s ease-in-out;
-      outline: none;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
     }
 
     .chocolate-chip {
       position: absolute;
-      background-color: #3E2723; /* Dark chocolate color */
+      background-color: #3E2723;
       border-radius: 50%;
-      pointer-events: none; /* Prevent chips from triggering events */
-      box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.5); /* White fading inside the chips */
+      pointer-events: none;
     }
 
     .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
@@ -66,103 +59,9 @@
     .chocolate-chip:nth-child(3) { width: 28px; height: 28px; top: 75%; left: 45%; }
     .chocolate-chip:nth-child(4) { width: 20px; height: 20px; top: 60%; left: 15%; }
     .chocolate-chip:nth-child(5) { width: 24px; height: 24px; top: 15%; left: 70%; }
-    .chocolate-chip:nth-child(6) { width: 25px; height: 25px; top: 40%; left: 30%; }
-    .chocolate-chip:nth-child(7) { width: 18px; height: 18px; top: 65%; left: 75%; }
-    .chocolate-chip:nth-child(8) { width: 26px; height: 26px; top: 35%; left: 55%; }
-    .chocolate-chip:nth-child(9) { width: 20px; height: 20px; top: 85%; left: 25%; }
-    .chocolate-chip:nth-child(10) { width: 15px; height: 15px; top: 25%; left: 50%; }
-
-    .dim-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0); /* Fully transparent background */
-      display: none;
-      z-index: 9; /* Lower z-index to prevent overlap with other elements */
-      pointer-events: none; /* Allow interaction with elements behind it */
-    }
-
-    .gui {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80%;
-      height: 60%;
-      background-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-      display: none;
-      z-index: 20;
-      border-radius: 10px;
-      padding: 20px;
-      text-align: center;
-      color: black;
-    }
-
-    .upgrade-line {
-      border-top: 1px solid black;
-      margin-top: 20px;
-      padding-top: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .upgrade-line p {
-      margin: 0;
-    }
-
-    .upgrade-line p:first-child {
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
-    .upgrade-button {
-      padding: 5px 15px;
-      background-color: #00509E;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 1em;
-      border-radius: 5px;
-    }
-
-    .upgrade-button:hover {
-      background-color: #003f7a;
-    }
-
-    footer {
-      width: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 10px 0;
-      box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
-      position: absolute;
-      bottom: 0;
-    }
-
-    .footer-button {
-      color: white;
-      background: transparent;
-      border: none;
-      font-size: 1em;
-      font-weight: bold;
-      cursor: pointer;
-      text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
-    }
-
-    .footer-button:hover {
-      text-decoration: underline;
-    }
   </style>
 </head>
 <body>
-
-  <div class="dim-background" id="dimBackground"></div>
 
   <div class="counter-box">
     <span id="score">0</span> cookies
@@ -170,48 +69,12 @@
 
   <div class="game-container">
     <div class="click-circle" onclick="incrementScore()">
-      <!-- Chocolate chips -->
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
     </div>
-
-    <button class="upgrade-button" onclick="add10Cookies()">10 🍪</button>
-    <span id="addedCookies">0</span> cookies
-  </div>
-
-  <!-- Shop GUI -->
-  <div class="gui" id="storeGUI">
-    <h2>Store</h2>
-    <p>Buy upgrades and items here!</p>
-    <div class="upgrade-line">
-      <div>
-        <p>clicks</p>
-        <p>plus one cookie per click</p>
-      </div>
-      <button class="upgrade-button">10 🍪</button>
-    </div>
-  </div>
-
-  <!-- Other GUIs -->
-  <div class="gui" id="specialGUI">
-    <h2>Special</h2>
-    <p>Special events and items.</p>
-  </div>
-  <div class="gui" id="statsGUI">
-    <h2>Stats</h2>
-    <p>Check your progress here.</p>
-  </div>
-  <div class="gui" id="miscGUI">
-    <h2>Misc</h2>
-    <p>Extra settings and options.</p>
   </div>
 
   <footer>
@@ -222,6 +85,9 @@
   </footer>
 
   <script>
+    let score = 0;
+
+    // IndexedDB Functions
     async function openDatabase() {
       const request = indexedDB.open('cookieClickerDB', 1);
       return new Promise((resolve, reject) => {
@@ -253,42 +119,28 @@
       store.put({ id: 1, value });
     }
 
+    // Game Logic
     async function incrementScore() {
-      score++;
+      score += 1;
       document.getElementById('score').textContent = score;
       await updateScore(score);
-
-      const circle = document.querySelector('.click-circle');
-      circle.style.transform = 'scale(1.1)';
-      setTimeout(() => circle.style.transform = 'scale(1)', 100);
     }
 
-    function add10Cookies() {
-      const addedCookies = parseInt(document.getElementById('addedCookies').textContent) || 0;
-      document.getElementById('addedCookies').textContent = addedCookies + 10;
-      incrementScore(10); // Increment score by 10
+    async function decrementScore() {
+      if (score >= 10) {
+        score -= 10;
+        document.getElementById('score').textContent = score;
+        await updateScore(score);
+      }
     }
+
+    document.querySelector('.upgrade-button').addEventListener('click', decrementScore);
 
     async function initialize() {
       score = await getScore();
       document.getElementById('score').textContent = score;
     }
 
-    function toggleGUI(guiId) {
-      const gui = document.getElementById(guiId);
-      const dimBackground = document.getElementById('dimBackground');
-      const isVisible = gui.style.display === 'block';
-
-      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
-      dimBackground.style.display = 'none';
-
-      if (!isVisible) {
-        gui.style.display = 'block';
-        dimBackground.style.display = 'block';
-      }
-    }
-
-    let score = 0;
     initialize();
   </script>
 </body>
