@@ -177,7 +177,7 @@
     <p>Buy upgrades and items here!</p>
     <div class="upgrade-line">
       <div>
-        <p>Clicks</p>
+        <p>Clicks <span id="level">lvl 1</span></p>
         <p id="clicksPerClick">+1 cookie per click</p>
       </div>
       <button class="upgrade-button" onclick="add10Cookies()">10 🍪</button>
@@ -208,6 +208,7 @@
   <script>
     let score = 0;
     let cookiesPerClick = 1; // Base value of cookies per click
+    let level = 1; // Initialize level
     const dbName = 'cookieClickerDB';
     const dbVersion = 1;
     const dbStoreName = 'clicks';
@@ -222,8 +223,10 @@
       if (score >= 10) {
         score -= 10;
         cookiesPerClick++; // Increase cookies per click
+        level++; // Increment level
         document.getElementById('score').textContent = score;
-        document.getElementById('clicksPerClick').textContent = `+${cookiesPerClick} cookie per click`; // Update display
+        document.getElementById('clicksPerClick').textContent = `+1 cookie per click`; // Update display to keep +1 fixed
+        document.getElementById('level').textContent = `lvl ${level}`; // Update level display
         saveToIndexedDB(score);
       }
     }
@@ -232,54 +235,34 @@
       const guis = document.querySelectorAll('.gui');
       guis.forEach(gui => {
         if (gui.id === guiId) {
-          gui.style.display = (gui.style.display === 'block') ? 'none' : 'block';
+          gui.style.display = (gui.style.display === 'block' ? 'none' : 'block');
         } else {
           gui.style.display = 'none';
         }
       });
-      // Allow interaction with the game container or disable it when GUI is open.
-      document.querySelector('.game-container').style.pointerEvents = (document.getElementById(guiId).style.display === 'block') ? 'none' : 'auto';
     }
 
-    function saveToIndexedDB(score) {
+    function saveToIndexedDB(data) {
+      if (!window.indexedDB) {
+        console.log('Your browser does not support IndexedDB.');
+        return;
+      }
+
       const request = indexedDB.open(dbName, dbVersion);
 
-      request.onsuccess = function (event) {
+      request.onsuccess = function(event) {
         const db = event.target.result;
-        const transaction = db.transaction(dbStoreName, 'readwrite');
+        const transaction = db.transaction([dbStoreName], 'readwrite');
         const store = transaction.objectStore(dbStoreName);
-        store.put({ score });
+        store.put(data, dbStoreName);
+        console.log('Data saved to IndexedDB.');
       };
 
-      request.onerror = function (event) {
-        console.error('Database error:', event.target.errorCode);
+      request.onerror = function(event) {
+        console.log('Database error:', event.target.errorCode);
       };
     }
-
-    function loadFromIndexedDB() {
-      const request = indexedDB.open(dbName, dbVersion);
-      request.onsuccess = function (event) {
-        const db = event.target.result;
-        const transaction = db.transaction(dbStoreName, 'readonly');
-        const store = transaction.objectStore(dbStoreName);
-        const getRequest = store.get('score');
-
-        getRequest.onsuccess = function (event) {
-          const result = event.target.result;
-          if (result) {
-            score = result.score;
-            document.getElementById('score').textContent = score;
-          }
-        };
-      };
-      request.onerror = function (event) {
-        console.error('Database error:', event.target.errorCode);
-      };
-    }
-
-    // Load the score from IndexedDB when the page loads
-    window.onload = loadFromIndexedDB;
-
   </script>
+
 </body>
 </html>
