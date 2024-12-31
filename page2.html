@@ -260,12 +260,11 @@
       setTimeout(() => circle.style.transform = 'scale(1)', 100);
     }
 
-    async function buyUpgrade() {
+    async function applyUpgrade() {
       if (score >= 10) {
-        score -= 10; // Deduct 10 cookies
-        clickBonus += 1; // Increase click bonus
+        score -= 10;
+        clickBonus++;
         document.getElementById('score').textContent = score;
-        document.getElementById('upgradeButton').disabled = true; // Disable the button after purchase
       }
     }
 
