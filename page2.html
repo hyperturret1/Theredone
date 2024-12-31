@@ -45,9 +45,9 @@
       background-color: #8B4513; /* Cookie color */
       border-radius: 50%;
       position: relative;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
       cursor: pointer;
       transition: transform 0.1s ease-in-out;
+      z-index: 10; /* Ensures cookie click area is above other elements */
     }
 
     /* Chocolate chip styles */
@@ -79,7 +79,7 @@
       background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
       display: none;
       z-index: 9;
-      backdrop-filter: blur(5px); /* Adding blur effect */
+      backdrop-filter: blur(0); /* Disable blur effect */
     }
 
     .gui {
@@ -238,72 +238,32 @@
     }
 
     function toggleGUI(guiId) {
-      const gui = document.getElementById(guiId);
-      const dimBackground = document.getElementById('dimBackground');
-      const isVisible = gui.style.display === 'block';
-
-      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
-      dimBackground.style.display = 'none';
-
-      if (!isVisible) {
-        gui.style.display = 'block';
-        dimBackground.style.display = 'block';
-      } else {
-        dimBackground.style.display = 'none';
-      }
+      const guis = document.querySelectorAll('.gui');
+      guis.forEach(gui => gui.style.display = 'none');
+      document.getElementById(guiId).style.display = 'block';
+      document.getElementById('dimBackground').style.display = guiId === 'storeGUI' ? 'block' : 'none';
     }
 
-    function saveToIndexedDB(value) {
+    function saveToIndexedDB(score) {
       const request = indexedDB.open(dbName, dbVersion);
-
-      request.onsuccess = function () {
-        const db = request.result;
-        const transaction = db.transaction([dbStoreName], 'readwrite');
-        const store = transaction.objectStore(dbStoreName);
-
-        const saveRequest = store.put({ score: value });
-
-        saveRequest.onsuccess = function () {
-          console.log('Score saved successfully.');
-        };
-
-        saveRequest.onerror = function () {
-          console.error('Failed to save score.');
-        };
+      request.onupgradeneeded = function(event) {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains(dbStoreName)) {
+          db.createObjectStore(dbStoreName, { keyPath: 'id', autoIncrement: true });
+        }
       };
 
-      request.onerror = function () {
-        console.error('Failed to open IndexedDB.');
+      request.onsuccess = function(event) {
+        const db = event.target.result;
+        const tx = db.transaction(dbStoreName, 'readwrite');
+        const store = tx.objectStore(dbStoreName);
+        store.put({ id: 1, score });
+      };
+
+      request.onerror = function(event) {
+        console.error('Error saving to IndexedDB:', event);
       };
     }
-
-    function loadFromIndexedDB() {
-      const request = indexedDB.open(dbName, dbVersion);
-
-      request.onsuccess = function () {
-        const db = request.result;
-        const transaction = db.transaction([dbStoreName], 'readonly');
-        const store = transaction.objectStore(dbStoreName);
-        const getRequest = store.get('score');
-
-        getRequest.onsuccess = function () {
-          if (getRequest.result) {
-            score = getRequest.result.score;
-            document.getElementById('score').textContent = score;
-          }
-        };
-
-        getRequest.onerror = function () {
-          console.error('Failed to load score.');
-        };
-      };
-
-      request.onerror = function () {
-        console.error('Failed to open IndexedDB.');
-      };
-    }
-
-    loadFromIndexedDB();
   </script>
 
 </body>
