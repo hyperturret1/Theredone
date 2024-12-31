@@ -143,6 +143,8 @@
       box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
       position: absolute;
       bottom: 0;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .footer-button {
@@ -202,6 +204,9 @@
 
   <footer>
     <button class="footer-button" onclick="toggleGUI('storeGUI')">Store</button>
+    <button class="footer-button" onclick="alert('Settings coming soon!')">Settings</button>
+    <button class="footer-button" onclick="alert('Stats coming soon!')">Stats</button>
+    <button class="footer-button" onclick="alert('Leaderboard coming soon!')">Leaderboard</button>
   </footer>
 
   <script>
@@ -236,27 +241,14 @@
       store.put({ id: 1, value });
     }
 
-    async function getClickBonus() {
-      const db = await openDatabase();
-      const transaction = db.transaction('scores', 'readonly');
-      const store = transaction.objectStore('scores');
-      const request = store.get(2);
-      return new Promise((resolve) => {
-        request.onsuccess = () => resolve(request.result ? request.result.value : 0);
-      });
-    }
-
-    async function updateClickBonus(value) {
-      const db = await openDatabase();
-      const transaction = db.transaction('scores', 'readwrite');
-      const store = transaction.objectStore('scores');
-      store.put({ id: 2, value });
-    }
-
     async function incrementScore() {
       score += clickBonus + 1;
       document.getElementById('score').textContent = score;
       await updateScore(score);
+
+      const circle = document.querySelector('.click-circle');
+      circle.style.transform = 'scale(1.1)';
+      setTimeout(() => circle.style.transform = 'scale(1)', 100);
     }
 
     async function applyUpgrade() {
@@ -265,14 +257,31 @@
         clickBonus++;
         document.getElementById('score').textContent = score;
         await updateScore(score);
-        await updateClickBonus(clickBonus);
+        await updateUpgrades(clickBonus);
       }
+    }
+
+    async function updateUpgrades(value) {
+      const db = await openDatabase();
+      const transaction = db.transaction('scores', 'readwrite');
+      const store = transaction.objectStore('scores');
+      store.put({ id: 2, value });
     }
 
     async function initialize() {
       score = await getScore();
-      clickBonus = await getClickBonus();
       document.getElementById('score').textContent = score;
+      clickBonus = await getUpgrades();
+    }
+
+    async function getUpgrades() {
+      const db = await openDatabase();
+      const transaction = db.transaction('scores', 'readonly');
+      const store = transaction.objectStore('scores');
+      const request = store.get(2);
+      return new Promise((resolve) => {
+        request.onsuccess = () => resolve(request.result ? request.result.value : 0);
+      });
     }
 
     function toggleGUI(guiId) {
