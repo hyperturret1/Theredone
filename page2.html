@@ -3,98 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page 2</title>
+  <title>Cookie Clicker Game</title>
   <style>
     body {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
+      background-image: linear-gradient(to bottom, #00509E, #001F54);
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
-      color: white;
-      text-align: center;
-    }
-    .buttons-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .buttons-container button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 5px;
-      background-color: #007bff;
-      color: white;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .buttons-container button:hover {
-      background-color: #0056b3;
-    }
-    .redirect-button {
-      display: block;
-      margin-top: 20px;
-      text-align: center;
-      background-color: #007bff;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-      text-decoration: none;
-    }
-    .redirect-button:hover {
-      background-color: #0056b3;
-    }
-    footer {
-      position: absolute;
-      bottom: 10px;
-      width: 100%;
-    }
-    .game-container {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: space-between;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      color: white;
+      overflow: hidden; /* Prevent scrolling */
     }
+
+    .counter-box {
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      text-align: center;
+      padding: 10px;
+      font-size: 1.5em;
+      font-weight: bold;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+    }
+
     .click-circle {
-      width: 100px;
-      height: 100px;
-      background-color: #8B4513; /* Brown color */
+      width: 300px;
+      height: 300px;
+      background-color: #8B4513; /* Cookie color */
       border-radius: 50%;
-      cursor: pointer;
-      margin-bottom: 20px;
       position: relative;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
       transition: transform 0.1s ease-in-out;
+      outline: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
+
     .chocolate-chip {
       position: absolute;
-      background-color: #3E2723; /* Dark brown color */
+      background-color: #3E2723; /* Dark chocolate color */
       border-radius: 50%;
-      transition: transform 0.1s ease-in-out;
+      pointer-events: none; /* Prevent chips from triggering events */
+      box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.5); /* White fading inside the chips */
     }
-    .chocolate-chip:nth-child(1) { width: 15px; height: 15px; top: 20%; left: 20%; }
-    .chocolate-chip:nth-child(2) { width: 12px; height: 12px; top: 30%; left: 60%; }
-    .chocolate-chip:nth-child(3) { width: 18px; height: 18px; top: 50%; left: 40%; }
-    .chocolate-chip:nth-child(4) { width: 14px; height: 14px; top: 70%; left: 30%; }
-    .chocolate-chip:nth-child(5) { width: 16px; height: 16px; top: 80%; left: 70%; }
-    .chocolate-chip:nth-child(6) { width: 13px; height: 13px; top: 60%; left: 80%; }
-    .chocolate-chip:nth-child(7) { width: 17px; height: 17px; top: 40%; left: 10%; }
-    .chocolate-chip:nth-child(8) { width: 14px; height: 14px; top: 20%; left: 80%; }
-    .chocolate-chip:nth-child(9) { width: 15px; height: 15px; top: 10%; left: 50%; }
-    .chocolate-chip:nth-child(10) { width: 12px; height: 12px; top: 30%; left: 10%; }
+
+    .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
+    .chocolate-chip:nth-child(2) { width: 22px; height: 22px; top: 50%; left: 60%; }
+    .chocolate-chip:nth-child(3) { width: 28px; height: 28px; top: 75%; left: 45%; }
+    .chocolate-chip:nth-child(4) { width: 20px; height: 20px; top: 60%; left: 15%; }
+    .chocolate-chip:nth-child(5) { width: 24px; height: 24px; top: 15%; left: 70%; }
+    .chocolate-chip:nth-child(6) { width: 25px; height: 25px; top: 40%; left: 30%; }
+    .chocolate-chip:nth-child(7) { width: 18px; height: 18px; top: 65%; left: 75%; }
+    .chocolate-chip:nth-child(8) { width: 26px; height: 26px; top: 35%; left: 55%; }
+    .chocolate-chip:nth-child(9) { width: 20px; height: 20px; top: 85%; left: 25%; }
+    .chocolate-chip:nth-child(10) { width: 15px; height: 15px; top: 25%; left: 50%; }
+
+    .dim-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0); /* Fully transparent background */
+      display: none;
+      z-index: 9; /* Lower z-index to prevent overlap with other elements */
+      pointer-events: none; /* Allow interaction with elements behind it */
+    }
+
+    .gui {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      height: 60%;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 20;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      color: black;
+    }
+
+    footer {
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0;
+      box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
+      position: absolute;
+      bottom: 0;
+    }
+
+    .footer-button {
+      color: white;
+      background: transparent;
+      border: none;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .footer-button:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
+
+  <div class="dim-background" id="dimBackground"></div>
+
+  <div class="counter-box">
+    <span id="score">0</span> cookies
+  </div>
 
   <div class="game-container">
     <div class="click-circle" onclick="incrementScore()">
@@ -110,35 +150,102 @@
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
     </div>
-    <div class="score" id="score">0</div>
   </div>
 
-  <div class="download-button-container">
-    <a href="https://www.mediafire.com/file/your-download-link" class="download-button">Download</a>
+  <div class="gui" id="storeGUI">
+    <h2>Store</h2>
+    <p>Buy upgrades and items here!</p>
+  </div>
+  <div class="gui" id="specialGUI">
+    <h2>Special</h2>
+    <p>Special events and items.</p>
+  </div>
+  <div class="gui" id="statsGUI">
+    <h2>Stats</h2>
+    <p>Check your progress here.</p>
+  </div>
+  <div class="gui" id="miscGUI">
+    <h2>Misc</h2>
+    <p>Extra settings and options.</p>
   </div>
 
-  <!-- New Button at the bottom of the page -->
-  <a href="index.html" class="redirect-button">Go back to Main Page</a>
+  <footer>
+    <button class="footer-button" onclick="toggleGUI('storeGUI')">Store</button>
+    <button class="footer-button" onclick="toggleGUI('specialGUI')">Special</button>
+    <button class="footer-button" onclick="toggleGUI('statsGUI')">Stats</button>
+    <button class="footer-button" onclick="toggleGUI('miscGUI')">Misc</button>
+  </footer>
 
   <script>
-    let score = 0;
+    async function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open('cookieClickerDB', 1);
+        request.onerror = (event) => reject(event.target.error);
+        request.onsuccess = (event) => resolve(event.target.result);
+        request.onupgradeneeded = (event) => {
+          const db = event.target.result;
+          if (!db.objectStoreNames.contains('scores')) {
+            db.createObjectStore('scores', { keyPath: 'id' });
+          }
+        };
+      });
+    }
 
-    function incrementScore() {
+    async function getScore() {
+      const db = await openDatabase();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction('scores', 'readonly');
+        const store = transaction.objectStore('scores');
+        const request = store.get(1);
+        request.onsuccess = () => resolve(request.result ? request.result.value : 0);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function updateScore(value) {
+      const db = await openDatabase();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction('scores', 'readwrite');
+        const store = transaction.objectStore('scores');
+        const request = store.put({ id: 1, value });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function incrementScore() {
       score++;
       document.getElementById('score').textContent = score;
-      // Apply shrink effect
+      await updateScore(score);
+
       const circle = document.querySelector('.click-circle');
-      circle.style.transform = 'scale(0.9)';
+      circle.style.transform = 'scale(1.1)';
       setTimeout(() => {
         circle.style.transform = 'scale(1)';
       }, 100);
     }
+
+    async function initialize() {
+      score = await getScore();
+      document.getElementById('score').textContent = score;
+    }
+
+    function toggleGUI(guiId) {
+      const gui = document.getElementById(guiId);
+      const dimBackground = document.getElementById('dimBackground');
+      const isVisible = gui.style.display === 'block';
+
+      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
+      dimBackground.style.display = 'none';
+
+      if (!isVisible) {
+        gui.style.display = 'block';
+        dimBackground.style.display = 'block';
+      }
+    }
+
+    let score = 0;
+    initialize();
   </script>
-
-  <!-- Credit Section -->
-  <footer>
-    <p>Website created by <strong>Hyperturret</strong></p>
-  </footer>
-
 </body>
 </html>
