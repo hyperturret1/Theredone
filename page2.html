@@ -48,6 +48,7 @@
       cursor: pointer;
       transition: transform 0.1s ease-in-out;
       z-index: 10; /* Ensures cookie click area is above other elements */
+      border: none; /* Remove the border around the circle */
     }
 
     /* Chocolate chip styles */
@@ -69,16 +70,17 @@
     .chocolate-chip:nth-child(9) { width: 20px; height: 20px; top: 85%; left: 25%; }
     .chocolate-chip:nth-child(10) { width: 15px; height: 15px; top: 25%; left: 50%; }
 
-    /* Dim background */
+    /* Dim background fully interactable */
     .dim-background {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+      background: rgba(0, 0, 0, 0); /* Fully transparent */
       display: none;
       z-index: 9;
+      pointer-events: none; /* Remove pointer events to make it interactable */
       backdrop-filter: blur(0); /* Disable blur effect */
     }
 
@@ -97,6 +99,7 @@
       padding: 20px;
       text-align: center;
       color: black;
+      pointer-events: auto; /* Allow interaction */
     }
 
     footer {
@@ -242,6 +245,12 @@
       guis.forEach(gui => gui.style.display = 'none');
       document.getElementById(guiId).style.display = 'block';
       document.getElementById('dimBackground').style.display = guiId === 'storeGUI' ? 'block' : 'none';
+      // Allow interaction with background and all elements beneath.
+      if (document.getElementById('dimBackground').style.display === 'block') {
+        document.getElementById('dimBackground').style.pointerEvents = 'auto'; 
+      } else {
+        document.getElementById('dimBackground').style.pointerEvents = 'none'; 
+      }
     }
 
     function saveToIndexedDB(score) {
