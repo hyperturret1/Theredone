@@ -57,7 +57,19 @@
       background-color: #3E2723; /* Dark chocolate color */
       border-radius: 50%;
       pointer-events: none; /* Prevent chips from triggering events */
-      box-shadow: -2px -2px 4px rgba(255, 255, 255, 0.5); /* Highlight effect */
+    }
+
+    /* Inner white fade for chips */
+    .chocolate-chip::before {
+      content: '';
+      position: absolute;
+      top: 25%;
+      left: 25%;
+      width: 50%;
+      height: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      pointer-events: none;
     }
 
     /* Chocolate chips positions and sizes */
@@ -80,6 +92,8 @@
       align-items: center;
       padding: 10px 0;
       box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
+      position: fixed; /* Keep footer attached */
+      bottom: 10px; /* Slightly higher than the bottom */
     }
 
     .footer-button {
