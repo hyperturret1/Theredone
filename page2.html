@@ -156,7 +156,6 @@
     .upgrade-button:hover {
       background-color: #003f7a;
     }
-
   </style>
 </head>
 <body>
@@ -219,16 +218,21 @@
 
   <script>
     let score = 0;
+    const dbName = 'cookieClickerDB';
+    const dbVersion = 1;
+    const dbStoreName = 'clicks';
 
     function incrementScore() {
       score++;
       document.getElementById('score').textContent = score;
+      saveToIndexedDB(score);
     }
 
     function add10Cookies() {
       if (score >= 10) {
         score -= 10;
         document.getElementById('score').textContent = score;
+        saveToIndexedDB(score);
       }
     }
 
@@ -245,6 +249,57 @@
         dimBackground.style.display = 'block';
       }
     }
+
+    // IndexedDB Functions
+    function initIndexedDB() {
+      const request = indexedDB.open(dbName, dbVersion);
+      
+      request.onerror = function (event) {
+        console.error('Database error: ' + event.target.errorCode);
+      };
+
+      request.onsuccess = function (event) {
+        const db = event.target.result;
+        loadFromIndexedDB();
+      };
+
+      request.onupgradeneeded = function (event) {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains(dbStoreName)) {
+          db.createObjectStore(dbStoreName, { keyPath: 'id' });
+        }
+      };
+    }
+
+    function saveToIndexedDB(score) {
+      const request = indexedDB.open(dbName, dbVersion);
+      request.onsuccess = function (event) {
+        const db = event.target.result;
+        const transaction = db.transaction([dbStoreName], 'readwrite');
+        const store = transaction.objectStore(dbStoreName);
+        
+        store.put({ id: 1, score: score });
+      };
+    }
+
+    function loadFromIndexedDB() {
+      const request = indexedDB.open(dbName, dbVersion);
+      request.onsuccess = function (event) {
+        const db = event.target.result;
+        const transaction = db.transaction([dbStoreName], 'readonly');
+        const store = transaction.objectStore(dbStoreName);
+
+        store.get(1).onsuccess = function (event) {
+          const data = event.target.result;
+          if (data) {
+            score = data.score;
+            document.getElementById('score').textContent = score;
+          }
+        };
+      };
+    }
+
+    initIndexedDB(); // Initialize IndexedDB on page load
   </script>
 
 </body>
