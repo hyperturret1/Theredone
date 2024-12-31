@@ -190,9 +190,16 @@
     <div class="upgrade-line">
       <div>
         <p>clicks</p>
+        <p>+1 cookie per click</p>
+      </div>
+      <button class="upgrade-button" id="shopClickUpgradeButton">10 🍪</button>
+    </div>
+    <div class="upgrade-line">
+      <div>
+        <p>clicks</p>
         <p>plus one cookie per click</p>
       </div>
-      <button class="upgrade-button" id="shopUpgradeButton">10 🍪</button>
+      <button class="upgrade-button" id="shopIncrementUpgradeButton">10 🍪</button>
     </div>
   </div>
 
@@ -254,20 +261,30 @@
     }
 
     async function incrementScore() {
-      score += clickBonus + 1; // Add the bonus for each click
+      score += clickBonus; // Add the bonus for each click
       document.getElementById('score').textContent = score;
-      await updateScore(score);
+      await updateScore(score); // Save new score in IndexedDB
 
       const circle = document.querySelector('.click-circle');
       circle.style.transform = 'scale(1.1)';
       setTimeout(() => circle.style.transform = 'scale(1)', 100);
     }
 
-    async function applyUpgrade() {
+    async function applyUpgradeClickBonus() {
       const price = 10; // Price of the upgrade
       if (score >= price) {
         score -= price;
         clickBonus++;
+        document.getElementById('score').textContent = score;
+        await updateScore(score); // Save new score in IndexedDB
+      }
+    }
+
+    async function applyIncrementUpgrade() {
+      const price = 10; // Price of the upgrade
+      if (score >= price) {
+        score -= price;
+        incrementBonus++;
         document.getElementById('score').textContent = score;
         await updateScore(score); // Save new score in IndexedDB
       }
@@ -294,10 +311,12 @@
 
     let score = 0;
     let clickBonus = 0; // Track the bonus clicks
+    let incrementBonus = 0; // Track the increment bonus
     initialize();
 
-    // Add event listener to the shop upgrade button
-    document.getElementById('shopUpgradeButton').addEventListener('click', applyUpgrade);
+    // Add event listener to the shop upgrade buttons
+    document.getElementById('shopClickUpgradeButton').addEventListener('click', applyUpgradeClickBonus);
+    document.getElementById('shopIncrementUpgradeButton').addEventListener('click', applyIncrementUpgrade);
   </script>
 </body>
 </html>
