@@ -129,7 +129,7 @@
   </div>
 
   <div class="game-container">
-    <div class="click-circle">
+    <div class="click-circle" onclick="incrementScore()">
       <!-- Chocolate chips -->
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
@@ -164,6 +164,20 @@
   </footer>
 
   <script>
+    let score = 0;
+
+    function incrementScore() {
+      score++;
+      document.getElementById('score').textContent = score;
+
+      // Visual feedback for the cookie click
+      const circle = document.querySelector('.click-circle');
+      circle.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        circle.style.transform = 'scale(1)';
+      }, 100);
+    }
+
     function toggleGUI(guiId) {
       const gui = document.getElementById(guiId);
       const dimBackground = document.getElementById('dimBackground');
