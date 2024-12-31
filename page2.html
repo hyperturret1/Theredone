@@ -281,17 +281,6 @@
 
     let score = 0;
     let clickBonus = 0; // Track the bonus clicks
-    document.getElementById('upgradeButton').addEventListener('click', () => {
-      if (score >= 10) {
-        score -= 10; // Deduct 10 from total score
-        document.getElementById('score').textContent = score; // Update the displayed score
-
-        clickBonus += 1; // Increase the bonus clicks
-      }
-    });
-
-    async function incrementScore() {
-      score += clickBonus + 1; // Add the bonus for each click
     initialize();
   </script>
 </body>
