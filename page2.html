@@ -101,6 +101,29 @@
       color: black;
     }
 
+    .upgrade-line {
+      border-top: 1px solid black;
+      margin-top: 20px;
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .upgrade-button {
+      padding: 5px 15px;
+      background-color: #00509E;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+      border-radius: 5px;
+    }
+
+    .upgrade-button:hover {
+      background-color: #003f7a;
+    }
+
     footer {
       width: 100%;
       background-color: rgba(0, 0, 0, 0.5);
@@ -156,6 +179,13 @@
   <div class="gui" id="storeGUI">
     <h2>Store</h2>
     <p>Buy upgrades and items here!</p>
+    <div class="upgrade-line">
+      <div>
+        <p>Click Upgrade</p>
+        <p>Increase clicks by 1</p>
+      </div>
+      <button class="upgrade-button" onclick="buyUpgrade()">10 🍪</button>
+    </div>
   </div>
   <div class="gui" id="specialGUI">
     <h2>Special</h2>
@@ -196,45 +226,3 @@
       const db = await openDatabase();
       const tx = db.transaction('scores', 'readonly');
       const store = tx.objectStore('scores');
-      const request = store.get(1);
-      return new Promise((resolve) => {
-        request.onsuccess = () => resolve(request.result?.value || 0);
-      });
-    }
-
-    async function saveScore(newScore) {
-      const db = await openDatabase();
-      const tx = db.transaction('scores', 'readwrite');
-      const store = tx.objectStore('scores');
-      store.put({ id: 1, value: newScore });
-    }
-
-    async function incrementScore() {
-      score += 1;
-      document.getElementById('score').textContent = score;
-      await saveScore(score);
-    }
-
-    async function initialize() {
-      score = await getScore();
-      document.getElementById('score').textContent = score;
-    }
-
-    function toggleGUI(guiId) {
-      const gui = document.getElementById(guiId);
-      const dimBackground = document.getElementById('dimBackground');
-      const isVisible = gui.style.display === 'block';
-
-      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
-      dimBackground.style.display = 'none';
-
-      if (!isVisible) {
-        gui.style.display = 'block';
-        dimBackground.style.display = 'block';
-      }
-    }
-
-    window.onload = initialize;
-  </script>
-</body>
-</html>
