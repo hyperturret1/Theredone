@@ -227,10 +227,15 @@
 
     function toggleGUI(guiId) {
       const guis = document.querySelectorAll('.gui');
-      guis.forEach(gui => gui.style.display = 'none');
-      document.getElementById(guiId).style.display = 'block';
-      // Allow interaction with background and all elements beneath.
-      document.querySelector('.game-container').style.pointerEvents = guiId === 'storeGUI' ? 'none' : 'auto';
+      guis.forEach(gui => {
+        if (gui.id === guiId) {
+          gui.style.display = (gui.style.display === 'block') ? 'none' : 'block';
+        } else {
+          gui.style.display = 'none';
+        }
+      });
+      // Allow interaction with the game container or disable it when GUI is open.
+      document.querySelector('.game-container').style.pointerEvents = (document.getElementById(guiId).style.display === 'block') ? 'none' : 'auto';
     }
 
     function saveToIndexedDB(score) {
@@ -241,16 +246,16 @@
           db.createObjectStore(dbStoreName, { keyPath: 'id', autoIncrement: true });
         }
       };
-
+      
       request.onsuccess = function(event) {
         const db = event.target.result;
-        const tx = db.transaction(dbStoreName, 'readwrite');
-        const store = tx.objectStore(dbStoreName);
-        store.put({ id: 1, score });
+        const transaction = db.transaction([dbStoreName], 'readwrite');
+        const store = transaction.objectStore(dbStoreName);
+        store.put({ score });
       };
-
+      
       request.onerror = function(event) {
-        console.error('Error saving to IndexedDB:', event);
+        console.error('Error accessing IndexedDB:', event.target.errorCode);
       };
     }
   </script>
