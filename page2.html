@@ -38,13 +38,33 @@
     .click-circle {
       width: 300px;
       height: 300px;
-      background-color: #8B4513;
+      background-color: #8B4513; /* Cookie color */
       border-radius: 50%;
+      position: relative;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
       cursor: pointer;
       transition: transform 0.1s ease-in-out;
       outline: none;
+      user-select: none;
     }
+
+    .chocolate-chip {
+      position: absolute;
+      background-color: #3E2723; /* Dark chocolate color */
+      border-radius: 50%;
+      pointer-events: none; /* Prevent chips from triggering events */
+    }
+
+    .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
+    .chocolate-chip:nth-child(2) { width: 22px; height: 22px; top: 50%; left: 60%; }
+    .chocolate-chip:nth-child(3) { width: 28px; height: 28px; top: 75%; left: 45%; }
+    .chocolate-chip:nth-child(4) { width: 20px; height: 20px; top: 60%; left: 15%; }
+    .chocolate-chip:nth-child(5) { width: 24px; height: 24px; top: 15%; left: 70%; }
+    .chocolate-chip:nth-child(6) { width: 25px; height: 25px; top: 40%; left: 30%; }
+    .chocolate-chip:nth-child(7) { width: 18px; height: 18px; top: 65%; left: 75%; }
+    .chocolate-chip:nth-child(8) { width: 26px; height: 26px; top: 35%; left: 55%; }
+    .chocolate-chip:nth-child(9) { width: 20px; height: 20px; top: 85%; left: 25%; }
+    .chocolate-chip:nth-child(10) { width: 15px; height: 15px; top: 25%; left: 50%; }
 
     .dim-background {
       position: absolute;
@@ -53,7 +73,7 @@
       width: 100%;
       height: 100%;
       background: none;
-      pointer-events: none; /* Allows interaction behind the dimmed background */
+      pointer-events: none;
     }
 
     .gui {
@@ -139,7 +159,19 @@
   </div>
 
   <div class="game-container">
-    <div class="click-circle" onclick="incrementScore()"></div>
+    <div class="click-circle" onclick="incrementScore()">
+      <!-- Chocolate chips -->
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+    </div>
   </div>
 
   <!-- Store GUI -->
