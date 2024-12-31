@@ -182,6 +182,11 @@
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
     </div>
+
+    <div class="upgrade-line">
+      <p>Upgrade clicks:</p>
+      <button class="upgrade-button" id="upgradeButton">10 🍪</button>
+    </div>
   </div>
 
   <!-- Shop GUI -->
@@ -265,6 +270,7 @@
         score -= 10;
         clickBonus++;
         document.getElementById('score').textContent = score;
+        await updateScore(score);
       }
     }
 
@@ -290,6 +296,9 @@
     let score = 0;
     let clickBonus = 0; // Track the bonus clicks
     initialize();
+
+    // Add event listener to the upgrade button
+    document.getElementById('upgradeButton').addEventListener('click', applyUpgrade);
   </script>
 </body>
 </html>
