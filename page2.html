@@ -47,7 +47,7 @@
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
       cursor: pointer;
       transition: transform 0.1s ease-in-out;
-      outline: none;
+      outline: none; /* Removed focus blue border */
       user-select: none;
       -webkit-tap-highlight-color: transparent; /* Disable tap highlight */
     }
@@ -57,15 +57,19 @@
       background-color: #3E2723; /* Dark chocolate color */
       border-radius: 50%;
       pointer-events: none; /* Prevent chips from triggering events */
-      box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.5), inset 2px 2px 4px rgba(255, 255, 255, 0.2); /* Adds depth to chips */
     }
 
     /* Chocolate chips positions and sizes */
-    .chocolate-chip:nth-child(1) { width: 25px; height: 25px; top: 15%; left: 30%; }
+    .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
     .chocolate-chip:nth-child(2) { width: 22px; height: 22px; top: 50%; left: 60%; }
     .chocolate-chip:nth-child(3) { width: 28px; height: 28px; top: 75%; left: 45%; }
     .chocolate-chip:nth-child(4) { width: 20px; height: 20px; top: 60%; left: 15%; }
-    .chocolate-chip:nth-child(5) { width: 24px; height: 24px; top: 10%; left: 65%; }
+    .chocolate-chip:nth-child(5) { width: 24px; height: 24px; top: 15%; left: 70%; }
+    .chocolate-chip:nth-child(6) { width: 25px; height: 25px; top: 40%; left: 30%; }
+    .chocolate-chip:nth-child(7) { width: 18px; height: 18px; top: 65%; left: 75%; }
+    .chocolate-chip:nth-child(8) { width: 26px; height: 26px; top: 35%; left: 55%; }
+    .chocolate-chip:nth-child(9) { width: 20px; height: 20px; top: 85%; left: 25%; }
+    .chocolate-chip:nth-child(10) { width: 15px; height: 15px; top: 25%; left: 50%; }
 
     footer {
       width: 100%;
@@ -101,6 +105,11 @@
   <div class="game-container">
     <div class="click-circle" onclick="incrementScore()" tabindex="0">
       <!-- Chocolate chips -->
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
