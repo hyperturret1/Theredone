@@ -249,21 +249,21 @@
       const store = transaction.objectStore('scores');
       const request = store.get(1);
       return new Promise((resolve) => {
-        request.onsuccess = () => resolve(request.result ? request.result.value : 0);
+        request.onsuccess = () => resolve(request.result ? request.result : { score: 0, clickBonus: 0, incrementBonus: 0 });
       });
     }
 
-    async function updateScore(value) {
+    async function updateScore(score, clickBonus, incrementBonus) {
       const db = await openDatabase();
       const transaction = db.transaction('scores', 'readwrite');
       const store = transaction.objectStore('scores');
-      store.put({ id: 1, value });
+      store.put({ id: 1, score, clickBonus, incrementBonus });
     }
 
     async function incrementScore() {
       score += clickBonus; // Add the bonus for each click
       document.getElementById('score').textContent = score;
-      await updateScore(score); // Save new score in IndexedDB
+      await updateScore(score, clickBonus, incrementBonus); // Save new score in IndexedDB
 
       const circle = document.querySelector('.click-circle');
       circle.style.transform = 'scale(1.1)';
@@ -276,7 +276,7 @@
         score -= price;
         clickBonus++;
         document.getElementById('score').textContent = score;
-        await updateScore(score); // Save new score in IndexedDB
+        await updateScore(score, clickBonus, incrementBonus); // Save new score in IndexedDB
       }
     }
 
@@ -286,12 +286,15 @@
         score -= price;
         incrementBonus++;
         document.getElementById('score').textContent = score;
-        await updateScore(score); // Save new score in IndexedDB
+        await updateScore(score, clickBonus, incrementBonus); // Save new score in IndexedDB
       }
     }
 
     async function initialize() {
-      score = await getScore();
+      const data = await getScore();
+      score = data.score;
+      clickBonus = data.clickBonus;
+      incrementBonus = data.incrementBonus;
       document.getElementById('score').textContent = score;
     }
 
