@@ -21,11 +21,21 @@
     }
     .game-container {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+      right: 50px;
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+    .score-container {
+      background-color: #8B4513; /* Brown */
+      border: 3px solid #FFD700; /* Gold border */
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      font-size: 1.5em;
+      color: #FFD700; /* Gold text */
+      margin-bottom: 20px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
     }
     .click-circle {
       width: 100px;
@@ -33,7 +43,6 @@
       background-color: #8B4513; /* Brown color */
       border-radius: 50%;
       cursor: pointer;
-      margin-bottom: 20px;
       position: relative;
       transition: transform 0.1s ease-in-out;
       outline: 2px solid transparent; /* Transparent focus outline */
@@ -67,6 +76,9 @@
 <body>
 
   <div class="game-container">
+    <div class="score-container">
+      Clicks: <span id="score">0</span>
+    </div>
     <div class="click-circle" onclick="incrementScore()" tabindex="0">
       <!-- Chocolate chips -->
       <div class="chocolate-chip"></div>
@@ -80,7 +92,6 @@
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
     </div>
-    <div class="score" id="score">0</div>
   </div>
 
   <script>
