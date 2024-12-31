@@ -251,19 +251,28 @@
     }
 
     async function incrementScore() {
-      score++;
-      document.getElementById('score').textContent = score;
-      await updateScore(score);
+      // Check if there are enough cookies to buy the upgrade
+      if (score >= 10) {
+        score += 1;
+        document.getElementById('score').textContent = score;
+        await updateScore(score);
 
-      const circle = document.querySelector('.click-circle');
-      circle.style.transform = 'scale(1.1)';
-      setTimeout(() => circle.style.transform = 'scale(1)', 100);
+        const circle = document.querySelector('.click-circle');
+        circle.style.transform = 'scale(1.1)';
+        setTimeout(() => circle.style.transform = 'scale(1)', 100);
+      }
     }
 
-    async function initialize() {
-      score = await getScore();
-      document.getElementById('score').textContent = score;
+    async function decrementScore() {
+      if (score >= 10) {
+        score -= 10;
+        document.getElementById('score').textContent = score;
+        await updateScore(score);
+      }
     }
+
+    // Add event listener to the "10 🍪" button
+    document.querySelector('.upgrade-button').addEventListener('click', decrementScore);
 
     function toggleGUI(guiId) {
       const gui = document.getElementById(guiId);
