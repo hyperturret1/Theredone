@@ -5,9 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cookie Clicker Game</title>
   <style>
-    /* Same styles as before, no changes made */
+    /* Styling remains unchanged */
     body {
       background-image: linear-gradient(to bottom, #00509E, #001F54);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       margin: 0;
       display: flex;
       flex-direction: column;
@@ -26,6 +29,7 @@
       padding: 10px;
       font-size: 1.5em;
       font-weight: bold;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .game-container {
@@ -39,7 +43,7 @@
     .click-circle {
       width: 300px;
       height: 300px;
-      background-color: #8B4513;
+      background-color: #8B4513; /* Cookie color */
       border-radius: 50%;
       position: relative;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
@@ -49,9 +53,9 @@
 
     .chocolate-chip {
       position: absolute;
-      background-color: #3E2723;
+      background-color: #3E2723; /* Dark chocolate color */
       border-radius: 50%;
-      pointer-events: none;
+      pointer-events: none; /* Prevent chips from triggering events */
     }
 
     .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
@@ -59,9 +63,63 @@
     .chocolate-chip:nth-child(3) { width: 28px; height: 28px; top: 75%; left: 45%; }
     .chocolate-chip:nth-child(4) { width: 20px; height: 20px; top: 60%; left: 15%; }
     .chocolate-chip:nth-child(5) { width: 24px; height: 24px; top: 15%; left: 70%; }
+    .chocolate-chip:nth-child(6) { width: 25px; height: 25px; top: 40%; left: 30%; }
+    .chocolate-chip:nth-child(7) { width: 18px; height: 18px; top: 65%; left: 75%; }
+    .chocolate-chip:nth-child(8) { width: 26px; height: 26px; top: 35%; left: 55%; }
+    .chocolate-chip:nth-child(9) { width: 20px; height: 20px; top: 85%; left: 25%; }
+    .chocolate-chip:nth-child(10) { width: 15px; height: 15px; top: 25%; left: 50%; }
+
+    .dim-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+      display: none;
+      z-index: 9;
+    }
+
+    .gui {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      height: 60%;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 20;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      color: black;
+    }
+
+    footer {
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0;
+      box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .footer-button {
+      color: white;
+      background: transparent;
+      border: none;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
+  <div class="dim-background" id="dimBackground"></div>
 
   <div class="counter-box">
     <span id="score">0</span> cookies
@@ -69,12 +127,45 @@
 
   <div class="game-container">
     <div class="click-circle" onclick="incrementScore()">
+      <!-- Chocolate chips -->
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
     </div>
+  </div>
+
+  <!-- Shop GUI -->
+  <div class="gui" id="storeGUI">
+    <h2>Store</h2>
+    <p>Buy upgrades and items here!</p>
+    <div class="upgrade-line">
+      <div>
+        <p>Clicks</p>
+        <p>+1 cookie per click</p>
+      </div>
+      <button class="upgrade-button" onclick="add10Cookies()">10 🍪</button>
+    </div>
+  </div>
+
+  <!-- Other GUIs -->
+  <div class="gui" id="specialGUI">
+    <h2>Special</h2>
+    <p>Special events and items.</p>
+  </div>
+  <div class="gui" id="statsGUI">
+    <h2>Stats</h2>
+    <p>Check your progress here.</p>
+  </div>
+  <div class="gui" id="miscGUI">
+    <h2>Misc</h2>
+    <p>Extra settings and options.</p>
   </div>
 
   <footer>
@@ -87,61 +178,31 @@
   <script>
     let score = 0;
 
-    // IndexedDB Functions
-    async function openDatabase() {
-      const request = indexedDB.open('cookieClickerDB', 1);
-      return new Promise((resolve, reject) => {
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => resolve(request.result);
-        request.onupgradeneeded = (event) => {
-          const db = event.target.result;
-          if (!db.objectStoreNames.contains('scores')) {
-            db.createObjectStore('scores', { keyPath: 'id' });
-          }
-        };
-      });
-    }
-
-    async function getScore() {
-      const db = await openDatabase();
-      const transaction = db.transaction('scores', 'readonly');
-      const store = transaction.objectStore('scores');
-      const request = store.get(1);
-      return new Promise((resolve) => {
-        request.onsuccess = () => resolve(request.result ? request.result.value : 0);
-      });
-    }
-
-    async function updateScore(value) {
-      const db = await openDatabase();
-      const transaction = db.transaction('scores', 'readwrite');
-      const store = transaction.objectStore('scores');
-      store.put({ id: 1, value });
-    }
-
-    // Game Logic
-    async function incrementScore() {
-      score += 1;
+    function incrementScore() {
+      score++;
       document.getElementById('score').textContent = score;
-      await updateScore(score);
     }
 
-    async function decrementScore() {
+    function add10Cookies() {
       if (score >= 10) {
         score -= 10;
         document.getElementById('score').textContent = score;
-        await updateScore(score);
       }
     }
 
-    document.querySelector('.upgrade-button').addEventListener('click', decrementScore);
+    function toggleGUI(guiId) {
+      const gui = document.getElementById(guiId);
+      const dimBackground = document.getElementById('dimBackground');
+      const isVisible = gui.style.display === 'block';
 
-    async function initialize() {
-      score = await getScore();
-      document.getElementById('score').textContent = score;
+      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
+      dimBackground.style.display = 'none';
+
+      if (!isVisible) {
+        gui.style.display = 'block';
+        dimBackground.style.display = 'block';
+      }
     }
-
-    initialize();
   </script>
 </body>
 </html>
