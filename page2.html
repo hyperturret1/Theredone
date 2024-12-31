@@ -7,6 +7,9 @@
   <style>
     body {
       background-image: linear-gradient(to bottom, #00509E, #001F54);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       margin: 0;
       display: flex;
       flex-direction: column;
@@ -25,34 +28,35 @@
       padding: 10px;
       font-size: 1.5em;
       font-weight: bold;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .game-container {
-      flex-grow: 1;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;
+      flex-grow: 1;
     }
 
     .click-circle {
       width: 300px;
       height: 300px;
-      background-color: #8B4513;
+      background-color: #8B4513; /* Cookie color */
       border-radius: 50%;
       position: relative;
       cursor: pointer;
       transition: transform 0.1s ease-in-out;
+      z-index: 10; /* Ensures cookie click area is above other elements */
+      border: none; /* Remove the border around the circle */
     }
 
-    .click-circle:active {
-      transform: scale(1.1);
-    }
-
+    /* Chocolate chip styles */
     .chocolate-chip {
       position: absolute;
-      background-color: #3E2723;
+      background-color: #3E2723; /* Dark chocolate color */
       border-radius: 50%;
+      pointer-events: auto; /* Allow interaction with chips */
     }
 
     .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
@@ -60,20 +64,13 @@
     .chocolate-chip:nth-child(3) { width: 28px; height: 28px; top: 75%; left: 45%; }
     .chocolate-chip:nth-child(4) { width: 20px; height: 20px; top: 60%; left: 15%; }
     .chocolate-chip:nth-child(5) { width: 24px; height: 24px; top: 15%; left: 70%; }
+    .chocolate-chip:nth-child(6) { width: 25px; height: 25px; top: 40%; left: 30%; }
+    .chocolate-chip:nth-child(7) { width: 18px; height: 18px; top: 65%; left: 75%; }
+    .chocolate-chip:nth-child(8) { width: 26px; height: 26px; top: 35%; left: 55%; }
+    .chocolate-chip:nth-child(9) { width: 20px; height: 20px; top: 85%; left: 25%; }
+    .chocolate-chip:nth-child(10) { width: 15px; height: 15px; top: 25%; left: 50%; }
 
-    .floating-particle {
-      position: absolute;
-      color: yellow;
-      font-size: 1.2em;
-      animation: float-up 1s ease-in-out;
-      pointer-events: none;
-    }
-
-    @keyframes float-up {
-      0% { opacity: 1; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(-50px); }
-    }
-
+    /* Dim background removed */
     .gui {
       position: absolute;
       top: 50%;
@@ -82,12 +79,14 @@
       width: 80%;
       height: 60%;
       background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
       display: none;
       z-index: 20;
       border-radius: 10px;
       padding: 20px;
       text-align: center;
       color: black;
+      pointer-events: auto; /* Allow interaction */
     }
 
     footer {
@@ -97,6 +96,7 @@
       justify-content: space-around;
       align-items: center;
       padding: 10px 0;
+      box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
       position: absolute;
       bottom: 0;
     }
@@ -106,13 +106,16 @@
       background: transparent;
       border: none;
       font-size: 1em;
+      font-weight: bold;
       cursor: pointer;
+      padding: 5px 15px;
     }
 
     .footer-button:hover {
       text-decoration: underline;
     }
 
+    /* Restored design for "10 🍪" button in the shop */
     .upgrade-line {
       border-top: 1px solid black;
       margin-top: 20px;
@@ -147,12 +150,19 @@
   </style>
 </head>
 <body>
+
   <div class="counter-box">
     <span id="score">0</span> cookies
   </div>
 
   <div class="game-container">
-    <div class="click-circle" onclick="incrementScore(event)">
+    <div class="click-circle" onclick="incrementScore()">
+      <!-- Chocolate chips -->
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
@@ -161,22 +171,28 @@
     </div>
   </div>
 
+  <!-- Shop GUI -->
   <div class="gui" id="storeGUI">
     <h2>Store</h2>
-    <p>Buy upgrades here!</p>
-    <button onclick="add10Cookies()">10 🍪</button>
+    <p>Buy upgrades and items here!</p>
+    <div class="upgrade-line">
+      <div>
+        <p>Clicks</p>
+        <p id="clicksPerClick">+1 cookie per click</p>
+      </div>
+      <button class="upgrade-button" onclick="add10Cookies()">10 🍪</button>
+    </div>
   </div>
 
+  <!-- Other GUIs -->
   <div class="gui" id="specialGUI">
     <h2>Special</h2>
     <p>Special events and items.</p>
   </div>
-
   <div class="gui" id="statsGUI">
     <h2>Stats</h2>
     <p>Check your progress here.</p>
   </div>
-
   <div class="gui" id="miscGUI">
     <h2>Misc</h2>
     <p>Extra settings and options.</p>
@@ -191,48 +207,79 @@
 
   <script>
     let score = 0;
-    let cookiesPerClick = 1;
+    let cookiesPerClick = 1; // Base value of cookies per click
+    const dbName = 'cookieClickerDB';
+    const dbVersion = 1;
+    const dbStoreName = 'clicks';
 
-    function incrementScore(event) {
+    function incrementScore() {
       score += cookiesPerClick;
       document.getElementById('score').textContent = score;
-      createFloatingParticle(event.clientX, event.clientY, `+${cookiesPerClick}`);
-      saveToIndexedDB();
+      saveToIndexedDB(score);
     }
 
-    function createFloatingParticle(x, y, text) {
-      const particle = document.createElement('div');
-      particle.className = 'floating-particle';
-      particle.textContent = text;
-      document.body.appendChild(particle);
-      particle.style.left = `${x}px`;
-      particle.style.top = `${y}px`;
-
-      setTimeout(() => {
-        particle.remove();
-      }, 1000);
+    function add10Cookies() {
+      if (score >= 10) {
+        score -= 10;
+        cookiesPerClick++; // Increase cookies per click
+        document.getElementById('score').textContent = score;
+        document.getElementById('clicksPerClick').textContent = `+${cookiesPerClick} cookie per click`; // Update display
+        saveToIndexedDB(score);
+      }
     }
 
     function toggleGUI(guiId) {
-      const gui = document.getElementById(guiId);
-      gui.style.display = gui.style.display === 'block' ? 'none' : 'block';
+      const guis = document.querySelectorAll('.gui');
+      guis.forEach(gui => {
+        if (gui.id === guiId) {
+          gui.style.display = (gui.style.display === 'block') ? 'none' : 'block';
+        } else {
+          gui.style.display = 'none';
+        }
+      });
+      // Allow interaction with the game container or disable it when GUI is open.
+      document.querySelector('.game-container').style.pointerEvents = (document.getElementById(guiId).style.display === 'block') ? 'none' : 'auto';
     }
 
-    function saveToIndexedDB() {
-      const dbRequest = indexedDB.open('cookieClickerDB', 1);
+    function saveToIndexedDB(score) {
+      const request = indexedDB.open(dbName, dbVersion);
 
-      dbRequest.onupgradeneeded = function () {
-        const db = dbRequest.result;
-        db.createObjectStore('gameData', { keyPath: 'id' });
+      request.onsuccess = function (event) {
+        const db = event.target.result;
+        const transaction = db.transaction(dbStoreName, 'readwrite');
+        const store = transaction.objectStore(dbStoreName);
+        store.put({ score });
       };
 
-      dbRequest.onsuccess = function () {
-        const db = dbRequest.result;
-        const transaction = db.transaction('gameData', 'readwrite');
-        const store = transaction.objectStore('gameData');
-        store.put({ id: 'score', value: score });
+      request.onerror = function (event) {
+        console.error('Database error:', event.target.errorCode);
       };
     }
+
+    function loadFromIndexedDB() {
+      const request = indexedDB.open(dbName, dbVersion);
+      request.onsuccess = function (event) {
+        const db = event.target.result;
+        const transaction = db.transaction(dbStoreName, 'readonly');
+        const store = transaction.objectStore(dbStoreName);
+        const getRequest = store.get('score');
+
+        getRequest.onsuccess = function (event) {
+          const result = event.target.result;
+          if (result) {
+            score = result.score;
+            document.getElementById('score').textContent = score;
+          }
+        };
+      };
+      request.onerror = function (event) {
+        console.error('Database error:', event.target.errorCode);
+      };
+    }
+
+    // Load the score from IndexedDB when the page loads
+    window.onload = loadFromIndexedDB;
+
   </script>
 </body>
 </html>
