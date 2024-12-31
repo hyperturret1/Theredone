@@ -6,97 +6,82 @@
   <title>Cookie Clicker Game</title>
   <style>
     body {
-      background-image: linear-gradient(to bottom, #00509E, #001F54);
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/1600x900/?nature,water');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      margin: 0;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      justify-content: space-between;
       height: 100vh;
-      font-family: Arial, sans-serif;
+      margin: 0;
       color: white;
-    }
-
-    .counter-box {
-      width: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
       text-align: center;
-      padding: 10px;
-      font-size: 1.5em;
-      font-weight: bold;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .game-container {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      flex-grow: 1;
     }
 
     .click-circle {
-      width: 300px;
-      height: 300px;
-      background-color: #8B4513; /* Cookie color */
+      width: 150px;
+      height: 150px;
+      background-color: #F5D6B1; /* Light beige cookie color */
       border-radius: 50%;
-      position: relative;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
       cursor: pointer;
+      margin-bottom: 20px;
+      position: relative;
       transition: transform 0.1s ease-in-out;
-      outline: none; /* Removed focus blue border */
-      user-select: none;
-      -webkit-tap-highlight-color: transparent; /* Disable tap highlight */
+      outline: 2px solid transparent;
+      box-shadow: inset -5px -5px 15px #E6B995, inset 5px 5px 15px #F8E8C5; /* Adds light and shadow details */
     }
 
     .chocolate-chip {
       position: absolute;
-      background-color: #3E2723; /* Dark chocolate color */
+      background-color: #5C3823; /* Chocolate chip color */
       border-radius: 50%;
-      pointer-events: none; /* Prevent chips from triggering events */
+      pointer-events: none;
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Adds depth to chips */
     }
 
-    /* Chocolate chips positions */
-    .chocolate-chip:nth-child(1) { width: 15px; height: 15px; top: 20%; left: 30%; }
-    .chocolate-chip:nth-child(2) { width: 12px; height: 12px; top: 50%; left: 60%; }
-    .chocolate-chip:nth-child(3) { width: 18px; height: 18px; top: 80%; left: 40%; }
-    .chocolate-chip:nth-child(4) { width: 10px; height: 10px; top: 60%; left: 10%; }
-    .chocolate-chip:nth-child(5) { width: 12px; height: 12px; top: 15%; left: 70%; }
+    .chocolate-chip:nth-child(1) { width: 16px; height: 16px; top: 25%; left: 30%; }
+    .chocolate-chip:nth-child(2) { width: 12px; height: 12px; top: 40%; left: 60%; }
+    .chocolate-chip:nth-child(3) { width: 18px; height: 18px; top: 60%; left: 40%; }
+    .chocolate-chip:nth-child(4) { width: 14px; height: 14px; top: 70%; left: 20%; }
+    .chocolate-chip:nth-child(5) { width: 15px; height: 15px; top: 20%; left: 65%; }
+
+    /* White highlight to match the light reflection */
+    .click-circle::before {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      width: 30px;
+      height: 10px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+      transform: rotate(-15deg);
+    }
+
+    .score {
+      font-size: 2em;
+      margin-top: 10px;
+    }
 
     footer {
+      position: absolute;
+      bottom: 10px;
       width: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 10px 0;
-      box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .footer-button {
-      color: white;
-      background: transparent;
-      border: none;
-      font-size: 1em;
-      font-weight: bold;
-      cursor: pointer;
-      text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
-    }
-
-    .footer-button:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-
-  <div class="counter-box">
-    <span id="score">0</span> cookies
-  </div>
-
   <div class="game-container">
     <div class="click-circle" onclick="incrementScore()" tabindex="0">
       <!-- Chocolate chips -->
@@ -106,15 +91,8 @@
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
     </div>
+    <div class="score" id="score">0</div>
   </div>
-
-  <footer>
-    <button class="footer-button">Cookie</button>
-    <button class="footer-button">Store</button>
-    <button class="footer-button">Special</button>
-    <button class="footer-button">Stats</button>
-    <button class="footer-button">Misc</button>
-  </footer>
 
   <script>
     async function openDatabase() {
@@ -181,11 +159,11 @@
         let score = await getScore();
         score++;
         document.getElementById('score').textContent = score;
-        await updateScore(score);
         const circle = document.querySelector('.click-circle');
-        circle.style.transform = 'scale(1.1)'; // Scale up cookie and chips
+        circle.style.transform = 'scale(0.9)';
         setTimeout(() => {
           circle.style.transform = 'scale(1)';
+          circle.focus(); // Ensure focus remains
         }, 100);
       } catch (error) {
         console.error('Error handling score:', error);
@@ -204,5 +182,8 @@
     initialize();
   </script>
 
+  <footer>
+    <p>Game created by <strong>Hyperturret</strong></p>
+  </footer>
 </body>
 </html>
