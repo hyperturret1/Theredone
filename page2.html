@@ -46,9 +46,9 @@
       border-radius: 50%;
       position: relative;
       cursor: pointer;
-      transition: transform 0.1s ease-in-out, background-color 0.1s ease-in-out, box-shadow 0.1s ease-in-out; /* Added transition */
+      border: 3px solid transparent; /* Make border transparent */
       z-index: 10; /* Ensures cookie click area is above other elements */
-      border: none; /* Remove the border around the circle */
+      transition: transform 0.1s ease-in-out;
     }
 
     /* Chocolate chip styles */
@@ -146,21 +146,6 @@
 
     .upgrade-button:hover {
       background-color: #003f7a;
-    }
-
-    /* Transparent blue square around the cookie */
-    .click-circle::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 300px;
-      height: 300px;
-      border: 3px solid transparent; /* Remove blue border */
-      border-radius: 50%;
-      transition: border 0.3s ease-in-out;
-      pointer-events: none; /* Prevent interaction with the border */
-      z-index: 9;
     }
   </style>
 </head>
