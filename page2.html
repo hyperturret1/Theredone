@@ -234,12 +234,14 @@
       const dimBackground = document.getElementById('dimBackground');
       const isVisible = gui.style.display === 'block';
 
-      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
+      document.querySelectorAll('.gui').forEach(g => g.style.display = 'none');
       dimBackground.style.display = 'none';
 
       if (!isVisible) {
         gui.style.display = 'block';
         dimBackground.style.display = 'block';
+      } else {
+        gui.style.display = 'none';
       }
     }
 
