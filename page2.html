@@ -182,6 +182,9 @@
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
     </div>
+
+    <button class="upgrade-button" onclick="add10Cookies()">10 🍪</button>
+    <span id="addedCookies">0</span> cookies
   </div>
 
   <!-- Shop GUI -->
@@ -258,6 +261,12 @@
       const circle = document.querySelector('.click-circle');
       circle.style.transform = 'scale(1.1)';
       setTimeout(() => circle.style.transform = 'scale(1)', 100);
+    }
+
+    function add10Cookies() {
+      const addedCookies = parseInt(document.getElementById('addedCookies').textContent) || 0;
+      document.getElementById('addedCookies').textContent = addedCookies + 10;
+      incrementScore(10); // Increment score by 10
     }
 
     async function initialize() {
