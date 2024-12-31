@@ -232,9 +232,6 @@
           if (!db.objectStoreNames.contains('scores')) {
             db.createObjectStore('scores', { keyPath: 'id' });
           }
-          if (!db.objectStoreNames.contains('upgrades')) {
-            db.createObjectStore('upgrades', { keyPath: 'id' });
-          }
         };
       });
     }
@@ -256,41 +253,29 @@
       store.put({ id: 1, value });
     }
 
-    async function getUpgrades() {
-      const db = await openDatabase();
-      const transaction = db.transaction('upgrades', 'readonly');
-      const store = transaction.objectStore('upgrades');
-      const request = store.get(1);
-      return new Promise((resolve) => {
-        request.onsuccess = () => resolve(request.result ? request.result.value : { hasPurchased: false });
-      });
+    async function incrementScore() {
+      score += clickBonus + 1; // Add the bonus for each click
+      document.getElementById('score').textContent = score;
+      await updateScore(score);
+
+      const circle = document.querySelector('.click-circle');
+      circle.style.transform = 'scale(1.1)';
+      setTimeout(() => circle.style.transform = 'scale(1)', 100);
     }
 
     async function applyUpgrade() {
-      const upgrades = await getUpgrades();
-
-      if (!upgrades.hasPurchased && score >= 10) {
-        score -= 10;
+      const price = 10; // Price of the upgrade
+      if (score >= price) {
+        score -= price;
         clickBonus++;
         document.getElementById('score').textContent = score;
-        await updateScore(score);
-
-        upgrades.hasPurchased = true;
-        const db = await openDatabase();
-        const transaction = db.transaction('upgrades', 'readwrite');
-        const store = transaction.objectStore('upgrades');
-        store.put({ id: 1, value: upgrades });
+        await updateScore(score); // Save new score in IndexedDB
       }
     }
 
     async function initialize() {
       score = await getScore();
       document.getElementById('score').textContent = score;
-
-      const upgrades = await getUpgrades();
-      if (upgrades.hasPurchased) {
-        document.getElementById('shopUpgradeButton').disabled = true;
-      }
     }
 
     function toggleGUI(guiId) {
