@@ -78,10 +78,10 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0); /* Fully transparent background */
+      background: rgba(0, 0, 255, 0.5);
       display: none;
-      z-index: 9; /* Lower z-index to prevent overlap with other elements */
-      pointer-events: none; /* Allow interaction with elements behind it */
+      z-index: 10;
+      pointer-events: none;
     }
 
     .gui {
@@ -155,18 +155,13 @@
   <div class="gui" id="storeGUI">
     <h2>Store</h2>
     <p>Buy upgrades and items here!</p>
-  </div>
-  <div class="gui" id="specialGUI">
-    <h2>Special</h2>
-    <p>Special events and items.</p>
-  </div>
-  <div class="gui" id="statsGUI">
-    <h2>Stats</h2>
-    <p>Check your progress here.</p>
-  </div>
-  <div class="gui" id="miscGUI">
-    <h2>Misc</h2>
-    <p>Extra settings and options.</p>
+
+    <!-- Box line with button -->
+    <div style="border-top: 1px solid black; margin-top: 20px; padding-top: 10px;">
+      <p style="font-weight: bold; text-transform: uppercase;">clicks</p>
+      <p style="margin: 0; font-weight: normal;">plus one cookie per click</p>
+      <button style="margin-top: 10px; padding: 10px 20px; background-color: #00509E; color: white; border: none; cursor: pointer;">Buy Click Upgrade</button>
+    </div>
   </div>
 
   <footer>
