@@ -260,6 +260,15 @@
       setTimeout(() => circle.style.transform = 'scale(1)', 100);
     }
 
+    async function buyUpgrade() {
+      if (score >= 10) {
+        score -= 10; // Deduct 10 cookies
+        clickBonus += 1; // Increase click bonus
+        document.getElementById('score').textContent = score;
+        document.getElementById('upgradeButton').disabled = true; // Disable the button after purchase
+      }
+    }
+
     async function initialize() {
       score = await getScore();
       document.getElementById('score').textContent = score;
