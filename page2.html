@@ -18,7 +18,7 @@
       height: 100vh;
       font-family: Arial, sans-serif;
       color: white;
-      overflow: hidden;
+      overflow: hidden; /* Prevent scrolling */
     }
 
     .counter-box {
@@ -45,18 +45,20 @@
       background-color: #8B4513; /* Cookie color */
       border-radius: 50%;
       position: relative;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
       cursor: pointer;
-      border: 3px solid transparent; /* Make border transparent */
-      z-index: 10; /* Ensures cookie click area is above other elements */
       transition: transform 0.1s ease-in-out;
+      outline: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* Chocolate chip styles */
     .chocolate-chip {
       position: absolute;
       background-color: #3E2723; /* Dark chocolate color */
       border-radius: 50%;
-      pointer-events: auto; /* Allow interaction with chips */
+      pointer-events: none; /* Prevent chips from triggering events */
+      box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.5); /* White fading inside the chips */
     }
 
     .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
@@ -70,7 +72,18 @@
     .chocolate-chip:nth-child(9) { width: 20px; height: 20px; top: 85%; left: 25%; }
     .chocolate-chip:nth-child(10) { width: 15px; height: 15px; top: 25%; left: 50%; }
 
-    /* Dim background removed */
+    .dim-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0); /* Fully transparent background */
+      display: none;
+      z-index: 9; /* Lower z-index to prevent overlap with other elements */
+      pointer-events: none; /* Allow interaction with elements behind it */
+    }
+
     .gui {
       position: absolute;
       top: 50%;
@@ -86,7 +99,38 @@
       padding: 20px;
       text-align: center;
       color: black;
-      pointer-events: auto; /* Allow interaction */
+    }
+
+    .upgrade-line {
+      border-top: 1px solid black;
+      margin-top: 20px;
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .upgrade-line p {
+      margin: 0;
+    }
+
+    .upgrade-line p:first-child {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .upgrade-button {
+      padding: 5px 15px;
+      background-color: #00509E;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+      border-radius: 5px;
+    }
+
+    .upgrade-button:hover {
+      background-color: #003f7a;
     }
 
     footer {
@@ -108,48 +152,17 @@
       font-size: 1em;
       font-weight: bold;
       cursor: pointer;
-      padding: 5px 15px;
+      text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
     }
 
     .footer-button:hover {
       text-decoration: underline;
     }
-
-    /* Restored design for "10 🍪" button in the shop */
-    .upgrade-line {
-      border-top: 1px solid black;
-      margin-top: 20px;
-      padding-top: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .upgrade-line p {
-      margin: 0;
-    }
-
-    .upgrade-line p:first-child {
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
-    .upgrade-button {
-      padding: 10px 20px; /* Restored button size and design */
-      background-color: #00509E;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 1em;
-      border-radius: 5px;
-    }
-
-    .upgrade-button:hover {
-      background-color: #003f7a;
-    }
   </style>
 </head>
 <body>
+
+  <div class="dim-background" id="dimBackground"></div>
 
   <div class="counter-box">
     <span id="score">0</span> cookies
@@ -177,10 +190,10 @@
     <p>Buy upgrades and items here!</p>
     <div class="upgrade-line">
       <div>
-        <p>Clicks</p>
-        <p id="clicksPerClick">+1 cookie per click</p>
+        <p>clicks</p>
+        <p>plus one cookie per click</p>
       </div>
-      <button class="upgrade-button" onclick="add10Cookies()">10 🍪</button>
+      <button class="upgrade-button" id="upgradeButton">10 🍪</button>
     </div>
   </div>
 
@@ -206,80 +219,69 @@
   </footer>
 
   <script>
-    let score = 0;
-    let cookiesPerClick = 1; // Base value of cookies per click
-    const dbName = 'cookieClickerDB';
-    const dbVersion = 1;
-    const dbStoreName = 'clicks';
-
-    function incrementScore() {
-      score += cookiesPerClick;
-      document.getElementById('score').textContent = score;
-      saveToIndexedDB(score);
+    async function openDatabase() {
+      const request = indexedDB.open('cookieClickerDB', 1);
+      return new Promise((resolve, reject) => {
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+        request.onupgradeneeded = (event) => {
+          const db = event.target.result;
+          if (!db.objectStoreNames.contains('scores')) {
+            db.createObjectStore('scores', { keyPath: 'id' });
+          }
+        };
+      });
     }
 
-    function add10Cookies() {
-      if (score >= 10) {
-        score -= 10; // Deduct 10 from total score
-        cookiesPerClick++; // Increase cookies per click
-        document.getElementById('score').textContent = score;
-        document.getElementById('clicksPerClick').textContent = `+${cookiesPerClick} cookie per click`; // Update display
-        saveToIndexedDB(score);
-      }
+    async function getScore() {
+      const db = await openDatabase();
+      const transaction = db.transaction('scores', 'readonly');
+      const store = transaction.objectStore('scores');
+      const request = store.get(1);
+      return new Promise((resolve) => {
+        request.onsuccess = () => resolve(request.result ? request.result.value : 0);
+      });
+    }
+
+    async function updateScore(value) {
+      const db = await openDatabase();
+      const transaction = db.transaction('scores', 'readwrite');
+      const store = transaction.objectStore('scores');
+      store.put({ id: 1, value });
+    }
+
+    async function incrementScore() {
+      score += clickBonus + 1; // Add the bonus for each click
+      document.getElementById('score').textContent = score;
+      await updateScore(score);
+
+      const circle = document.querySelector('.click-circle');
+      circle.style.transform = 'scale(1.1)';
+      setTimeout(() => circle.style.transform = 'scale(1)', 100);
+    }
+
+    async function initialize() {
+      score = await getScore();
+      document.getElementById('score').textContent = score;
     }
 
     function toggleGUI(guiId) {
-      const guis = document.querySelectorAll('.gui');
-      guis.forEach(gui => {
-        if (gui.id === guiId) {
-          gui.style.display = (gui.style.display === 'block') ? 'none' : 'block';
-        } else {
-          gui.style.display = 'none';
-        }
-      });
-      // Allow interaction with the game container or disable it when GUI is open.
-      document.querySelector('.game-container').style.pointerEvents = (document.getElementById(guiId).style.display === 'block') ? 'none' : 'auto';
+      const gui = document.getElementById(guiId);
+      const dimBackground = document.getElementById('dimBackground');
+      const isVisible = gui.style.display === 'block';
+
+      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
+      dimBackground.style.display = 'none';
+
+      if (!isVisible) {
+        gui.style.display = 'block';
+        dimBackground.style.display = 'block';
+      }
     }
 
-    function saveToIndexedDB(score) {
-      const request = indexedDB.open(dbName, dbVersion);
-
-      request.onsuccess = function (event) {
-        const db = event.target.result;
-        const transaction = db.transaction(dbStoreName, 'readwrite');
-        const store = transaction.objectStore(dbStoreName);
-        store.put({ score });
-      };
-
-      request.onerror = function (event) {
-        console.error('Database error:', event.target.errorCode);
-      };
-    }
-
-    function loadFromIndexedDB() {
-      const request = indexedDB.open(dbName, dbVersion);
-      request.onsuccess = function (event) {
-        const db = event.target.result;
-        const transaction = db.transaction(dbStoreName, 'readonly');
-        const store = transaction.objectStore(dbStoreName);
-        const getRequest = store.get('score');
-
-        getRequest.onsuccess = function (event) {
-          const result = event.target.result;
-          if (result) {
-            score = result.score;
-            document.getElementById('score').textContent = score;
-          }
-        };
-      };
-      request.onerror = function (event) {
-        console.error('Database error:', event.target.errorCode);
-      };
-    }
-
-    // Load the score from IndexedDB when the page loads
-    window.onload = loadFromIndexedDB;
-
+    let score = 0;
+    let clickBonus = 0; // Track the bonus clicks
+    initialize();
   </script>
 </body>
 </html>
