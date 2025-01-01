@@ -202,6 +202,7 @@
       const db = await openDatabase();
       const tx = db.transaction('scores', 'readwrite');
       const store = tx.objectStore('scores');
+      console.log('Saving - Score:', score, 'Click Bonus:', clickBonus); // Debugging
       await store.put({ id: 'score', value: score });
       await store.put({ id: 'clickBonus', value: clickBonus });
       await tx.complete;
@@ -213,13 +214,16 @@
       const store = tx.objectStore('scores');
       const storedScore = await store.get('score');
       const storedClickBonus = await store.get('clickBonus');
+      console.log('Loaded Score:', storedScore, 'Loaded Click Bonus:', storedClickBonus); // Debugging
       score = storedScore?.value || 0;
       clickBonus = storedClickBonus?.value || 1;
       document.getElementById('score').innerText = score;
     }
 
     function incrementScore() {
+      console.log('Before Increment - Score:', score, 'Click Bonus:', clickBonus); // Debugging
       score += clickBonus;
+      console.log('After Increment - Score:', score); // Debugging
       document.getElementById('score').innerText = score;
       saveScore();
     }
@@ -243,6 +247,7 @@
       if (score >= 10) {
         score -= 10;
         clickBonus++;
+        console.log('New Click Bonus:', clickBonus); // Debugging
         document.getElementById('score').innerText = score;
         await saveScore();
       } else {
