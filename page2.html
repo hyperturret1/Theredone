@@ -181,18 +181,30 @@
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
     </div>
+  </div>
 
+  <footer>
+    <button class="footer-button" onclick="toggleGUI('storeGUI')">Store</button>
+    <button class="footer-button" onclick="toggleGUI('miscGUI')">Misc</button>
+  </footer>
+
+  <div class="gui" id="storeGUI">
+    <h2>Store</h2>
     <div class="upgrade-line">
       <p>Upgrade clicks:</p>
       <button class="upgrade-button" id="upgradeButton">10 🍪</button>
     </div>
   </div>
 
-  <footer>
-    <button class="footer-button" onclick="toggleGUI('storeGUI')">Store</button>
-  </footer>
+  <div class="gui" id="miscGUI">
+    <h2>Misc Options</h2>
+    <button class="upgrade-button" onclick="resetProgress()">Reset Progress</button>
+  </div>
 
   <script>
+    let score = 0;
+    let clickBonus = 0;
+
     async function openDatabase() {
       const request = indexedDB.open('cookieClickerDB', 1);
       return new Promise((resolve, reject) => {
@@ -213,8 +225,7 @@
       const store = transaction.objectStore('scores');
       const request = store.get(1);
       return new Promise((resolve) => {
-        request.onsuccess = () => resolve(request.result?.value ?? 0);
-        request.onerror = () => resolve(0);
+        request.onsuccess = () => resolve(request.result ? request.result.value : 0);
       });
     }
 
@@ -231,8 +242,7 @@
       const store = transaction.objectStore('scores');
       const request = store.get(2);
       return new Promise((resolve) => {
-        request.onsuccess = () => resolve(request.result?.value ?? 0);
-        request.onerror = () => resolve(0);
+        request.onsuccess = () => resolve(request.result ? request.result.value : 0);
       });
     }
 
@@ -259,6 +269,16 @@
       }
     }
 
+    async function resetProgress() {
+      score = 0;
+      clickBonus = 0;
+      document.getElementById('score').textContent = score;
+      await updateScore(score);
+      await updateClickBonus(clickBonus);
+      toggleGUI('miscGUI');
+      alert('Progress has been reset!');
+    }
+
     async function initialize() {
       score = await getScore();
       clickBonus = await getClickBonus();
@@ -279,8 +299,6 @@
       }
     }
 
-    let score = 0;
-    let clickBonus = 0;
     initialize();
 
     document.getElementById('upgradeButton').addEventListener('click', applyUpgrade);
