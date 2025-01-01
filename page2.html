@@ -61,12 +61,16 @@
       box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.5);
     }
 
-    /* Positioning the chocolate chips */
     .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
     .chocolate-chip:nth-child(2) { width: 22px; height: 22px; top: 50%; left: 60%; }
     .chocolate-chip:nth-child(3) { width: 28px; height: 28px; top: 75%; left: 45%; }
     .chocolate-chip:nth-child(4) { width: 20px; height: 20px; top: 60%; left: 15%; }
     .chocolate-chip:nth-child(5) { width: 24px; height: 24px; top: 15%; left: 70%; }
+    .chocolate-chip:nth-child(6) { width: 25px; height: 25px; top: 40%; left: 30%; }
+    .chocolate-chip:nth-child(7) { width: 18px; height: 18px; top: 65%; left: 75%; }
+    .chocolate-chip:nth-child(8) { width: 26px; height: 26px; top: 35%; left: 55%; }
+    .chocolate-chip:nth-child(9) { width: 20px; height: 20px; top: 85%; left: 25%; }
+    .chocolate-chip:nth-child(10) { width: 15px; height: 15px; top: 25%; left: 50%; }
 
     .dim-background {
       position: absolute;
@@ -97,6 +101,38 @@
       color: black;
     }
 
+    .upgrade-line {
+      border-top: 1px solid black;
+      margin-top: 20px;
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .upgrade-line p {
+      margin: 0;
+    }
+
+    .upgrade-line p:first-child {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .upgrade-button {
+      padding: 5px 15px;
+      background-color: #00509E;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+      border-radius: 5px;
+    }
+
+    .upgrade-button:hover {
+      background-color: #003f7a;
+    }
+
     footer {
       width: 100%;
       background-color: rgba(0, 0, 0, 0.5);
@@ -122,16 +158,6 @@
     .footer-button:hover {
       text-decoration: underline;
     }
-
-    .reset-button {
-      padding: 5px 15px;
-      background-color: red;
-      color: white;
-      border: none;
-      font-size: 1em;
-      border-radius: 5px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -149,41 +175,36 @@
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
       <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip"></div>
+    </div>
+
+    <div class="upgrade-line">
+      <p>Upgrade clicks:</p>
+      <button class="upgrade-button" id="upgradeButton">10 🍪</button>
     </div>
   </div>
 
   <div class="gui" id="storeGUI">
     <h2>Store</h2>
-    <p>Buy upgrades here!</p>
-  </div>
-
-  <div class="gui" id="specialGUI">
-    <h2>Special</h2>
-    <p>Special upgrades and bonuses will be displayed here!</p>
-  </div>
-
-  <div class="gui" id="statsGUI">
-    <h2>Stats</h2>
-    <p>Your game statistics will be shown here!</p>
-  </div>
-
-  <div class="gui" id="miscGUI">
-    <h2>Misc</h2>
-    <p>Additional settings and options.</p>
-    <button class="reset-button" onclick="resetProgress()">Reset Progress</button>
+    <p>Buy upgrades and items here!</p>
+    <div class="upgrade-line">
+      <div>
+        <p>clicks</p>
+        <p>plus one cookie per click</p>
+      </div>
+      <button class="upgrade-button" id="shopUpgradeButton">10 🍪</button>
+    </div>
   </div>
 
   <footer>
     <button class="footer-button" onclick="toggleGUI('storeGUI')">Store</button>
-    <button class="footer-button" onclick="toggleGUI('specialGUI')">Special</button>
-    <button class="footer-button" onclick="toggleGUI('statsGUI')">Stats</button>
-    <button class="footer-button" onclick="toggleGUI('miscGUI')">Misc</button>
   </footer>
 
   <script>
-    let score = 0;
-    let clickBonus = 0;
-
     async function openDatabase() {
       const request = indexedDB.open('cookieClickerDB', 1);
       return new Promise((resolve, reject) => {
@@ -198,19 +219,59 @@
       });
     }
 
-    async function resetProgress() {
+    async function getScore() {
+      const db = await openDatabase();
+      const transaction = db.transaction('scores', 'readonly');
+      const store = transaction.objectStore('scores');
+      const request = store.get(1);
+      return new Promise((resolve) => {
+        request.onsuccess = () => resolve(request.result ? request.result.value : 0);
+      });
+    }
+
+    async function updateScore(value) {
       const db = await openDatabase();
       const transaction = db.transaction('scores', 'readwrite');
       const store = transaction.objectStore('scores');
-      store.clear();
-      score = 0;
-      clickBonus = 0;
-      document.getElementById('score').textContent = score;
-      alert('Progress has been reset!');
+      store.put({ id: 1, value });
+    }
+
+    async function getClickBonus() {
+      const db = await openDatabase();
+      const transaction = db.transaction('scores', 'readonly');
+      const store = transaction.objectStore('scores');
+      const request = store.get(2);
+      return new Promise((resolve) => {
+        request.onsuccess = () => resolve(request.result ? request.result.value : 0);
+      });
+    }
+
+    async function updateClickBonus(value) {
+      const db = await openDatabase();
+      const transaction = db.transaction('scores', 'readwrite');
+      const store = transaction.objectStore('scores');
+      store.put({ id: 2, value });
     }
 
     async function incrementScore() {
       score += clickBonus + 1;
+      document.getElementById('score').textContent = score;
+      await updateScore(score);
+    }
+
+    async function applyUpgrade() {
+      if (score >= 10) {
+        score -= 10;
+        clickBonus++;
+        document.getElementById('score').textContent = score;
+        await updateScore(score);
+        await updateClickBonus(clickBonus);
+      }
+    }
+
+    async function initialize() {
+      score = await getScore();
+      clickBonus = await getClickBonus();
       document.getElementById('score').textContent = score;
     }
 
@@ -228,21 +289,11 @@
       }
     }
 
-    async function initialize() {
-      const db = await openDatabase();
-      const transaction = db.transaction('scores', 'readonly');
-      const store = transaction.objectStore('scores');
-      const request = store.get(1);
-
-      request.onsuccess = () => {
-        if (request.result) {
-          score = request.result.value || 0;
-          document.getElementById('score').textContent = score;
-        }
-      };
-    }
-
+    let score = 0;
+    let clickBonus = 0;
     initialize();
+
+    document.getElementById('shopUpgradeButton').addEventListener('click', applyUpgrade);
   </script>
 </body>
 </html>
