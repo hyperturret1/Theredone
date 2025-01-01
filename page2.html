@@ -160,7 +160,6 @@
   </style>
 </head>
 <body>
-
   <div class="dim-background" id="dimBackground"></div>
 
   <div class="counter-box">
@@ -236,7 +235,6 @@
       const store = tx.objectStore('scores');
       store.put({ id: 'score', value: score });
       store.put({ id: 'clickBonus', value: clickBonus });
-      return tx.complete;
     }
 
     async function loadScore() {
@@ -256,13 +254,6 @@
       saveScore();
     }
 
-    function toggleGUI(guiID) {
-      const guis = document.querySelectorAll('.gui');
-      guis.forEach(gui => {
-        gui.style.display = gui.id === guiID ? (gui.style.display === 'block' ? 'none' : 'block') : 'none';
-      });
-    }
-
     async function resetGame() {
       score = 0;
       clickBonus = 1;
@@ -276,13 +267,15 @@
         clickBonus++;
         document.getElementById('score').innerText = score;
         await saveScore();
-      } else {
-        alert('Not enough cookies!');
       }
     }
 
-    // Load the saved score on page load
-    window.onload = loadScore;
+    function toggleGUI(guiID) {
+      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
+      document.getElementById(guiID).style.display = 'block';
+    }
+
+    loadScore();
   </script>
 </body>
 </html>
