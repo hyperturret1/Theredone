@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Clicker</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        #gameContainer {
+            margin: 50px auto;
+            padding: 20px;
+            max-width: 400px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button Styles */
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #clickButton {
+            background-color: #4caf50; /* Green */
+            color: white;
+        }
+
+        #clickButton:hover {
+            background-color: #45a049;
+        }
+
+        /* Misc GUI Styling */
+        .miscGUI {
+            margin-top: 20px;
+        }
+
+        .miscGUI button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #ff4444; /* Red for reset */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .miscGUI button:hover {
+            background-color: #cc0000; /* Darker red on hover */
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <h1>Cookie Clicker</h1>
+        <p>Score: <span id="scoreDisplay">0</span></p>
+        <button id="clickButton">Click Me!</button>
+    </div>
+    <div class="miscGUI">
+        <button onclick="resetProgress()">Reset Progress</button>
+    </div>
+
+    <script>
+        // Variables
+        let score = 0;
+        let clickBonus = 1;
+
+        // Function to update score display
+        function updateScoreDisplay() {
+            const scoreDisplay = document.getElementById("scoreDisplay");
+            scoreDisplay.textContent = score;
+        }
+
+        // Function to handle button clicks
+        document.getElementById("clickButton").addEventListener("click", function () {
+            score += clickBonus;
+            updateScoreDisplay();
+            saveProgress(); // Save the score after every click
+        });
+
+        // IndexedDB Setup
+        const dbRequest = indexedDB.open("cookieClickerDB", 1);
+
+        dbRequest.onupgradeneeded = function (event) {
+            const db = event.target.result;
+            db.createObjectStore("scores", { keyPath: "id" });
+        };
+
+        dbRequest.onsuccess = function (event) {
+            const db = event.target.result;
+
+            // Load saved progress
+            const transaction = db.transaction(["scores"], "readonly");
+            const store = transaction.objectStore("scores");
+            const getRequest = store.get(1);
+
+            getRequest.onsuccess = function () {
+                if (getRequest.result) {
+                    score = getRequest.result.score || 0;
+                    clickBonus = getRequest.result.clickBonus || 1;
+                    updateScoreDisplay();
+                }
+            };
+
+            getRequest.onerror = function () {
+                console.error("Error loading progress.");
+            };
+        };
+
+        dbRequest.onerror = function () {
+            console.error("Error opening database.");
+        };
+
+        // Save progress to IndexedDB
+        function saveProgress() {
+            const db = dbRequest.result;
+
+            if (db) {
+                const transaction = db.transaction(["scores"], "readwrite");
+                const store = transaction.objectStore("scores");
+
+                const saveRequest = store.put({ id: 1, score: score, clickBonus: clickBonus });
+                saveRequest.onsuccess = function () {
+                    console.log("Progress saved.");
+                };
+
+                saveRequest.onerror = function () {
+                    console.error("Error saving progress.");
+                };
+            }
+        }
+
+        // Reset progress function
+        function resetProgress() {
+            const db = dbRequest.result;
+
+            if (db) {
+                const transaction = db.transaction(["scores"], "readwrite");
+                const store = transaction.objectStore("scores");
+
+                const clearRequest = store.clear();
+                clearRequest.onsuccess = function () {
+                    console.log("Progress reset successfully!");
+                    score = 0; // Reset the score in memory
+                    clickBonus = 1; // Reset click bonus
+                    updateScoreDisplay();
+                };
+
+                clearRequest.onerror = function () {
+                    console.error("Error resetting progress.");
+                };
+            }
+        }
+    </script>
+</body>
+</html>
