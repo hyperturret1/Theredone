@@ -214,26 +214,26 @@
 
   <script>
     let score = 0;
-    let clickBonus = 0;
 
-    async function openDatabase() {
-      const request = indexedDB.open('cookieClickerDB', 1);
-      return new Promise((resolve, reject) => {
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => resolve(request.result);
-        request.onupgradeneeded = (event) => {
-          const db = event.target.result;
-          if (!db.objectStoreNames.contains('scores')) {
-            db.createObjectStore('scores', { keyPath: 'id' });
-          }
-        };
+    function incrementScore() {
+      score++;
+      document.getElementById('score').innerText = score;
+    }
+
+    function toggleGUI(guiID) {
+      const guis = document.querySelectorAll('.gui');
+      guis.forEach(gui => {
+        if (gui.id === guiID) {
+          gui.style.display = gui.style.display === 'block' ? 'none' : 'block';
+        } else {
+          gui.style.display = 'none';
+        }
       });
     }
 
-    async function getScore() { /* ... */ }
-    async function updateScore() { /* ... */ }
-    async function resetGame() { 
-      // Reset everything
+    function resetGame() {
+      score = 0;
+      document.getElementById('score').innerText = score;
     }
   </script>
 </body>
