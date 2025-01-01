@@ -187,9 +187,9 @@
     async function openDatabase() {
       return new Promise((resolve, reject) => {
         const request = indexedDB.open('cookieClickerDB', 1);
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => resolve(request.result);
-        request.onupgradeneeded = (event) => {
+        request.onerror = () => reject(request.error);  // Handle error
+        request.onsuccess = () => resolve(request.result);  // Handle success
+        request.onupgradeneeded = (event) => { // Create object store if needed
           const db = event.target.result;
           if (!db.objectStoreNames.contains('scores')) {
             db.createObjectStore('scores', { keyPath: 'id' });
@@ -202,8 +202,8 @@
       const db = await openDatabase();
       const tx = db.transaction('scores', 'readwrite');
       const store = tx.objectStore('scores');
-      await store.put({ id: 'score', value: score });
-      await store.put({ id: 'clickBonus', value: clickBonus });
+      await store.put({ id: 'score', value: score });      // Save score
+      await store.put({ id: 'clickBonus', value: clickBonus });  // Save clickBonus
       await tx.complete;  // Wait for the transaction to complete
     }
 
@@ -211,11 +211,11 @@
       const db = await openDatabase();
       const tx = db.transaction('scores', 'readonly');
       const store = tx.objectStore('scores');
-      const storedScore = await store.get('score');
-      const storedClickBonus = await store.get('clickBonus');
-      score = storedScore?.value || 0;
-      clickBonus = storedClickBonus?.value || 1;
-      document.getElementById('score').innerText = score;
+      const storedScore = await store.get('score');        // Get score
+      const storedClickBonus = await store.get('clickBonus');  // Get clickBonus
+      score = storedScore?.value || 0;                       // Set score
+      clickBonus = storedClickBonus?.value || 1;             // Set clickBonus
+      document.getElementById('score').innerText = score;   // Update UI
     }
 
     function incrementScore() {
