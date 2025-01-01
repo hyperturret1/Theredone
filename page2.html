@@ -77,7 +77,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0);
+      background: rgba(0, 0, 0, 0.5);
       display: none;
       z-index: 9;
       pointer-events: none;
@@ -125,41 +125,10 @@
     .footer-button:hover {
       text-decoration: underline;
     }
-
-    .upgrade-line {
-      border-top: 1px solid black;
-      margin-top: 20px;
-      padding-top: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .upgrade-line p {
-      margin: 0;
-    }
-
-    .upgrade-line p:first-child {
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
-    .upgrade-button {
-      padding: 5px 15px;
-      background-color: #00509E;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 1em;
-      border-radius: 5px;
-    }
-
-    .upgrade-button:hover {
-      background-color: #003f7a;
-    }
   </style>
 </head>
 <body>
+
   <div class="dim-background" id="dimBackground"></div>
 
   <div class="counter-box">
@@ -179,13 +148,6 @@
   <div class="gui" id="storeGUI">
     <h2>Store</h2>
     <p>Buy upgrades and items here!</p>
-    <div class="upgrade-line">
-      <div>
-        <p>Upgrade clicks:</p>
-        <p>plus one cookie per click</p>
-      </div>
-      <button class="upgrade-button" id="shopUpgradeButton" onclick="buyUpgrade()">10 🍪</button>
-    </div>
   </div>
 
   <div class="gui" id="specialGUI">
@@ -201,7 +163,7 @@
   <div class="gui" id="miscGUI">
     <h2>Misc</h2>
     <p>Additional settings and options.</p>
-    <button class="upgrade-button" onclick="resetGame()">Reset Game</button>
+    <button onclick="resetGame()">Reset Game</button>
   </div>
 
   <footer>
@@ -212,70 +174,35 @@
   </footer>
 
   <script>
-    let score = 0;
-    let clickBonus = 1;
+    let openGUI = null;
 
-    async function openDatabase() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open('cookieClickerDB', 1);
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => resolve(request.result);
-        request.onupgradeneeded = (event) => {
-          const db = event.target.result;
-          if (!db.objectStoreNames.contains('scores')) {
-            db.createObjectStore('scores', { keyPath: 'id' });
-          }
-        };
-      });
-    }
+    function toggleGUI(guiID) {
+      const guiElement = document.getElementById(guiID);
+      const dimBackground = document.getElementById("dimBackground");
 
-    async function saveScore() {
-      const db = await openDatabase();
-      const tx = db.transaction('scores', 'readwrite');
-      const store = tx.objectStore('scores');
-      store.put({ id: 'score', value: score });
-      store.put({ id: 'clickBonus', value: clickBonus });
-    }
+      if (openGUI && openGUI !== guiElement) {
+        openGUI.style.display = "none";
+      }
 
-    async function loadScore() {
-      const db = await openDatabase();
-      const tx = db.transaction('scores', 'readonly');
-      const store = tx.objectStore('scores');
-      const storedScore = await store.get('score');
-      const storedClickBonus = await store.get('clickBonus');
-      score = storedScore?.value || 0;
-      clickBonus = storedClickBonus?.value || 1;
-      document.getElementById('score').innerText = score;
-    }
-
-    function incrementScore() {
-      score += clickBonus;
-      document.getElementById('score').innerText = score;
-      saveScore();
-    }
-
-    async function resetGame() {
-      score = 0;
-      clickBonus = 1;
-      document.getElementById('score').innerText = score;
-      await saveScore();
-    }
-
-    async function buyUpgrade() {
-      if (score >= 10) {
-        score -= 10;
-        clickBonus++;
-        document.getElementById('score').innerText = score;
-        await saveScore();
+      if (guiElement.style.display === "none" || guiElement.style.display === "") {
+        guiElement.style.display = "block";
+        dimBackground.style.display = "block";
+        openGUI = guiElement;
+      } else {
+        guiElement.style.display = "none";
+        dimBackground.style.display = "none";
+        openGUI = null;
       }
     }
 
-    function toggleGUI(guiID) {
-      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
-      document.getElementById(guiID).style.display = 'block';
+    function incrementScore() {
+      const score = document.getElementById('score');
+      score.innerText = parseInt(score.innerText) + 1;
     }
 
-    loadScore();
+    function resetGame() {
+      document.getElementById('score').innerText = '0';
+    }
   </script>
 </body>
 </html>
