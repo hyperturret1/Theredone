@@ -202,9 +202,9 @@
       const db = await openDatabase();
       const tx = db.transaction('scores', 'readwrite');
       const store = tx.objectStore('scores');
-      store.put({ id: 'score', value: score });
-      store.put({ id: 'clickBonus', value: clickBonus });
-      return tx.complete;
+      await store.put({ id: 'score', value: score });
+      await store.put({ id: 'clickBonus', value: clickBonus });
+      await tx.complete;  // Wait for the transaction to complete
     }
 
     async function loadScore() {
@@ -227,7 +227,7 @@
     function toggleGUI(guiID) {
       const guis = document.querySelectorAll('.gui');
       guis.forEach(gui => {
-        gui.style.display = gui.id === guiID ? (gui.style.display === 'block' ? 'none' : 'block') : 'none';
+        gui.style.display = gui.id === guiID ? (gui.style.display === 'none' ? 'block' : 'none') : 'none';
       });
     }
 
