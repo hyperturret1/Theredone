@@ -160,6 +160,8 @@
   <div class="gui" id="specialGUI">
     <h2>Special</h2>
     <p>Special upgrades and bonuses will be displayed here!</p>
+    <button onclick="specialAccess()">Special Access</button>
+    <p id="specialCode" style="margin-top: 20px; font-weight: bold;"></p>
   </div>
 
   <div class="gui" id="statsGUI">
@@ -202,7 +204,6 @@
       const db = await openDatabase();
       const tx = db.transaction('scores', 'readwrite');
       const store = tx.objectStore('scores');
-      console.log('Saving - Score:', score, 'Click Bonus:', clickBonus); // Debugging
       await store.put({ id: 'score', value: score });
       await store.put({ id: 'clickBonus', value: clickBonus });
       await tx.complete;
@@ -214,16 +215,13 @@
       const store = tx.objectStore('scores');
       const storedScore = await store.get('score');
       const storedClickBonus = await store.get('clickBonus');
-      console.log('Loaded Score:', storedScore, 'Loaded Click Bonus:', storedClickBonus); // Debugging
       score = storedScore?.value || 0;
       clickBonus = storedClickBonus?.value || 1;
       document.getElementById('score').innerText = score;
     }
 
     function incrementScore() {
-      console.log('Before Increment - Score:', score, 'Click Bonus:', clickBonus); // Debugging
       score += clickBonus;
-      console.log('After Increment - Score:', score); // Debugging
       document.getElementById('score').innerText = score;
       saveScore();
     }
@@ -247,11 +245,22 @@
       if (score >= 10) {
         score -= 10;
         clickBonus++;
-        console.log('New Click Bonus:', clickBonus); // Debugging
         document.getElementById('score').innerText = score;
         await saveScore();
       } else {
         alert('Not enough cookies!');
+      }
+    }
+
+    function specialAccess() {
+      if (score >= 1000) {
+        score -= 1000;
+        document.getElementById('score').innerText = score;
+        saveScore();
+        const specialCode = Math.floor(1000000 + Math.random() * 9000000); // Generate 7-digit code
+        document.getElementById('specialCode').innerText = `Your special code: ${specialCode}`;
+      } else {
+        alert('You need at least 1000 cookies for special access!');
       }
     }
 
