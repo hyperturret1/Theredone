@@ -247,20 +247,21 @@
         clickBonus++;
         document.getElementById('score').innerText = score;
         await saveScore();
+        await saveclickBonus++();
       } else {
-        alert('Not enough cookies!');
+        alert('Not enough cookies');
       }
     }
 
     function specialAccess() {
-      if (score >= 1000) {
-        score -= 1000;
+      if (score >= 10000) {
+        score -= 10000;
         document.getElementById('score').innerText = score;
         saveScore();
         const specialCode = Math.floor(1000000 + Math.random() * 9000000); // Generate 7-digit code
         document.getElementById('specialCode').innerText = `Your special code: ${specialCode}`;
       } else {
-        alert('You need at least 1000 cookies for special access!');
+        alert('You need at least 10000 cookies for special access');
       }
     }
 
