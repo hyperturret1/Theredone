@@ -159,8 +159,8 @@
 
   <div class="gui" id="specialGUI">
     <h2>Special</h2>
-    <p>The Special password will cost you 10000 cookies</p>
-    <button onclick="specialAccess()">Special Access</button>
+    <p>The code will cost you 10000 cookies</p>
+    <button onclick="specialAccess()">Special code</button>
     <p id="specialCode" style="margin-top: 20px; font-weight: bold;"></p>
   </div>
 
@@ -259,7 +259,7 @@
         const specialCode = Math.floor(1000000 + Math.random() * 9000000); // Generate 7-digit code
         document.getElementById('specialCode').innerText = `Your special code: ${specialCode}`;
       } else {
-        alert('You need at least 10000 cookies for special access');
+        alert('You need at least 10000 cookies for code');
       }
     }
 
