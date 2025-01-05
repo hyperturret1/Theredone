@@ -65,6 +65,42 @@
       box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.5);
     }
 
+    /* Chocolate chip positions */
+    .chip-1 {
+      width: 20px;
+      height: 20px;
+      top: 50px;
+      left: 80px;
+    }
+
+    .chip-2 {
+      width: 25px;
+      height: 25px;
+      top: 120px;
+      left: 200px;
+    }
+
+    .chip-3 {
+      width: 15px;
+      height: 15px;
+      top: 220px;
+      left: 100px;
+    }
+
+    .chip-4 {
+      width: 18px;
+      height: 18px;
+      top: 150px;
+      left: 50px;
+    }
+
+    .chip-5 {
+      width: 22px;
+      height: 22px;
+      top: 100px;
+      left: 170px;
+    }
+
     .dim-background {
       position: absolute;
       top: 0;
@@ -128,11 +164,11 @@
 
   <div class="game-container">
     <div class="click-circle" onclick="incrementScore()">
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
-      <div class="chocolate-chip"></div>
+      <div class="chocolate-chip chip-1"></div>
+      <div class="chocolate-chip chip-2"></div>
+      <div class="chocolate-chip chip-3"></div>
+      <div class="chocolate-chip chip-4"></div>
+      <div class="chocolate-chip chip-5"></div>
     </div>
   </div>
 
@@ -177,11 +213,6 @@
     let clickBonus = 1;
     let specialCode = null;
 
-    async function loadScore() {
-      score = 0; // Default value for the score
-      document.getElementById('score').innerText = score;
-    }
-
     function incrementScore() {
       score += clickBonus;
       document.getElementById('score').innerText = score;
@@ -213,9 +244,10 @@
     }
 
     function toggleGUI(guiID) {
-      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
       const gui = document.getElementById(guiID);
-      gui.style.display = gui.style.display === 'block' ? 'none' : 'block';
+      const isVisible = gui.style.display === 'block';
+      document.querySelectorAll('.gui').forEach(g => (g.style.display = 'none'));
+      gui.style.display = isVisible ? 'none' : 'block';
     }
 
     function resetGame() {
@@ -224,8 +256,6 @@
       document.getElementById('score').innerText = score;
       alert("Game reset!");
     }
-
-    window.onload = loadScore;
   </script>
 </body>
 </html>
