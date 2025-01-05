@@ -65,42 +65,6 @@
       box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.5);
     }
 
-    /* Chocolate chip positions */
-    .chip-1 {
-      width: 20px;
-      height: 20px;
-      top: 50px;
-      left: 80px;
-    }
-
-    .chip-2 {
-      width: 25px;
-      height: 25px;
-      top: 120px;
-      left: 200px;
-    }
-
-    .chip-3 {
-      width: 15px;
-      height: 15px;
-      top: 220px;
-      left: 100px;
-    }
-
-    .chip-4 {
-      width: 18px;
-      height: 18px;
-      top: 150px;
-      left: 50px;
-    }
-
-    .chip-5 {
-      width: 22px;
-      height: 22px;
-      top: 100px;
-      left: 170px;
-    }
-
     .dim-background {
       position: absolute;
       top: 0;
@@ -164,11 +128,11 @@
 
   <div class="game-container">
     <div class="click-circle" onclick="incrementScore()">
-      <div class="chocolate-chip chip-1"></div>
-      <div class="chocolate-chip chip-2"></div>
-      <div class="chocolate-chip chip-3"></div>
-      <div class="chocolate-chip chip-4"></div>
-      <div class="chocolate-chip chip-5"></div>
+      <div class="chocolate-chip" style="width: 20px; height: 20px; top: 50px; left: 50px;"></div>
+      <div class="chocolate-chip" style="width: 25px; height: 25px; top: 120px; left: 180px;"></div>
+      <div class="chocolate-chip" style="width: 15px; height: 15px; top: 200px; left: 100px;"></div>
+      <div class="chocolate-chip" style="width: 18px; height: 18px; top: 150px; left: 50px;"></div>
+      <div class="chocolate-chip" style="width: 22px; height: 22px; top: 100px; left: 150px;"></div>
     </div>
   </div>
 
@@ -240,7 +204,11 @@
     }
 
     function openLockedPage() {
-      alert("Locked page functionality is not implemented yet!");
+      if (specialCode) {
+        alert(`Access Granted! Your special code: ${specialCode}`);
+      } else {
+        alert("You need to generate the special code first!");
+      }
     }
 
     function toggleGUI(guiID) {
@@ -253,7 +221,9 @@
     function resetGame() {
       score = 0;
       clickBonus = 1;
+      specialCode = null;
       document.getElementById('score').innerText = score;
+      document.getElementById('specialCode').innerText = '';
       alert("Game reset!");
     }
   </script>
