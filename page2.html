@@ -128,7 +128,6 @@
   </style>
 </head>
 <body>
-
   <div class="dim-background" id="dimBackground"></div>
 
   <div class="counter-box">
@@ -157,20 +156,10 @@
 
   <div class="gui" id="specialGUI">
     <h2>Special</h2>
-    <p>The code will cost you 10000 cookies</p>
-    <button onclick="specialAccess()">Special code</button>
+    <p>The code will cost you 10000 cookies.</p>
+    <button onclick="specialAccess()">Get Special Code</button>
+    <button onclick="openLockedPage()">Open Locked Page</button>
     <p id="specialCode" style="margin-top: 20px; font-weight: bold;"></p>
-  </div>
-
-  <div class="gui" id="statsGUI">
-    <h2>Stats</h2>
-    <p>Your game statistics will be shown here!</p>
-  </div>
-
-  <div class="gui" id="miscGUI">
-    <h2>Misc</h2>
-    <p>Additional settings and options.</p>
-    <button onclick="resetGame()">Reset Game</button>
   </div>
 
   <footer>
@@ -183,6 +172,8 @@
   <script>
     let score = 0;
     let clickBonus = 1;
+    let specialCode = null;
+    let specialCooldown = 20 * 60 * 1000; // 20 minutes in milliseconds
 
     async function openDatabase() {
       return new Promise((resolve, reject) => {
@@ -198,31 +189,31 @@
       });
     }
 
-    async function saveScore() {
+    async function saveData(key, value) {
       const db = await openDatabase();
       const tx = db.transaction('scores', 'readwrite');
       const store = tx.objectStore('scores');
-      await store.put({ id: 'score', value: score });
-      await store.put({ id: 'clickBonus', value: clickBonus });
+      await store.put({ id: key, value: value });
     }
 
-    async function loadScore() {
+    async function loadData(key) {
       const db = await openDatabase();
       const tx = db.transaction('scores', 'readonly');
       const store = tx.objectStore('scores');
-      const storedScore = await store.get('score');
-      const storedClickBonus = await store.get('clickBonus');
+      const data = await store.get(key);
+      return data?.value || null;
+    }
 
-      score = storedScore?.value || 0;
-      clickBonus = storedClickBonus?.value || 1;
-
+    async function loadScore() {
+      score = (await loadData('score')) || 0;
+      clickBonus = (await loadData('clickBonus')) || 1;
       document.getElementById('score').innerText = score;
     }
 
     function incrementScore() {
       score += clickBonus;
       document.getElementById('score').innerText = score;
-      saveScore();
+      saveData('score', score);
     }
 
     async function buyUpgrade() {
@@ -230,35 +221,38 @@
         score -= 10;
         clickBonus++;
         document.getElementById('score').innerText = score;
-        saveScore();
+        saveData('score', score);
+        saveData('clickBonus', clickBonus);
       } else {
         alert('Not enough cookies!');
       }
     }
 
-    function toggleGUI(guiID) {
-      document.getElementById(guiID).style.display =
-        document.getElementById(guiID).style.display === 'none' ? 'block' : 'none';
-    }
+    async function specialAccess() {
+      const lastAccess = await loadData('specialCooldown');
+      const now = Date.now();
 
-    async function resetGame() {
-      score = 0;
-      clickBonus = 1;
-      document.getElementById('score').innerText = score;
-      await saveScore();
-      alert('Game has been reset!');
-    }
+      if (lastAccess && now - lastAccess < specialCooldown) {
+        const timeLeft = Math.ceil((specialCooldown - (now - lastAccess)) / 1000);
+        alert(`Please wait ${timeLeft} seconds to get another code.`);
+        return;
+      }
 
-    function specialAccess() {
       if (score >= 10000) {
         score -= 10000;
+        specialCode = Math.floor(1000000 + Math.random() * 9000000); // Generate 7-digit code
         document.getElementById('score').innerText = score;
-        saveScore();
-        const specialCode = Math.floor(1000000 + Math.random() * 9000000); // Generate 7-digit code
         document.getElementById('specialCode').innerText = `Your special code: ${specialCode}`;
+        saveData('score', score);
+        saveData('specialCooldown', now);
+        saveData('specialCode', specialCode);
       } else {
-        alert('You need at least 10000 cookies for code');
+        alert('You need at least 10000 cookies for the code.');
       }
+    }
+
+    function openLockedPage() {
+      window.location.href = 'locked.html';
     }
 
     window.onload = loadScore;
