@@ -65,12 +65,6 @@
       box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.5);
     }
 
-    .chocolate-chip:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 25%; }
-    .chocolate-chip:nth-child(2) { width: 22px; height: 22px; top: 50%; left: 60%; }
-    .chocolate-chip:nth-child(3) { width: 28px; height: 28px; top: 75%; left: 45%; }
-    .chocolate-chip:nth-child(4) { width: 20px; height: 20px; top: 60%; left: 15%; }
-    .chocolate-chip:nth-child(5) { width: 24px; height: 24px; top: 15%; left: 70%; }
-
     .dim-background {
       position: absolute;
       top: 0;
@@ -128,8 +122,6 @@
   </style>
 </head>
 <body>
-  <div class="dim-background" id="dimBackground"></div>
-
   <div class="counter-box">
     <span id="score">0</span> cookies
   </div>
@@ -162,6 +154,17 @@
     <p id="specialCode" style="margin-top: 20px; font-weight: bold;"></p>
   </div>
 
+  <div class="gui" id="statsGUI">
+    <h2>Stats</h2>
+    <p>Your game statistics will be shown here!</p>
+  </div>
+
+  <div class="gui" id="miscGUI">
+    <h2>Misc</h2>
+    <p>Additional settings and options.</p>
+    <button onclick="resetGame()">Reset Game</button>
+  </div>
+
   <footer>
     <button class="footer-button" onclick="toggleGUI('storeGUI')">Store</button>
     <button class="footer-button" onclick="toggleGUI('specialGUI')">Special</button>
@@ -173,86 +176,53 @@
     let score = 0;
     let clickBonus = 1;
     let specialCode = null;
-    let specialCooldown = 20 * 60 * 1000; // 20 minutes in milliseconds
-
-    async function openDatabase() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open('cookieClickerDB', 1);
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => resolve(request.result);
-        request.onupgradeneeded = (event) => {
-          const db = event.target.result;
-          if (!db.objectStoreNames.contains('scores')) {
-            db.createObjectStore('scores', { keyPath: 'id' });
-          }
-        };
-      });
-    }
-
-    async function saveData(key, value) {
-      const db = await openDatabase();
-      const tx = db.transaction('scores', 'readwrite');
-      const store = tx.objectStore('scores');
-      await store.put({ id: key, value: value });
-    }
-
-    async function loadData(key) {
-      const db = await openDatabase();
-      const tx = db.transaction('scores', 'readonly');
-      const store = tx.objectStore('scores');
-      const data = await store.get(key);
-      return data?.value || null;
-    }
 
     async function loadScore() {
-      score = (await loadData('score')) || 0;
-      clickBonus = (await loadData('clickBonus')) || 1;
+      score = 0; // Default value for the score
       document.getElementById('score').innerText = score;
     }
 
     function incrementScore() {
       score += clickBonus;
       document.getElementById('score').innerText = score;
-      saveData('score', score);
     }
 
-    async function buyUpgrade() {
+    function buyUpgrade() {
       if (score >= 10) {
         score -= 10;
         clickBonus++;
         document.getElementById('score').innerText = score;
-        saveData('score', score);
-        saveData('clickBonus', clickBonus);
       } else {
         alert('Not enough cookies!');
       }
     }
 
-    async function specialAccess() {
-      const lastAccess = await loadData('specialCooldown');
-      const now = Date.now();
-
-      if (lastAccess && now - lastAccess < specialCooldown) {
-        const timeLeft = Math.ceil((specialCooldown - (now - lastAccess)) / 1000);
-        alert(`Please wait ${timeLeft} seconds to get another code.`);
-        return;
-      }
-
+    function specialAccess() {
       if (score >= 10000) {
         score -= 10000;
-        specialCode = Math.floor(1000000 + Math.random() * 9000000); // Generate 7-digit code
+        specialCode = Math.floor(1000000 + Math.random() * 9000000); // Generate a 7-digit code
         document.getElementById('score').innerText = score;
         document.getElementById('specialCode').innerText = `Your special code: ${specialCode}`;
-        saveData('score', score);
-        saveData('specialCooldown', now);
-        saveData('specialCode', specialCode);
       } else {
         alert('You need at least 10000 cookies for the code.');
       }
     }
 
     function openLockedPage() {
-      window.location.href = 'locked.html';
+      alert("Locked page functionality is not implemented yet!");
+    }
+
+    function toggleGUI(guiID) {
+      document.querySelectorAll('.gui').forEach(gui => gui.style.display = 'none');
+      const gui = document.getElementById(guiID);
+      gui.style.display = gui.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function resetGame() {
+      score = 0;
+      clickBonus = 1;
+      document.getElementById('score').innerText = score;
+      alert("Game reset!");
     }
 
     window.onload = loadScore;
