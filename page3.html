@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Locked Page</title>
+  <title>Verify Special Code</title>
   <style>
     body {
       display: flex;
@@ -27,11 +27,16 @@
       font-size: 1em;
       cursor: pointer;
     }
+
+    p {
+      margin-top: 20px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>Enter Special Code</h1>
-  <input type="text" id="codeInput" placeholder="Enter your code" />
+  <input type="text" id="codeInput" placeholder="Enter your special code" />
   <button onclick="verifyCode()">Submit</button>
   <p id="resultMessage"></p>
 
@@ -49,14 +54,17 @@
       const tx = db.transaction('scores', 'readonly');
       const store = tx.objectStore('scores');
       const data = await store.get(key);
-      return data?.value || null;
+      return data?.value || null; // Return null if no data found
     }
 
     async function verifyCode() {
       const enteredCode = document.getElementById('codeInput').value;
       const correctCode = await loadData('specialCode');
 
-      if (enteredCode == correctCode) {
+      console.log('Entered Code:', enteredCode);
+      console.log('Correct Code:', correctCode);
+
+      if (enteredCode === correctCode) {
         document.getElementById('resultMessage').innerText = 'Access Granted! Welcome!';
       } else {
         document.getElementById('resultMessage').innerText = 'Invalid Code. Try Again.';
