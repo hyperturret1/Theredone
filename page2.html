@@ -259,8 +259,8 @@
     }
 
     function specialAccess() {
-      if (score >= 10000) {
-        score -= 10000;
+      if (score >= 10) {
+        score -= 10;
         document.getElementById('score').innerText = score;
         saveScore();
         const specialCode = Math.floor(1000000 + Math.random() * 9000000);
