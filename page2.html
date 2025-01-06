@@ -150,14 +150,42 @@
     </div>
   </div>
 
+  <div class="gui" id="storeGUI">
+    <h2>Store</h2>
+    <p>Buy upgrades and items here!</p>
+    <div class="upgrade-line">
+      <div>
+        <p>Upgrade clicks:</p>
+        <p>plus one cookie per click</p>
+      </div>
+      <button class="upgrade-button" id="shopUpgradeButton" onclick="buyUpgrade()">10 🍪</button>
+    </div>
+  </div>
+
   <div class="gui" id="specialGUI">
     <h2>Special</h2>
     <p>Special upgrades and bonuses will be displayed here!</p>
-    <button id="specialAccessButton" onclick="handleSpecialAccess()">Special Access</button>
+    <button id="specialAccessButton" onclick="specialAccess()">Special Access</button>
+    <p id="specialCode" style="margin-top: 20px; font-weight: bold;"></p>
+    <button id="goToPage3Button" onclick="goToOtherPage()" disabled>Go to Page 3</button>
+  </div>
+
+  <div class="gui" id="statsGUI">
+    <h2>Stats</h2>
+    <p>Your game statistics will be shown here!</p>
+  </div>
+
+  <div class="gui" id="miscGUI">
+    <h2>Misc</h2>
+    <p>Additional settings and options.</p>
+    <button onclick="resetGame()">Reset Game</button>
   </div>
 
   <footer>
+    <button class="footer-button" onclick="toggleGUI('storeGUI')">Store</button>
     <button class="footer-button" onclick="toggleGUI('specialGUI')">Special</button>
+    <button class="footer-button" onclick="toggleGUI('statsGUI')">Stats</button>
+    <button class="footer-button" onclick="toggleGUI('miscGUI')">Misc</button>
   </footer>
 
   <script>
@@ -211,15 +239,38 @@
       });
     }
 
-    async function handleSpecialAccess() {
+    async function resetGame() {
+      score = 0;
+      clickBonus = 1;
+      document.getElementById('score').innerText = score;
+      await saveScore();
+      alert('Game has been reset!');
+    }
+
+    async function buyUpgrade() {
+      if (score >= 10) {
+        score -= 10;
+        clickBonus++;
+        document.getElementById('score').innerText = score;
+        await saveScore();
+      } else {
+        alert('Not enough cookies');
+      }
+    }
+
+    function specialAccess() {
       if (score >= 10000) {
         score -= 10000;
         document.getElementById('score').innerText = score;
-        await saveScore();
-        window.location.href = "page3.html";
+        saveScore();
+        document.getElementById('goToPage3Button').disabled = false;
       } else {
-        alert("You need at least 10,000 cookies to access this page!");
+        alert('You need at least 10000 cookies for special access');
       }
+    }
+
+    function goToOtherPage() {
+      window.location.href = "page3.html";
     }
 
     window.onload = loadScore;
