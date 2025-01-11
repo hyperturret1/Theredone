@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Page 3</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
     body {
       background-image: linear-gradient(to bottom, #FF4500, #8B0000);
@@ -37,20 +38,28 @@
   </style>
 </head>
 <body>
-  <button onclick="sendWhatsAppMessage()">Send WhatsApp Message</button>
+  <button onclick="sendEmail()">Click Me</button>
 
   <script>
-    function sendWhatsAppMessage() {
-      const userId = "USER123"; // Replace this with a dynamic ID if needed
-      const googleUsername = "user@gmail.com"; // Replace this with logic to get the user's Google email
-      const phoneNumber = "96179313658"; // WhatsApp number in international format
-      const message = `Hello, this is my ID: ${userId}, and my Google username is: ${googleUsername}`;
-      
-      // Construct the WhatsApp URL
-      const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-      
-      // Open the WhatsApp chat in a new tab
-      window.open(whatsappURL, "_blank");
+    // Initialize EmailJS with your public key
+    emailjs.init('sedX3ssYNonPN78s2');
+
+    function sendEmail() {
+      const templateParams = {
+        from_name: "Website User",
+        user_email: "user@example.com", // You can replace this with dynamic data later
+        message: "The button was clicked!",
+      };
+
+      emailjs.send('service_a7thouk', 'template_efqsyxp', templateParams)
+        .then((response) => {
+          alert('Email sent successfully!');
+          console.log('SUCCESS!', response.status, response.text);
+        })
+        .catch((error) => {
+          alert('Failed to send email. Please try again.');
+          console.error('FAILED...', error);
+        });
     }
   </script>
 </body>
