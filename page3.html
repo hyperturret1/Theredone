@@ -3,76 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page 3</title>
-  <script type="text/javascript">
-    // Initialize EmailJS with your public key
-    (function() {
-      emailjs.init("sedX3ssYNonPN78s2");  // Public key for emailjs
-    })();
-
-    function sendEmail() {
-      const userEmail = document.getElementById("userEmail").value;
-      
-      // Check if email is provided
-      if (!userEmail) {
-        alert("Please enter your email address!");
-        return;
-      }
-
-      console.log("Email entered:", userEmail); // Log email to verify
-
-      const templateParams = {
-        from_name: userEmail,
-        message: "Button clicked"
-      };
-
-      // Send email
-      emailjs.send("service_a7thouk", "template_efqsyxp", templateParams)
-        .then(function(response) {
-          console.log("Email sent successfully", response); // Log success response
-          alert("Email sent successfully!");
-        }, function(error) {
-          console.error("Error sending email:", error); // Log error response
-          alert("Failed to send email. Please try again.");
-        });
-    }
-  </script>
+  <title>Login Page</title>
   <style>
     body {
-      background-image: linear-gradient(to bottom, #FF4500, #8B0000);
-      color: white;
-      height: 100vh;
-      margin: 0;
       font-family: Arial, sans-serif;
-      overflow: hidden;
+      background-color: #f0f0f0;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-
+    .login-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
     button {
-      background-color: #ffffff;
-      color: #8B0000;
-      font-size: 1.5em;
-      padding: 10px 20px;
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 4px;
       cursor: pointer;
-      font-weight: bold;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
     }
-
     button:hover {
-      transform: scale(1.1);
-      box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5);
+      background-color: #45a049;
+    }
+    .error {
+      color: red;
+      font-size: 0.9em;
     }
   </style>
 </head>
 <body>
-  <div>
-    <input type="email" id="userEmail" placeholder="Enter your email" style="padding: 10px; font-size: 1em; border-radius: 5px; border: none; margin-right: 10px;">
-    <button onclick="sendEmail()">Click Me</button>
-  </div>
+
+<div class="login-container">
+  <h2>Login</h2>
+  <div class="error" id="error-message"></div>
+  <form id="login-form">
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button type="button" onclick="login()">Login</button>
+  </form>
+</div>
+
+<script>
+  const registeredUsers = [
+    { email: "test@example.com", password: "password123" },
+    { email: "user@example.com", password: "securepass" },
+  ];
+
+  function login() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errorMessage = document.getElementById('error-message');
+
+    // Clear any previous error
+    errorMessage.textContent = '';
+
+    // Check if the email exists in registered users
+    const user = registeredUsers.find(user => user.email === email);
+
+    if (!user) {
+      errorMessage.textContent = 'Email not found!';
+      return;
+    }
+
+    // Check if the password matches
+    if (user.password !== password) {
+      errorMessage.textContent = 'Incorrect password!';
+      return;
+    }
+
+    // If login is successful, redirect to another page
+    window.location.href = 'page3.html'; // Replace with your destination page
+  }
+</script>
+
 </body>
 </html>
