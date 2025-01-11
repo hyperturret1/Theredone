@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Page 3</title>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
     body {
       background-image: linear-gradient(to bottom, #FF4500, #8B0000);
@@ -16,6 +15,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
     }
 
     button {
@@ -35,32 +35,55 @@
       transform: scale(1.1);
       box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5);
     }
+
+    input {
+      padding: 10px;
+      font-size: 1em;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .login-container {
+      text-align: center;
+    }
+
   </style>
 </head>
 <body>
-  <button onclick="sendEmail()">Click Me</button>
 
+  <div class="login-container">
+    <h2>Please enter your ID</h2>
+    <input type="text" id="userId" placeholder="Enter your ID" />
+    <button onclick="sendEmail()">Submit</button>
+  </div>
+
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script>
-    // Initialize EmailJS with your public key
-    emailjs.init('sedX3ssYNonPN78s2');
+    emailjs.init("sedX3ssYNonPN78s2"); // Use your public key here
 
     function sendEmail() {
+      const userId = document.getElementById("userId").value; // Get the entered user ID
+
+      if (!userId) {
+        alert("Please enter your ID first!");
+        return;
+      }
+
       const templateParams = {
-        from_name: "Website User",
-        user_email: "user@example.com", // You can replace this with dynamic data later
-        message: "The button was clicked!",
+        from_name: userId,  // Use the user ID entered
+        message: "Button clicked"
       };
 
-      emailjs.send('service_a7thouk', 'template_efqsyxp', templateParams)
-        .then((response) => {
-          alert('Email sent successfully!');
-          console.log('SUCCESS!', response.status, response.text);
-        })
-        .catch((error) => {
-          alert('Failed to send email. Please try again.');
-          console.error('FAILED...', error);
+      emailjs.send("service_a7thouk", "template_efqsyxp", templateParams)
+        .then(function(response) {
+          console.log("SUCCESS!", response);
+          alert("Email sent successfully!");
+        }, function(error) {
+          console.log("FAILED...", error);
         });
     }
   </script>
+
 </body>
 </html>
