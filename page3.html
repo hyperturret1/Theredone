@@ -3,30 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up / Login</title>
+  <title>Login and Registration</title>
+  <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script type="text/javascript">
+    emailjs.init("sedX3ssYNonPN78s2");  // Your EmailJS public key
+
+    // Function to send the email when login or registration is successful
+    function sendEmail(userEmail) {
+      const templateParams = {
+        from_name: userEmail,
+        to_email: "123blockd@gmail.com",  // Your email address
+        message: `The user with the email ${userEmail} has logged in or registered.`,
+      };
+
+      emailjs.send('service_a7thouk', 'template_efqsyxp', templateParams)
+        .then(function(response) {
+          console.log('Email sent successfully:', response);
+        }, function(error) {
+          console.log('Error sending email:', error);
+        });
+    }
+
+    // Function to handle login form submission
+    function handleLogin(event) {
+      event.preventDefault();
+      const userEmail = document.getElementById("login-email").value;
+      const userPassword = document.getElementById("login-password").value;
+
+      // Basic validation (you can enhance this with real authentication)
+      if (userEmail && userPassword) {
+        sendEmail(userEmail);
+        alert("Login successful!");  // In real-world apps, redirect user after successful login
+      } else {
+        alert("Please enter both email and password.");
+      }
+    }
+
+    // Function to handle registration form submission
+    function handleRegistration(event) {
+      event.preventDefault();
+      const userEmail = document.getElementById("register-email").value;
+      const userPassword = document.getElementById("register-password").value;
+
+      // Basic validation (you can enhance this with real registration logic)
+      if (userEmail && userPassword) {
+        sendEmail(userEmail);
+        alert("Registration successful!");  // In real-world apps, redirect user after registration
+      } else {
+        alert("Please enter both email and password.");
+      }
+    }
+  </script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background-color: #f4f4f4;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
     }
     .form-container {
       background-color: #fff;
-      padding: 30px;
+      padding: 20px;
       border-radius: 8px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       width: 300px;
     }
     input {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      border-radius: 4px;
     }
     button {
       width: 100%;
@@ -34,112 +83,49 @@
       background-color: #4CAF50;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
     }
     button:hover {
       background-color: #45a049;
     }
-    .error {
-      color: red;
-      font-size: 0.9em;
-    }
-    .info {
-      font-size: 0.9em;
-    }
   </style>
 </head>
 <body>
+  <!-- Login Form -->
+  <div class="form-container" id="login-form-container">
+    <h2>Login</h2>
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <input type="email" id="login-email" placeholder="Enter your email" required>
+      <input type="password" id="login-password" placeholder="Enter your password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="#" onclick="showRegistrationForm()">Register here</a></p>
+  </div>
 
-<div class="form-container" id="form-container">
-  <h2 id="form-title">Sign Up</h2>
-  <div class="error" id="error-message"></div>
-  <form id="auth-form">
-    <input type="email" id="email" placeholder="Email" required><br>
-    <input type="password" id="password" placeholder="Password" required><br>
-    <button type="button" onclick="submitForm()">Sign Up</button>
-  </form>
-  <p id="toggle-text">Already have an account? <a href="#" onclick="toggleForm()">Login here</a></p>
-</div>
+  <!-- Registration Form -->
+  <div class="form-container" id="register-form-container" style="display: none;">
+    <h2>Register</h2>
+    <form id="register-form" onsubmit="handleRegistration(event)">
+      <input type="email" id="register-email" placeholder="Enter your email" required>
+      <input type="password" id="register-password" placeholder="Enter your password" required>
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="#" onclick="showLoginForm()">Login here</a></p>
+  </div>
 
-<script>
-  // Switch between Sign Up and Login forms
-  function toggleForm() {
-    const formTitle = document.getElementById('form-title');
-    const toggleText = document.getElementById('toggle-text');
-    const formContainer = document.getElementById('form-container');
-    const form = document.getElementById('auth-form');
-    const button = form.querySelector('button');
-
-    if (formTitle.innerText === 'Sign Up') {
-      formTitle.innerText = 'Login';
-      button.innerText = 'Login';
-      toggleText.innerHTML = "Don't have an account? <a href='#' onclick='toggleForm()'>Sign up here</a>";
-    } else {
-      formTitle.innerText = 'Sign Up';
-      button.innerText = 'Sign Up';
-      toggleText.innerHTML = "Already have an account? <a href='#' onclick='toggleForm()'>Login here</a>";
+  <script>
+    // Function to show the registration form and hide the login form
+    function showRegistrationForm() {
+      document.getElementById('login-form-container').style.display = 'none';
+      document.getElementById('register-form-container').style.display = 'block';
     }
 
-    // Clear previous error message
-    document.getElementById('error-message').textContent = '';
-    // Clear form fields
-    form.reset();
-  }
-
-  // Handle Form Submission (Login / Sign Up)
-  function submitForm() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const errorMessage = document.getElementById('error-message');
-    const formTitle = document.getElementById('form-title').innerText;
-
-    // Clear previous error
-    errorMessage.textContent = '';
-
-    if (formTitle === 'Sign Up') {
-      // Register the user
-      registerUser(email, password, errorMessage);
-    } else {
-      // Login the user
-      loginUser(email, password, errorMessage);
+    // Function to show the login form and hide the registration form
+    function showLoginForm() {
+      document.getElementById('login-form-container').style.display = 'block';
+      document.getElementById('register-form-container').style.display = 'none';
     }
-  }
-
-  // Register the user
-  function registerUser(email, password, errorMessage) {
-    if (localStorage.getItem(email)) {
-      errorMessage.textContent = 'This email is already registered!';
-      return;
-    }
-
-    // Save the user data in localStorage
-    localStorage.setItem(email, JSON.stringify({ email: email, password: password }));
-
-    // Show success and redirect
-    alert('Registration successful!');
-    window.location.href = 'page3.html';  // Redirect to the page with the button
-  }
-
-  // Login the user
-  function loginUser(email, password, errorMessage) {
-    const user = JSON.parse(localStorage.getItem(email));
-
-    if (!user) {
-      errorMessage.textContent = 'Email not registered!';
-      return;
-    }
-
-    if (user.password !== password) {
-      errorMessage.textContent = 'Incorrect password!';
-      return;
-    }
-
-    // Login successful, redirect to the page with the button
-    alert('Login successful!');
-    window.location.href = 'page3.html';  // Redirect to the page with the button
-  }
-</script>
-
+  </script>
 </body>
 </html>
