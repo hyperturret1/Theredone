@@ -5,27 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Page 3</title>
   <script type="text/javascript">
+    // Initialize EmailJS with your public key
     (function() {
-      emailjs.init("sedX3ssYNonPN78s2");
+      emailjs.init("sedX3ssYNonPN78s2");  // Public key for emailjs
     })();
 
     function sendEmail() {
       const userEmail = document.getElementById("userEmail").value;
+      
+      // Check if email is provided
       if (!userEmail) {
         alert("Please enter your email address!");
         return;
       }
+
+      console.log("Email entered:", userEmail); // Log email to verify
 
       const templateParams = {
         from_name: userEmail,
         message: "Button clicked"
       };
 
+      // Send email
       emailjs.send("service_a7thouk", "template_efqsyxp", templateParams)
         .then(function(response) {
+          console.log("Email sent successfully", response); // Log success response
           alert("Email sent successfully!");
         }, function(error) {
-          console.error("Error sending email:", error);
+          console.error("Error sending email:", error); // Log error response
           alert("Failed to send email. Please try again.");
         });
     }
