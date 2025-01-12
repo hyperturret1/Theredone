@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -56,7 +57,9 @@
   </div>
 
   <script>
-    // Open (or create) the IndexedDB database
+    // Initialize EmailJS
+    emailjs.init("sedX3ssYNonPN78s2");
+
     const dbRequest = indexedDB.open("RegistrationDB", 1);
     let db;
 
@@ -75,7 +78,7 @@
       console.error("Error opening database:", event.target.errorCode);
     };
 
-    // Function to check if email is already registered
+    // Check if email is already registered
     function isEmailRegistered(email) {
       return new Promise((resolve, reject) => {
         const transaction = db.transaction(["users"], "readonly");
@@ -92,11 +95,22 @@
       });
     }
 
-    // Function to add a new email to the database
+    // Add a new email to the database
     function registerEmail(email) {
       const transaction = db.transaction(["users"], "readwrite");
       const store = transaction.objectStore("users");
       store.add({ email });
+    }
+
+    // Send email notification using EmailJS
+    function sendEmailNotification(email) {
+      emailjs.send("service_a7thouk", "template_efqsyxp", { user_email: email })
+        .then(() => {
+          console.log("Email sent successfully!");
+        })
+        .catch((error) => {
+          console.error("Error sending email:", error);
+        });
     }
 
     document.getElementById("registerForm").addEventListener("submit", async (event) => {
@@ -106,7 +120,6 @@
       const errorMessage = document.getElementById("errorMessage");
       const email = emailInput.value.trim();
 
-      // Email validation regex
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!emailRegex.test(email)) {
@@ -114,10 +127,7 @@
         return;
       }
 
-      // Check if the email is already registered
       const alreadyRegistered = await isEmailRegistered(email);
-
-      // Check if this email belongs to the current user
       const currentUser = localStorage.getItem("currentUser");
 
       if (alreadyRegistered && currentUser !== email) {
@@ -125,15 +135,15 @@
         return;
       }
 
-      // Add email to IndexedDB if not already registered
       if (!alreadyRegistered) {
         registerEmail(email);
       }
 
-      // Save the current user in localStorage
       localStorage.setItem("currentUser", email);
 
-      // Clear error message and redirect to page4.html
+      // Send email notification
+      sendEmailNotification(email);
+
       errorMessage.textContent = "";
       window.location.href = "page4.html";
     });
