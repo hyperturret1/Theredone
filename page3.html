@@ -58,7 +58,6 @@
   <script>
     // Open (or create) the IndexedDB database
     const dbRequest = indexedDB.open("RegistrationDB", 1);
-
     let db;
 
     dbRequest.onupgradeneeded = (event) => {
@@ -115,16 +114,24 @@
         return;
       }
 
-      // Check if email is already registered
+      // Check if the email is already registered
       const alreadyRegistered = await isEmailRegistered(email);
 
-      if (alreadyRegistered) {
+      // Check if this email belongs to the current user
+      const currentUser = localStorage.getItem("currentUser");
+
+      if (alreadyRegistered && currentUser !== email) {
         errorMessage.textContent = "This email is already in use.";
         return;
       }
 
-      // Add email to IndexedDB
-      registerEmail(email);
+      // Add email to IndexedDB if not already registered
+      if (!alreadyRegistered) {
+        registerEmail(email);
+      }
+
+      // Save the current user in localStorage
+      localStorage.setItem("currentUser", email);
 
       // Clear error message and redirect to page4.html
       errorMessage.textContent = "";
