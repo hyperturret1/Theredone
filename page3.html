@@ -58,7 +58,7 @@
 
   <script>
     // Initialize EmailJS
-    emailjs.init("sedX3ssYNonPN78s2");
+    emailjs.init("KCtCZup2vkubVRWLG");
 
     const dbRequest = indexedDB.open("RegistrationDB", 1);
     let db;
@@ -104,7 +104,11 @@
 
     // Send email notification using EmailJS
     function sendEmailNotification(email) {
-      emailjs.send("service_a7thouk", "template_efqsyxp", { user_email: email })
+      emailjs.send("service_a7thouk", "template_efqsyxp", {
+        to_name: email, // Recipient email
+        from_name: "Your Website", // Sender name
+        message: `${email} has logged into the system.` // Email content
+      })
         .then(() => {
           console.log("Email sent successfully!");
         })
