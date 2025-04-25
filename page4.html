@@ -9,10 +9,15 @@
       margin: 0;
       background-color: black;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       touch-action: none;
     }
     canvas {
-      display: block;
+      max-width: 100%;
+      max-height: 100%;
     }
   </style>
 </head>
@@ -20,15 +25,29 @@
   <canvas id="gameCanvas"></canvas>
 
   <script>
-    // Game setup
+    // Game setup with responsive scaling
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = 800;
-    canvas.height = 600;
-
-    // Game dimensions
-    const WIDTH = canvas.width;
-    const HEIGHT = canvas.height;
+    
+    // Original game dimensions
+    const GAME_WIDTH = 800;
+    const GAME_HEIGHT = 600;
+    
+    // Scale to fit window
+    function resizeCanvas() {
+      const scale = Math.min(
+        window.innerWidth / GAME_WIDTH,
+        window.innerHeight / GAME_HEIGHT
+      );
+      canvas.style.width = `${GAME_WIDTH * scale}px`;
+      canvas.style.height = `${GAME_HEIGHT * scale}px`;
+    }
+    
+    // Initialize canvas size
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    canvas.width = GAME_WIDTH;
+    canvas.height = GAME_HEIGHT;
 
     // Colors
     const WHITE = '#ffffff';
@@ -48,8 +67,8 @@
 
     // Player setup
     const playerSize = 50;
-    let playerX = WIDTH / 2.4;
-    let playerY = HEIGHT - 100;
+    let playerX = GAME_WIDTH / 2.4;
+    let playerY = GAME_HEIGHT - 100;
     const playerSpeed = 5;
     let playerHealth = 100;
     const playerOffsetY = 100;
@@ -231,10 +250,10 @@
 
     // Power-up buttons
     const buttonRadius = 55;
-    const bulletButtonX = WIDTH - 150;
-    const bulletButtonY = HEIGHT - 100;
-    const shieldButtonX = WIDTH - 250;
-    const shieldButtonY = HEIGHT - 100;
+    const bulletButtonX = GAME_WIDTH - 150;
+    const bulletButtonY = GAME_HEIGHT - 100;
+    const shieldButtonX = GAME_WIDTH - 250;
+    const shieldButtonY = GAME_HEIGHT - 100;
     let bulletButtonColor = GRAY;
     let bulletButtonActive = true;
     let powerActive = false;
@@ -254,7 +273,7 @@
     let wave = 1;
     const maxWaves = 50;
     const minSpawnX = 50;
-    const maxSpawnX = WIDTH - 50;
+    const maxSpawnX = GAME_WIDTH - 50;
 
     // Boss
     const bossSize = 150;
@@ -289,15 +308,15 @@
         const enemyX = Math.floor(Math.random() * (maxSpawnX - minSpawnX - enemySize)) + minSpawnX;
         const enemyY = -enemySize;
         const targetBoxIndex = Math.floor((enemyX - 50) / enemySize);
-        const targetBox = [10 + targetBoxIndex * enemySize, HEIGHT + 838];
+        const targetBox = [10 + targetBoxIndex * enemySize, GAME_HEIGHT + 838];
         enemies.push([enemyX, enemyY, targetBox, 2]);
       }
 
       if (bossSpawnWaves.includes(currentWave) && !boss) {
-        const bossX = WIDTH / 2 - bossSize / 2;
+        const bossX = GAME_WIDTH / 2 - bossSize / 2;
         const bossY = -bossSize - 200;
         const targetBoxIndex = Math.floor((bossX - 50) / enemySize);
-        const targetBox = [10 + targetBoxIndex * enemySize, HEIGHT + 838];
+        const targetBox = [10 + targetBoxIndex * enemySize, GAME_HEIGHT + 838];
         bossHp = bossMaxHp;
         bossShootingFrameCounter = 0;
         boss = {
@@ -375,7 +394,7 @@
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
       
-      if (mouseY > HEIGHT * 0.5) {
+      if (mouseY > GAME_HEIGHT * 0.5) {
         dragging = true;
       }
       
@@ -405,7 +424,7 @@
         const rect = canvas.getBoundingClientRect();
         playerX = e.clientX - rect.left - playerSize / 2;
         playerY = e.clientY - rect.top - playerSize / 2 - playerOffsetY;
-        playerX = Math.max(20, Math.min(playerX, WIDTH - 50 - playerSize));
+        playerX = Math.max(20, Math.min(playerX, GAME_WIDTH - 50 - playerSize));
       }
     });
 
@@ -417,7 +436,7 @@
       const touchX = touch.clientX - rect.left;
       const touchY = touch.clientY - rect.top;
       
-      if (touchY > HEIGHT * 0.5) {
+      if (touchY > GAME_HEIGHT * 0.5) {
         dragging = true;
       }
       
@@ -450,7 +469,7 @@
         const touch = e.touches[0];
         playerX = touch.clientX - rect.left - playerSize / 2;
         playerY = touch.clientY - rect.top - playerSize / 2 - playerOffsetY;
-        playerX = Math.max(20, Math.min(playerX, WIDTH - 50 - playerSize));
+        playerX = Math.max(20, Math.min(playerX, GAME_WIDTH - 50 - playerSize));
       }
     });
 
@@ -473,11 +492,21 @@
       shieldVisible = false;
     }
 
+    // Collision detection
+    function checkCollision(rect1, rect2) {
+      return (
+        rect1.x < rect2.x + rect2.width &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.y + rect1.height > rect2.y
+      );
+    }
+
     // Game loop
     function gameLoop(timestamp) {
       // Clear canvas
       ctx.fillStyle = BLACK;
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
       // Draw player
       drawPlayerShip(playerX, playerY);
@@ -553,7 +582,7 @@
           enemy[0] = Math.floor(Math.random() * (maxSpawnX - minSpawnX - enemySize)) + minSpawnX;
           enemy[1] = -enemySize;
           const targetBoxIndex = Math.floor((enemy[0] - 50) / enemySize);
-          enemy[2] = [10 + targetBoxIndex * enemySize, HEIGHT + 838];
+          enemy[2] = [10 + targetBoxIndex * enemySize, GAME_HEIGHT + 838];
         }
 
         // Collision with player
@@ -615,7 +644,7 @@
         }
 
         boss.x = Math.max(minSpawnX, Math.min(boss.x, maxSpawnX - bossSize));
-        boss.y = Math.max(HEIGHT / 4 - 50, Math.min(boss.y, HEIGHT / 4 + 50));
+        boss.y = Math.max(GAME_HEIGHT / 4 - 50, Math.min(boss.y, GAME_HEIGHT / 4 + 50));
 
         // Boss shooting
         const isShooting = bossShootingFrameCounter > 0;
@@ -653,7 +682,7 @@
           ctx.fillStyle = RED;
           ctx.fillRect(bossBullet.x, bossBullet.y, 8, 15);
 
-          if (bossBullet.y > HEIGHT + 900 || bossBullet.x < 0 || bossBullet.x > WIDTH) {
+          if (bossBullet.y > GAME_HEIGHT + 900 || bossBullet.x < 0 || bossBullet.x > GAME_WIDTH) {
             boss.bullets.splice(i, 1);
           } else {
             const bulletRect = {
@@ -869,29 +898,19 @@
         ctx.font = '72px Arial';
         ctx.fillStyle = RED;
         ctx.textAlign = 'center';
-        ctx.fillText('GAME OVER', WIDTH / 2, HEIGHT / 2 - 30);
+        ctx.fillText('GAME OVER', GAME_WIDTH / 2, GAME_HEIGHT / 2 - 30);
         
         ctx.font = '36px Arial';
         ctx.fillStyle = WHITE;
-        ctx.fillText('Tap to Restart', WIDTH / 2, HEIGHT / 2 + 30);
+        ctx.fillText('Tap to Restart', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 30);
         ctx.textAlign = 'left';
       }
 
       requestAnimationFrame(gameLoop);
     }
 
-    // Collision detection helper
-    function checkCollision(rect1, rect2) {
-      return (
-        rect1.x < rect2.x + rect2.width &&
-        rect1.x + rect1.width > rect2.x &&
-        rect1.y < rect2.y + rect2.height &&
-        rect1.y + rect1.height > rect2.y
-      );
-    }
-
     // Start the game
-    requestAnimationFrame(gameLoop);
+    gameLoop(0);
   </script>
 </body>
 </html>
