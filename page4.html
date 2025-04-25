@@ -3,14 +3,895 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page 4</title>
+  <title>Spaceship Game</title>
   <style>
     body {
       margin: 0;
-      background-color: white;
+      background-color: black;
+      overflow: hidden;
+      touch-action: none;
+    }
+    canvas {
+      display: block;
     }
   </style>
 </head>
 <body>
+  <canvas id="gameCanvas"></canvas>
+
+  <script>
+    // Game setup
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 600;
+
+    // Game dimensions
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
+
+    // Colors
+    const WHITE = '#ffffff';
+    const RED = '#ff0000';
+    const GREEN = '#00ff00';
+    const BRIGHT_GREEN = '#ffff00';
+    const BLUE = '#0064ff';
+    const SHIELD_BLUE = '#64c8ff';
+    const BLACK = '#000000';
+    const YELLOW = '#ffff00';
+    const ORANGE = '#ffa500';
+    const GRAY = '#808080';
+    const DARK_GRAY = '#505050';
+    const LIGHT_GRAY = '#c8b4b4';
+    const BOSS_HEALTH_COLOR = '#c80000';
+    const ENEMY_COLOR = '#c8ffc8';
+
+    // Player setup
+    const playerSize = 50;
+    let playerX = WIDTH / 2.4;
+    let playerY = HEIGHT - 100;
+    const playerSpeed = 5;
+    let playerHealth = 100;
+    const playerOffsetY = 100;
+    let dragging = false;
+
+    // Create player spaceship
+    function drawPlayerShip(x, y) {
+      ctx.save();
+      ctx.translate(x, y);
+      
+      // Main body (red)
+      ctx.beginPath();
+      ctx.moveTo(25, 2);
+      ctx.lineTo(40, 15);
+      ctx.lineTo(35, 20);
+      ctx.lineTo(40, 45);
+      ctx.lineTo(10, 45);
+      ctx.lineTo(15, 20);
+      ctx.lineTo(10, 15);
+      ctx.closePath();
+      ctx.fillStyle = RED;
+      ctx.fill();
+      
+      // Cockpit (white)
+      ctx.beginPath();
+      ctx.moveTo(25, 8);
+      ctx.lineTo(30, 15);
+      ctx.lineTo(20, 15);
+      ctx.closePath();
+      ctx.fillStyle = WHITE;
+      ctx.fill();
+      
+      // Engine glow
+      for (let i = 0; i < 10; i++) {
+        const alpha = 1 - i * 0.1;
+        const color = `rgba(255, ${Math.max(100, 255 - i * 15)}, 0, ${alpha})`;
+        ctx.fillStyle = color;
+        ctx.fillRect(22, 40 + i, 6, 2);
+      }
+      
+      ctx.restore();
+    }
+
+    // Create enemy spaceship
+    function drawEnemyShip(x, y, frameIndex) {
+      ctx.save();
+      ctx.translate(x, y);
+      
+      // Main body (green)
+      ctx.beginPath();
+      ctx.moveTo(20, 38);
+      ctx.lineTo(5, 25);
+      ctx.lineTo(10, 20);
+      ctx.lineTo(5, 5);
+      ctx.lineTo(35, 5);
+      ctx.lineTo(30, 20);
+      ctx.lineTo(35, 25);
+      ctx.closePath();
+      ctx.fillStyle = GREEN;
+      ctx.fill();
+      
+      // Cockpit (white)
+      ctx.beginPath();
+      ctx.moveTo(20, 32);
+      ctx.lineTo(25, 25);
+      ctx.lineTo(15, 25);
+      ctx.closePath();
+      ctx.fillStyle = WHITE;
+      ctx.fill();
+      
+      // Engine glow with animation
+      for (let i = 0; i < 8; i++) {
+        const alpha = 0.8 - i * 0.1;
+        let color;
+        if (frameIndex % 2 === 0) {
+          color = `rgba(255, ${Math.max(0, 150 - i * 30)}, 0, ${alpha})`;
+        } else {
+          color = `rgba(255, ${Math.max(0, 100 - i * 12)}, 0, ${alpha})`;
+        }
+        ctx.fillStyle = color;
+        ctx.fillRect(17, i, 6, 2);
+      }
+      
+      ctx.restore();
+    }
+
+    // Create boss ship
+    function drawBossShip(x, y, frameIndex, isShooting) {
+      ctx.save();
+      ctx.translate(x, y);
+      const centerX = 75;
+      const centerY = 75;
+      
+      // Hexagon main body (red)
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = Math.PI / 3 * i - Math.PI / 6;
+        const radius = 50;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fillStyle = RED;
+      ctx.fill();
+      
+      // Inner hexagon (yellow)
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = Math.PI / 3 * i - Math.PI / 6;
+        const radius = 30;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fillStyle = YELLOW;
+      ctx.fill();
+      
+      // Core (pulsing white)
+      const coreSize = 10 + (frameIndex % 3);
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, coreSize, 0, Math.PI * 2);
+      ctx.fillStyle = WHITE;
+      ctx.fill();
+      
+      // 4 mechanical arms
+      const armLength = 50 + (frameIndex % 6 < 3 ? 8 : 0);
+      for (const angle of [45, 135, 225, 315]) {
+        const endX = centerX + armLength * Math.cos(angle * Math.PI / 180);
+        const endY = centerY + armLength * Math.sin(angle * Math.PI / 180);
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(endX, endY);
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = YELLOW;
+        ctx.stroke();
+        
+        // Claws
+        for (const clawAngle of [angle - 30, angle + 30]) {
+          const clawX = endX + 20 * Math.cos(clawAngle * Math.PI / 180);
+          const clawY = endY + 20 * Math.sin(clawAngle * Math.PI / 180);
+          ctx.beginPath();
+          ctx.moveTo(endX, endY);
+          ctx.lineTo(clawX, clawY);
+          ctx.lineWidth = 5;
+          ctx.strokeStyle = RED;
+          ctx.stroke();
+        }
+      }
+      
+      // Shooting effect
+      if (isShooting) {
+        for (const angle of [0, 90, 180, 270]) {
+          const flashX = centerX + 70 * Math.cos(angle * Math.PI / 180);
+          const flashY = centerY + 70 * Math.sin(angle * Math.PI / 180);
+          ctx.beginPath();
+          ctx.arc(flashX, flashY, 8, 0, Math.PI * 2);
+          ctx.fillStyle = YELLOW;
+          ctx.fill();
+        }
+      }
+      
+      ctx.restore();
+    }
+
+    // Bullets
+    const bulletOffsetX = 23;
+    const bulletOffsetY = 5;
+    let bullets = [];
+    const bulletSpeed = 10;
+    const normalShootCooldown = 20;
+    const powerShootCooldown = 7;
+    let shootCooldown = normalShootCooldown;
+    let shootTimer = 0;
+    let bulletColor = GREEN;
+
+    // Power-up buttons
+    const buttonRadius = 55;
+    const bulletButtonX = WIDTH - 150;
+    const bulletButtonY = HEIGHT - 100;
+    const shieldButtonX = WIDTH - 250;
+    const shieldButtonY = HEIGHT - 100;
+    let bulletButtonColor = GRAY;
+    let bulletButtonActive = true;
+    let powerActive = false;
+    let powerEndTime = 0;
+    let bulletCooldownEndTime = 0;
+    let shieldButtonColor = BLUE;
+    let shieldActive = false;
+    let shieldEndTime = 0;
+    let shieldCooldownEndTime = 0;
+    let shieldButtonActive = true;
+    let shieldVisible = false;
+
+    // Enemies
+    const enemySize = 40;
+    const enemySpeed = 1;
+    let enemies = [];
+    let wave = 1;
+    const maxWaves = 50;
+    const minSpawnX = 50;
+    const maxSpawnX = WIDTH - 50;
+
+    // Boss
+    const bossSize = 150;
+    const bossHitboxWidth = 140;
+    const bossSpeed = 2;
+    const bossSpawnWaves = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+    let boss = null;
+    let bossHp = 150;
+    const bossMaxHp = bossHp;
+    let bossBullets = [];
+    const bossShootCooldown = 120;
+    let bossShootingFrameCounter = 0;
+
+    // Boss health bar
+    const bossHealthBarWidth = 200;
+    const bossHealthBarHeight = 20;
+    const bossHealthBarX = 150;
+    const bossHealthBarY = 50;
+
+    // Game state
+    let gameOver = false;
+    let lastTime = 0;
+    let enemyFrameIndex = 0;
+    let bossFrameIndex = 0;
+    const animationSpeed = 100;
+    let lastAnimationUpdate = 0;
+
+    // Spawn enemies
+    function spawnEnemies(currentWave) {
+      const numEnemies = currentWave * 3;
+      for (let i = 0; i < numEnemies; i++) {
+        const enemyX = Math.floor(Math.random() * (maxSpawnX - minSpawnX - enemySize)) + minSpawnX;
+        const enemyY = -enemySize;
+        const targetBoxIndex = Math.floor((enemyX - 50) / enemySize);
+        const targetBox = [10 + targetBoxIndex * enemySize, HEIGHT + 838];
+        enemies.push([enemyX, enemyY, targetBox, 2]);
+      }
+
+      if (bossSpawnWaves.includes(currentWave) && !boss) {
+        const bossX = WIDTH / 2 - bossSize / 2;
+        const bossY = -bossSize - 200;
+        const targetBoxIndex = Math.floor((bossX - 50) / enemySize);
+        const targetBox = [10 + targetBoxIndex * enemySize, HEIGHT + 838];
+        bossHp = bossMaxHp;
+        bossShootingFrameCounter = 0;
+        boss = {
+          x: bossX,
+          y: bossY,
+          target: targetBox,
+          state: "down",
+          moveCounter: 0,
+          hp: bossHp,
+          bullets: [],
+          shootTimer: bossShootCooldown
+        };
+      }
+    }
+
+    // Power-up functions
+    function activateBulletPower() {
+      if (bulletButtonActive && !powerActive) {
+        bulletColor = BRIGHT_GREEN;
+        shootCooldown = powerShootCooldown;
+        powerActive = true;
+        powerEndTime = Date.now() + 7000;
+        bulletButtonColor = LIGHT_GRAY;
+        bulletButtonActive = false;
+      }
+    }
+
+    function activateShield() {
+      if (shieldButtonActive && !shieldActive) {
+        shieldActive = true;
+        shieldVisible = true;
+        shieldEndTime = Date.now() + 7000;
+        shieldButtonColor = DARK_GRAY;
+        shieldButtonActive = false;
+      }
+    }
+
+    function checkPowerStatus() {
+      const currentTime = Date.now();
+      
+      // Bullet power status
+      if (powerActive && currentTime >= powerEndTime) {
+        bulletColor = GREEN;
+        shootCooldown = normalShootCooldown;
+        powerActive = false;
+        bulletCooldownEndTime = currentTime + 5000;
+        bulletButtonColor = DARK_GRAY;
+      }
+      
+      if (!bulletButtonActive && !powerActive && currentTime >= bulletCooldownEndTime) {
+        bulletButtonActive = true;
+        bulletButtonColor = YELLOW;
+      }
+      
+      // Shield power status
+      if (shieldActive && currentTime >= shieldEndTime) {
+        shieldActive = false;
+        shieldVisible = false;
+        shieldCooldownEndTime = currentTime + 5000;
+        shieldButtonColor = DARK_GRAY;
+      }
+      
+      if (!shieldButtonActive && !shieldActive && currentTime >= shieldCooldownEndTime) {
+        shieldButtonActive = true;
+        shieldButtonColor = SHIELD_BLUE;
+      }
+    }
+
+    // Initialize first wave
+    spawnEnemies(wave);
+
+    // Event listeners
+    canvas.addEventListener('mousedown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      if (mouseY > HEIGHT * 0.5) {
+        dragging = true;
+      }
+      
+      if (gameOver) {
+        resetGame();
+      }
+      
+      // Check bullet button click
+      const distToBulletButton = Math.sqrt((mouseX - bulletButtonX) ** 2 + (mouseY - bulletButtonY) ** 2);
+      if (distToBulletButton <= buttonRadius) {
+        activateBulletPower();
+      }
+      
+      // Check shield button click
+      const distToShieldButton = Math.sqrt((mouseX - shieldButtonX) ** 2 + (mouseY - shieldButtonY) ** 2);
+      if (distToShieldButton <= buttonRadius) {
+        activateShield();
+      }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      dragging = false;
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (dragging) {
+        const rect = canvas.getBoundingClientRect();
+        playerX = e.clientX - rect.left - playerSize / 2;
+        playerY = e.clientY - rect.top - playerSize / 2 - playerOffsetY;
+        playerX = Math.max(20, Math.min(playerX, WIDTH - 50 - playerSize));
+      }
+    });
+
+    // Touch support
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const touchX = touch.clientX - rect.left;
+      const touchY = touch.clientY - rect.top;
+      
+      if (touchY > HEIGHT * 0.5) {
+        dragging = true;
+      }
+      
+      if (gameOver) {
+        resetGame();
+      }
+      
+      // Check bullet button click
+      const distToBulletButton = Math.sqrt((touchX - bulletButtonX) ** 2 + (touchY - bulletButtonY) ** 2);
+      if (distToBulletButton <= buttonRadius) {
+        activateBulletPower();
+      }
+      
+      // Check shield button click
+      const distToShieldButton = Math.sqrt((touchX - shieldButtonX) ** 2 + (touchY - shieldButtonY) ** 2);
+      if (distToShieldButton <= buttonRadius) {
+        activateShield();
+      }
+    });
+
+    canvas.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      dragging = false;
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (dragging) {
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        playerX = touch.clientX - rect.left - playerSize / 2;
+        playerY = touch.clientY - rect.top - playerSize / 2 - playerOffsetY;
+        playerX = Math.max(20, Math.min(playerX, WIDTH - 50 - playerSize));
+      }
+    });
+
+    function resetGame() {
+      playerHealth = 100;
+      wave = 1;
+      enemies = [];
+      bullets = [];
+      if (boss) boss.bullets = [];
+      boss = null;
+      spawnEnemies(wave);
+      gameOver = false;
+      shootTimer = 0;
+      bulletButtonColor = GRAY;
+      bulletButtonActive = true;
+      powerActive = false;
+      shieldButtonColor = BLUE;
+      shieldButtonActive = true;
+      shieldActive = false;
+      shieldVisible = false;
+    }
+
+    // Game loop
+    function gameLoop(timestamp) {
+      // Clear canvas
+      ctx.fillStyle = BLACK;
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      // Draw player
+      drawPlayerShip(playerX, playerY);
+
+      // Draw shield if active
+      if (shieldVisible) {
+        ctx.beginPath();
+        ctx.arc(playerX + playerSize / 2, playerY + playerSize / 2, playerSize + 15, 0, Math.PI * 2);
+        ctx.strokeStyle = SHIELD_BLUE;
+        ctx.lineWidth = 5;
+        ctx.stroke();
+        
+        if (timestamp % 400 < 200) {
+          ctx.beginPath();
+          ctx.arc(playerX + playerSize / 2, playerY + playerSize / 2, playerSize + 15, 0, Math.PI * 2);
+          ctx.strokeStyle = WHITE;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+      }
+
+      // Update animations
+      if (timestamp - lastAnimationUpdate > animationSpeed) {
+        enemyFrameIndex = (enemyFrameIndex + 1) % 5;
+        if (boss) {
+          bossFrameIndex = (bossFrameIndex + 1) % 20;
+          if (boss.shootTimer <= 0) {
+            bossShootingFrameCounter = 10;
+          }
+          if (bossShootingFrameCounter > 0) {
+            bossShootingFrameCounter--;
+          }
+        }
+        lastAnimationUpdate = timestamp;
+      }
+
+      // Check power-up status
+      checkPowerStatus();
+
+      // Automatic shooting
+      if (!gameOver) {
+        shootTimer++;
+        if (shootTimer >= shootCooldown) {
+          bullets.push([playerX + bulletOffsetX, playerY + bulletOffsetY]);
+          shootTimer = 0;
+        }
+      }
+
+      // Update bullets
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        const bullet = bullets[i];
+        bullet[1] -= bulletSpeed;
+        ctx.fillStyle = bulletColor;
+        ctx.fillRect(bullet[0], bullet[1], 5, 10);
+        
+        if (bullet[1] < 0) {
+          bullets.splice(i, 1);
+        }
+      }
+
+      // Update enemies
+      for (let i = enemies.length - 1; i >= 0; i--) {
+        const enemy = enemies[i];
+        const targetY = enemy[2][1];
+
+        if (enemy[1] < targetY) {
+          enemy[1] += enemySpeed;
+        }
+
+        drawEnemyShip(enemy[0], enemy[1], enemyFrameIndex);
+
+        if (Math.abs(enemy[1] - targetY) < enemySpeed) {
+          enemy[0] = Math.floor(Math.random() * (maxSpawnX - minSpawnX - enemySize)) + minSpawnX;
+          enemy[1] = -enemySize;
+          const targetBoxIndex = Math.floor((enemy[0] - 50) / enemySize);
+          enemy[2] = [10 + targetBoxIndex * enemySize, HEIGHT + 838];
+        }
+
+        // Collision with player
+        const playerRect = {
+          x: playerX,
+          y: playerY,
+          width: playerSize,
+          height: playerSize
+        };
+        
+        const enemyRect = {
+          x: enemy[0],
+          y: enemy[1],
+          width: enemySize,
+          height: enemySize
+        };
+        
+        if (checkCollision(playerRect, enemyRect)) {
+          if (!shieldActive) {
+            playerHealth -= 10;
+          }
+          enemies.splice(i, 1);
+          if (playerHealth <= 0) {
+            gameOver = true;
+            bullets = [];
+            enemies = [];
+            if (boss) boss.bullets = [];
+          }
+        }
+      }
+
+      // Update boss
+      if (boss && !gameOver) {
+        // Boss movement
+        if (boss.state === "down") {
+          if (boss.moveCounter < 600) {
+            boss.y += bossSpeed;
+            boss.moveCounter += bossSpeed;
+          } else {
+            boss.state = "left_350";
+            boss.moveCounter = 0;
+          }
+        } else if (boss.state === "left_350") {
+          if (boss.moveCounter < 500) {
+            boss.x -= bossSpeed;
+            boss.moveCounter += bossSpeed;
+          } else {
+            boss.state = "right_350";
+            boss.moveCounter = 0;
+          }
+        } else if (boss.state === "right_350") {
+          if (boss.moveCounter < 500) {
+            boss.x += bossSpeed;
+            boss.moveCounter += bossSpeed;
+          } else {
+            boss.state = "left_350";
+            boss.moveCounter = 0;
+          }
+        }
+
+        boss.x = Math.max(minSpawnX, Math.min(boss.x, maxSpawnX - bossSize));
+        boss.y = Math.max(HEIGHT / 4 - 50, Math.min(boss.y, HEIGHT / 4 + 50));
+
+        // Boss shooting
+        const isShooting = bossShootingFrameCounter > 0;
+        
+        if (boss.shootTimer <= 0) {
+          const angles = [-285, -300, 90, 105, 120];
+          for (const angle of angles) {
+            const bulletX = boss.x + bossSize / 2;
+            const bulletY = boss.y + bossSize;
+            boss.bullets.push({
+              x: bulletX,
+              y: bulletY,
+              angle: angle
+            });
+          }
+          boss.shootTimer = bossShootCooldown;
+          bossShootingFrameCounter = 10;
+        } else {
+          boss.shootTimer--;
+        }
+
+        // Draw boss
+        if (isShooting) {
+          drawBossShip(boss.x, boss.y, bossFrameIndex, true);
+        } else {
+          drawBossShip(boss.x, boss.y, bossFrameIndex, false);
+        }
+
+        // Update boss bullets
+        for (let i = boss.bullets.length - 1; i >= 0; i--) {
+          const bossBullet = boss.bullets[i];
+          bossBullet.x += Math.cos(bossBullet.angle * Math.PI / 180) * bulletSpeed * 0.5;
+          bossBullet.y += Math.sin(bossBullet.angle * Math.PI / 180) * bulletSpeed * 0.5;
+          
+          ctx.fillStyle = RED;
+          ctx.fillRect(bossBullet.x, bossBullet.y, 8, 15);
+
+          if (bossBullet.y > HEIGHT + 900 || bossBullet.x < 0 || bossBullet.x > WIDTH) {
+            boss.bullets.splice(i, 1);
+          } else {
+            const bulletRect = {
+              x: bossBullet.x,
+              y: bossBullet.y,
+              width: 8,
+              height: 15
+            };
+            
+            const playerRect = {
+              x: playerX,
+              y: playerY,
+              width: playerSize,
+              height: playerSize
+            };
+            
+            if (checkCollision(bulletRect, playerRect)) {
+              if (!shieldActive) {
+                playerHealth -= 15;
+              }
+              boss.bullets.splice(i, 1);
+              if (playerHealth <= 0) {
+                gameOver = true;
+                bullets = [];
+                enemies = [];
+                boss.bullets = [];
+              }
+            }
+          }
+        }
+
+        // Boss collision with player
+        const bossRect = {
+          x: boss.x + (bossSize - bossHitboxWidth) / 2,
+          y: boss.y,
+          width: bossHitboxWidth,
+          height: bossSize
+        };
+        
+        const playerRect = {
+          x: playerX,
+          y: playerY,
+          width: playerSize,
+          height: playerSize
+        };
+        
+        if (checkCollision(bossRect, playerRect)) {
+          if (!shieldActive) {
+            playerHealth -= 25;
+          }
+          if (playerHealth <= 0) {
+            gameOver = true;
+            bullets = [];
+            enemies = [];
+            boss.bullets = [];
+          }
+        }
+      }
+
+      // Bullet collisions
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        const bullet = bullets[i];
+        const bulletRect = {
+          x: bullet[0],
+          y: bullet[1],
+          width: 5,
+          height: 10
+        };
+        
+        let hit = false;
+        
+        // Check enemy collisions
+        for (let j = enemies.length - 1; j >= 0; j--) {
+          const enemy = enemies[j];
+          const enemyRect = {
+            x: enemy[0],
+            y: enemy[1],
+            width: enemySize,
+            height: enemySize
+          };
+          
+          if (checkCollision(bulletRect, enemyRect)) {
+            enemy[3]--;
+            if (enemy[3] <= 0) {
+              enemies.splice(j, 1);
+            }
+            hit = true;
+            break;
+          }
+        }
+        
+        // Check boss collision
+        if (!hit && boss) {
+          const bossRect = {
+            x: boss.x + (bossSize - bossHitboxWidth) / 2,
+            y: boss.y,
+            width: bossHitboxWidth,
+            height: bossSize
+          };
+          
+          if (checkCollision(bulletRect, bossRect)) {
+            boss.hp--;
+            hit = true;
+            if (boss.hp <= 0) {
+              boss = null;
+            }
+          }
+        }
+        
+        if (hit) {
+          bullets.splice(i, 1);
+        }
+      }
+
+      // Spawn new wave
+      if (enemies.length === 0 && !boss && wave < maxWaves && !gameOver) {
+        wave++;
+        spawnEnemies(wave);
+      }
+
+      // Draw UI
+      ctx.font = '36px Arial';
+      ctx.fillStyle = WHITE;
+      ctx.fillText(`Health: ${playerHealth}`, 10, 30);
+      ctx.fillText(`Wave: ${wave}/${maxWaves}`, 10, 70);
+
+      // Draw boss health bar
+      if (boss) {
+        const healthPercentage = boss.hp / bossMaxHp;
+        const currentHealthWidth = Math.max(0, bossHealthBarWidth * healthPercentage);
+        
+        ctx.strokeStyle = BLACK;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(bossHealthBarX, bossHealthBarY, bossHealthBarWidth, bossHealthBarHeight);
+        
+        ctx.fillStyle = BOSS_HEALTH_COLOR;
+        ctx.fillRect(bossHealthBarX, bossHealthBarY, currentHealthWidth, bossHealthBarHeight);
+        
+        const missingHealthWidth = bossHealthBarWidth - currentHealthWidth;
+        if (missingHealthWidth > 0) {
+          ctx.fillStyle = GRAY;
+          ctx.fillRect(
+            bossHealthBarX + currentHealthWidth,
+            bossHealthBarY,
+            missingHealthWidth,
+            bossHealthBarHeight
+          );
+        }
+        
+        ctx.fillStyle = WHITE;
+        ctx.fillText(
+          `BOSS: ${boss.hp}/${bossMaxHp}`,
+          bossHealthBarX + bossHealthBarWidth + 10,
+          bossHealthBarY + 15
+        );
+      }
+
+      // Draw power-up buttons
+      ctx.beginPath();
+      ctx.arc(bulletButtonX, bulletButtonY, buttonRadius, 0, Math.PI * 2);
+      ctx.fillStyle = bulletButtonColor;
+      ctx.fill();
+      ctx.strokeStyle = WHITE;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      ctx.fillStyle = BLACK;
+      ctx.textAlign = 'center';
+      ctx.fillText('RAPID', bulletButtonX, bulletButtonY - 5);
+      
+      ctx.beginPath();
+      ctx.arc(shieldButtonX, shieldButtonY, buttonRadius, 0, Math.PI * 2);
+      ctx.fillStyle = shieldButtonColor;
+      ctx.fill();
+      ctx.strokeStyle = WHITE;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      ctx.fillStyle = BLACK;
+      ctx.fillText('SHIELD', shieldButtonX, shieldButtonY - 5);
+      ctx.textAlign = 'left';
+
+      // Draw cooldown counters
+      const currentTime = Date.now();
+      
+      if (powerActive || !bulletButtonActive) {
+        const cooldown = Math.max(
+          0,
+          Math.ceil(
+            ((powerActive ? powerEndTime : bulletCooldownEndTime) - currentTime) / 1000
+          )
+        );
+        ctx.fillStyle = BLACK;
+        ctx.textAlign = 'center';
+        ctx.fillText(`${cooldown}s`, bulletButtonX, bulletButtonY + 35);
+      }
+      
+      if (shieldActive || !shieldButtonActive) {
+        const cooldown = Math.max(
+          0,
+          Math.ceil(
+            ((shieldActive ? shieldEndTime : shieldCooldownEndTime) - currentTime) / 1000
+          )
+        );
+        ctx.fillStyle = BLACK;
+        ctx.fillText(`${cooldown}s`, shieldButtonX, shieldButtonY + 35);
+      }
+      
+      ctx.textAlign = 'left';
+
+      // Game over screen
+      if (gameOver) {
+        ctx.font = '72px Arial';
+        ctx.fillStyle = RED;
+        ctx.textAlign = 'center';
+        ctx.fillText('GAME OVER', WIDTH / 2, HEIGHT / 2 - 30);
+        
+        ctx.font = '36px Arial';
+        ctx.fillStyle = WHITE;
+        ctx.fillText('Tap to Restart', WIDTH / 2, HEIGHT / 2 + 30);
+        ctx.textAlign = 'left';
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Collision detection helper
+    function checkCollision(rect1, rect2) {
+      return (
+        rect1.x < rect2.x + rect2.width &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.y + rect1.height > rect2.y
+      );
+    }
+
+    // Start the game
+    requestAnimationFrame(gameLoop);
+  </script>
 </body>
 </html>
