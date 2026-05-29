@@ -3,103 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Video Page</title>
+  <title>Spy Video Player</title>
 
   <style>
     body {
       margin: 0;
-      padding: 0;
       min-height: 100vh;
-
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-
-      background-image:
-        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
-        url('https://images.unsplash.com/photo-1506744038136-46273834b3fb');
-
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
       font-family: Arial, sans-serif;
       color: white;
     }
 
-    .video-container {
+    .container {
       width: 90%;
       max-width: 900px;
-
-      background: rgba(0,0,0,0.4);
-      padding: 20px;
-      border-radius: 15px;
-
-      backdrop-filter: blur(5px);
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-
       text-align: center;
-    }
-
-    .video-title {
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 15px;
     }
 
     video {
       width: 100%;
-      border-radius: 10px;
+      border-radius: 12px;
+      background: black;
+    }
+
+    .title {
+      font-size: 24px;
+      margin-bottom: 15px;
+      font-weight: bold;
     }
 
     .download-button {
       display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-
-      background-color: #007bff;
+      margin-top: 15px;
+      padding: 10px 18px;
+      background: #007bff;
       color: white;
-
-      text-decoration: none;
       border-radius: 8px;
-
-      transition: 0.3s;
+      text-decoration: none;
       cursor: pointer;
     }
 
     .download-button:hover {
-      background-color: #0056b3;
-      transform: scale(1.05);
+      background: #0056b3;
     }
-
   </style>
 </head>
+
 <body>
 
-  <div class="video-container">
+  <div class="container">
 
-    <div class="video-title">
-      Movie Player
-    </div>
+    <div class="title">Spy Video</div>
 
     <video controls>
-      <source src="https://www.dropbox.com/scl/fi/peuwu9tcn9iasut63qpqy/merge_video_1780002818630.mp4?rlkey=df3redgxbrryw3do1o0rzxmb6&st=pzul5udm&raw=1" type="video/mp4">
+      <source src="https://www.dropbox.com/scl/fi/q8g42rikhyudtm6y27d55/spy.mp4?rlkey=h6dabzz124f57q6g5y6bym7q7&raw=1" type="video/mp4">
 
       <track
-        src="https://www.dropbox.com/scl/fi/fnc6w552qnpk11qbwmxvv/subtitles_SPY.vtt?rlkey=kbxhce3q6bhvrmv3k3koschv2&st=o6cqsqd5&raw=1"
+        src="https://www.dropbox.com/scl/fi/b53lcvmh7xkhb80rpwi2o/spy.srt?rlkey=ytvcu4y12f8pbqfb7bwe00c0p&raw=1"
         kind="subtitles"
         srclang="en"
         label="English"
         default>
 
-      Your browser does not support the video tag.
+      Your browser does not support video playback.
     </video>
 
-    <!-- Decorative (non-working for now) button -->
-    <a href="#" class="download-button">
-      Download
-    </a>
+    <!-- decorative button -->
+    <a href="#" class="download-button">Download</a>
 
   </div>
 
