@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Spy Video Player</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spy Video</title>
 
   <style>
     body {
       margin: 0;
       min-height: 100vh;
+
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
+
+      background:
+      linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
+
       font-family: Arial, sans-serif;
       color: white;
     }
@@ -23,31 +27,37 @@
       text-align: center;
     }
 
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
     video {
       width: 100%;
       border-radius: 12px;
       background: black;
     }
 
-    .title {
-      font-size: 24px;
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
-
     .download-button {
       display: inline-block;
+
       margin-top: 15px;
       padding: 10px 18px;
+
       background: #007bff;
       color: white;
-      border-radius: 8px;
+
       text-decoration: none;
+      border-radius: 8px;
+
       cursor: pointer;
+      transition: 0.3s;
     }
 
     .download-button:hover {
       background: #0056b3;
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -56,23 +66,19 @@
 
   <div class="container">
 
-    <div class="title">Spy Video</div>
+    <div class="title">
+      Spy Video
+    </div>
 
     <video controls>
-      <source src="https://www.dropbox.com/scl/fi/q8g42rikhyudtm6y27d55/spy.mp4?rlkey=h6dabzz124f57q6g5y6bym7q7&raw=1" type="video/mp4">
-
-      <track
-        src="https://www.dropbox.com/scl/fi/b53lcvmh7xkhb80rpwi2o/spy.srt?rlkey=ytvcu4y12f8pbqfb7bwe00c0p&raw=1"
-        kind="subtitles"
-        srclang="en"
-        label="English"
-        default>
+      <source src="https://www.dropbox.com/scl/fi/l85xkuf47gfote0ddf95q/spy.mp4?rlkey=kt9btg741a1dlgnwytubo87bn&raw=1" type="video/mp4">
 
       Your browser does not support video playback.
     </video>
 
-    <!-- decorative button -->
-    <a href="#" class="download-button">Download</a>
+    <a href="#" class="download-button">
+      Download
+    </a>
 
   </div>
 
